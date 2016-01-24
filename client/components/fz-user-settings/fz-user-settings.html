@@ -1,0 +1,23 @@
+<div class="fz-user-settings__link"
+  ng-show="vm.user"
+  ng-click="vm.show = true">
+  <svg class="fz-user-settings__link-icon"
+    ng-class="{'fz-user-settings__link-icon--alert': !vm.user.profile.fname}">
+    <use xlink:href="#shape-cog"></use></svg>▾
+</div>
+<fz-window class="fz-window--popup fz-user-settings__popup" show="vm.show" window-title="Настройки">
+  <h4 class="fz-user-settings__heading">Личные данные</h4>
+  <div class="fz-user-settings__section">
+    <fz-field field-name="Полное имя">
+      <fz-input-submit model="vm.user.profile.fname" on-ok="vm.updateUserProfile()" placeholder="Ваши ФИО"></fz-input-submit></fz-field>
+  </div>
+  <h4 class="fz-user-settings__heading">Доступные модули</h4>
+  <div class="fz-user-settings__section">
+    <div class="" ng-repeat="module in vm.getAvailableModules()">
+      <a ui-sref="{{module}}" ng-click="vm.show = false">{{vm.getModuleName(module)}}</a>
+    </div>
+    <div class="fz-notification" ng-show="vm.getAvailableModules().length === 0">
+      Спасибо за регистрацию! Возвращайтесь, когда администратор откроет Вам доступ к функционалу системы или тренер запишет Вас в группу.
+    </div>
+  </div>
+</fz-window>

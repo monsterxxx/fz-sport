@@ -1,0 +1,22 @@
+<div class="fz-list__container">
+  <div class="fz-list__title" ng-click="vm.expanded = !vm.expanded">
+    <span class="fz-list__toggle" ng-class="{'fz-list__toggle--expanded': vm.expanded}">▾</span>
+    <span class="fz-list__title-text">{{vm.listTitle}}</span>
+    <div class="fz-list__menu-btn" ng-show="vm.expanded && (vm.showNew !== undefined)" ng-click="vm.add($event)">&#10133;</div>
+    <div class="fz-list__menu-btn" ng-show="vm.expanded && (vm.showAttendance !== undefined)" ng-click="vm.attendance($event)">&#9998;</div>
+    <div class="fz-list__menu-extra-element"></div>
+    <div class="fz-list__menu-check" ng-show="vm.showCheck"><input type="checkbox" ng-model="vm.checkModel" ng-click="vm.check($event)"></div>
+  </div>
+
+  <!-- seemed ugly -->
+  <!-- <div class="fz-list__menu" ng-show="vm.expanded && (vm.showNew !== undefined)">
+    <div class="fz-list__menu-btn" ng-show="vm.showNew !== undefined" ng-click="vm.showNew = true">&#10133;</div>{{vm.showNew}}
+  </div> -->
+
+  <!-- Wait for ANGULAR 1.5 -->
+  <!-- <div class="fz-list__new-item" ng-show="vm.showNew">
+    <div class="fz-list__new-item-title">Новая запись</div>
+    <div class="" ng-transclude="new"></div>
+  </div> -->
+  <div class="fz-list__content" ng-if="vm.expanded" ng-transclude="list"></div>
+</div>

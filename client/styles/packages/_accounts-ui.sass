@@ -1,0 +1,42 @@
+login-buttons
+  > div:first-child
+    display: none
+
+#login-buttons
+  line-height: 32px
+  .login-link-and-dropdown-list
+    position: static
+
+.login-link-and-dropdown-list
+  height: 32px
+
+#login-sign-in-link
+  margin-right: 8px
+  font-size: 15px
+  font-weight: bold
+  text-decoration: none !important
+  color: white
+
+#login-name-link
+  @extend #login-sign-in-link
+  display: inline-block
+  // flex-shrink: 0
+  overflow-x: hidden
+  white-space: nowrap
+
+#login-dropdown-list
+  position: absolute
+  top: 42px
+  left: 10px
+  right: 10px
+  margin-top: 0
+  margin-right: auto
+  margin-left: auto
+  max-width: 500px
+  background-color: white
+  border: 1px solid #ccc
+  border-radius: $default-boder-radius
+  box-shadow: rgba(0, 0, 0, 0.2) 0px 0px 3px 0px
+
+.login-button
+  border-radius: 3px !important

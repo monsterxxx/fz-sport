@@ -1,0 +1,37 @@
+.fz-btn
+  display: inline-block
+  padding: 6px 12px
+  margin-left: 8px
+  font-size: 14px
+  color: white
+  text-align: center
+  text-decoration: none
+  cursor: pointer
+  border-style: solid
+  border-width: 1px
+  border-radius: $default-boder-radius
+  &.active
+    position: relative
+    top: 1px
+  &:disabled
+    color: rgba(white, .5)
+    cursor: default
+
+  //using material color palette 800 and 900 for hover
+  &--primary
+    background-color: #0277BD
+    border-color: #01579B
+    &:hover:not(:disabled)
+      background-color: #01579B
+
+  &--success
+    background-color: #2E7D32
+    border-color: #1B5E20
+    &:hover:not(:disabled)
+      background-color: #1B5E20
+
+  &--cancel
+    background-color: #D84315
+    border-color: #BF360C
+    &:hover:not(:disabled)
+      background-color: #BF360C

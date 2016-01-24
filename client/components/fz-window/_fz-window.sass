@@ -1,0 +1,56 @@
+.fz-window
+
+  &__container
+    position: relative
+    max-width: 500px
+    background-color: white
+    border: 1px solid #ccc
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 0px 3px 0px
+    box-sizing: border-box
+
+  &__close
+    position: absolute
+    right: 12px
+    line-height: 32px
+    color: black
+    cursor: pointer
+
+  &__title
+    padding: 0 12px
+    font-weight: bold
+    line-height: 32px
+    color: white
+    cursor: default
+    background-color: #333
+
+    .fz-window__close
+      position: static
+      float: right
+      color: white
+
+  &__content
+    padding: 0 12px 16px
+
+.fz-window--popup
+
+  .fz-window
+
+    &__container
+      position: absolute
+      top: 42px
+      left: 10px
+      right: 10px
+      z-index: 100
+      margin-right: auto
+      margin-left: auto
+      border-radius: $default-boder-radius
+
+    &__title
+      border-top-left-radius: $default-boder-radius
+      border-top-right-radius: $default-boder-radius
+
+.fz-window--card
+
+  .fz-window__container
+    padding-top: 8px
+    margin-top: 8px

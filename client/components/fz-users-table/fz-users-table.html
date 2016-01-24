@@ -1,0 +1,31 @@
+<fz-list class="fz-list--level-1 fz-list--no-background" list-title="Пользователи" show-new="vm.showNew">
+
+  <table class="fz-table">
+    <thead>
+      <tr>
+        <td></td>
+        <td>№</td>
+        <td>Полное имя</td>
+        <td>login</td>
+        <td>email</td>
+        <td>Клиент</td>
+        <td>Тренер</td>
+      </tr>
+    </thead>
+    <tbody>
+      <tr ng-repeat="user in vm.users" ng-controller="FzUsersTableRowCtrl as vm">
+        <td></td>
+        <td>{{$index + 1}}</td>
+        <td>{{user.profile.fname}}</td>
+        <td>{{user.username}}</td>
+        <td>{{user.emails[0].address}}</td>
+        <td class="tbl-check"><input type="checkbox" ng-model="user.role.client" class="" /></td>
+        <td class="tbl-check"><input type="checkbox" ng-model="user.role.trainer" class="" /></td>
+        <td><input type="button" ng-click="vm.updateUserSettings(user._id)" ng-show="vm.areSettingsChanged" value="Сохранить" /></td>
+        <!-- <td><pre>{{$root.json(user)}}</pre></td>
+        <td><pre>{{$root.json(vm.oriSettings)}}</pre></td> -->
+      </tr>
+    </tbody>
+  </table>
+
+</fz-list>

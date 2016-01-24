@@ -1,0 +1,7 @@
+<div class="fz-window__container" ng-if="vm.show || vm.show === undefined" ng-click="$event.stopPropagation();">
+  <span class="fz-window__close" ng-if="!vm.title && vm.show" ng-click="vm.close(); vm.show=false;">&#10006;</span>
+  <div class="fz-window__title" ng-if="vm.title">{{vm.title}}
+    <span class="fz-window__close" style="color: #ffffff;" ng-click="vm.close(); vm.show=false;">&#10006;</span></div>
+  <div class="fz-window__content">
+    <ng-transclude></ng-transclude></div>
+</div>

@@ -1,0 +1,36 @@
+.fz-input-submit
+  &__container
+    position: relative
+    margin-top: 1px
+  &__input
+    width:100%
+    padding: 8px 3px 7px
+    font-style: italic
+    color: #000
+    border: none
+    background: none
+    outline-style: none
+    border-bottom: 1px solid rgba(black, 0)
+    box-sizing: border-box
+    &:focus
+      border-bottom: 1px solid black
+  &__input--dirty
+    padding-right: 50px
+  &__button
+    position: absolute
+    top: 50%
+    width: 20px
+    margin-top: -15px
+    line-height: 30px
+    text-align: center
+    vertical-align: middle
+    cursor: pointer
+  &__button--ok
+    right: 20px
+    margin-right: 5px
+    font-style: italic
+    color: #006400 //darkgreen
+  &__button--cancel
+    right: 0
+    font-style: italic
+    color: #8b0000 //darkred
