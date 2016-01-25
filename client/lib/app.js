@@ -6,10 +6,7 @@ angular.module('fz', [
   'angular-meteor',
   // 'angular-meteor.auth',
   'ui.router',
-  //COMPONENTS
-  'fz.navbar',
-  'fz.clients-table',
-  //LAYOUT
+  //ROUTES
   'fz.admin',
   'fz.trainer'
 ])

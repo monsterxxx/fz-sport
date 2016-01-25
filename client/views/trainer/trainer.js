@@ -3,7 +3,7 @@
 
 angular
   .module('fz.trainer', [
-    'fz.list-groups'
+
   ])
   .config(function ($stateProvider) {
     $stateProvider

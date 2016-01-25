@@ -1,8 +1,0 @@
-<fz-window show="vm.show" window-title="Новая группа" close="vm.resetForm()">
-  <form name="vm.form" ng-submit="vm.insertGroup()" novalidate>
-    <fz-field field-name="Название группы">
-      <input class="fz-input" name="vm.input" type="text" ng-model="vm.group.name" placeholder="Введите название группы" required>
-    </fz-field>
-    <fz-buttons-submit ok-text="'Сохранить'" ok-disabled="vm.form.$invalid" cancel-text="Очистить" cancel="vm.resetForm()" cancel-disabled="!vm.isFormChanged()" ></fz-buttons-submit>
-  </form>
-</fz-window>
