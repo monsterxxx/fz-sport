@@ -3,6 +3,8 @@ Clients._ensureIndex({
 });
 
 Meteor.publish('searchClients', function(name) {
+  if (!this.userId) {return; }
+
   let user = Users.findOne(this.userId);
 
   if (name && (user.role.admin || user.role.trainer)) {

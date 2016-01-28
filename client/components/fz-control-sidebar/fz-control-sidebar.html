@@ -1,0 +1,67 @@
+<aside class="control-sidebar control-sidebar-dark">
+  <!-- Tabs -->
+  <ul class="nav nav-tabs nav-justified control-sidebar-tabs">
+    <li ng-class="{active: vm.selectedTab === 1}"><a href="" ng-click="vm.selectedTab = 1"><i class="fa fa-user"></i></a></li>
+    <li ng-class="{active: vm.selectedTab === 2}"><a href="" ng-click="vm.selectedTab = 2"><i class="fa fa-home"></i></a></li>
+  </ul>
+  <!-- Tab panes -->
+  <div class="tab-content">
+    <!-- Profile tab content -->
+    <div class="tab-pane" ng-class="{active: vm.selectedTab === 1}">
+      <fz-control-sidebar-profile></fz-control-sidebar-profile>
+    </div>
+
+    <!-- Home tab content -->
+    <!-- <div class="tab-pane" ng-class="{active: vm.selectedTab === 1}">
+      <h3 class="control-sidebar-heading">Recent Activity</h3>
+      <ul class="control-sidebar-menu">
+        <li>
+          <a href="javascript::;">
+            <i class="menu-icon fa fa-birthday-cake bg-red"></i>
+
+            <div class="menu-info">
+              <h4 class="control-sidebar-subheading">Langdon's Birthday</h4>
+
+              <p>Will be 23 on April 24th</p>
+            </div>
+          </a>
+        </li>
+      </ul>
+
+      <h3 class="control-sidebar-heading">Tasks Progress</h3>
+      <ul class="control-sidebar-menu">
+        <li>
+          <a href="javascript::;">
+            <h4 class="control-sidebar-subheading">
+              Custom Template Design
+              <span class="label label-danger pull-right">70%</span>
+            </h4>
+
+            <div class="progress progress-xxs">
+              <div class="progress-bar progress-bar-danger" style="width: 70%"></div>
+            </div>
+          </a>
+        </li>
+      </ul>
+    </div> -->
+
+    <!-- Settings tab content -->
+    <div class="tab-pane"  ng-class="{active: vm.selectedTab === 2}">
+      <!-- Form example - with checkboxes -->
+      <!-- <form method="post">
+        <h3 class="control-sidebar-heading">General Settings</h3>
+
+        <div class="form-group">
+          <label class="control-sidebar-subheading">
+            Report panel usage
+            <input type="checkbox" class="pull-right" checked>
+          </label>
+
+          <p>
+            Some information about this general settings option
+          </p>
+        </div>
+      </form> -->
+    </div>
+  </div>
+</aside>

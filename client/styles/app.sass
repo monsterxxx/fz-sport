@@ -2,5 +2,93 @@
 @import 'packages/accounts-ui'
 @import '../components/components'
 
+body
+  font-family: 'PT Sans', 'Trebuchet MS', 'sans-serif' !important
+
 a
   text-decoration: none!important
+
+nav a
+  &:active:not(:hover)
+    background-color: transparent !important
+  // &:hover
+  //   background-color: transparent !important
+  &:focus:not(:hover):not(:active)
+    background-color: transparent !important
+  &.accounts-ui
+    height: 50px
+    padding: 0 !important
+    &:active
+      background-color: transparent !important
+    &:hover
+      background-color: transparent !important
+    &:focus
+      background-color: transparent !important
+
+@media (max-width: 480px)
+  nav a
+    &:active
+      background-color: transparent !important
+    &:hover
+      background-color: transparent !important
+    &:focus
+      background-color: transparent !important
+
+.main-sidebar-off
+  margin-left: 0
+
+.form-control[disabled], .btn[disabled], fieldset[disabled] .form-control
+    cursor: default
+
+.fz-navbar-enter
+  position: absolute
+  width: 50px
+  line-height: 50px !important
+  text-align: center
+  pointer-events: none
+
+.fz-initials
+  display: block
+  width: 30px
+  height: 30px
+  font-size: 17px
+  font-weight: bold
+  line-height: 30px
+  overflow: hidden
+  text-align: center
+  top: 0
+  color: #4d4d4d
+  background-color: #edeff0
+  border-radius: 3px
+  &:hover
+    background-color: #e3e6e8
+  &-lg
+    width: 45px
+    height: 45px
+    line-height: 45px
+    font-size: 22px
+    border-radius: 4px
+    cursor: default
+    &:hover
+      background-color: #edeff0
+  &-navbar
+    position: absolute
+    top: 10px
+    left: 10px
+    pointer-events: none
+    &:hover
+      background-color: #e3e6e8
+
+.sidebar-company-header
+  padding-right: 15px
+.sidebar-input
+  height: 35px
+  margin: 10px 0
+  color: #000
+  border-radius: 3px
+  background-color: #374850
+  border: 1px solid transparent
+  // transition: all 0.3s ease-in-out
+  &:focus
+    background-color: #fff
+    border-color: transparent

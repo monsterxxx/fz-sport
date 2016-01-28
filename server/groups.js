@@ -11,16 +11,17 @@ Meteor.publish('groups', function () {
     return Groups.find({'trainer._id': user._id});
   }
 
-  if (user.role.client) {
-    let client = Clients.findOne(user.system.client._id),
-        groupIds = [];
-
-    for (let i = 0; i < client.groups.length; i++) {
-      groupIds.push(client.groups[i]._id);
-    }
-
-    return Groups.find({'_id': {$in : groupIds}});
-  }
+  // TODO publish groups for clients
+  // if (user.role.client) {
+  //   let client = Clients.findOne(user.system.client._id),
+  //       groupIds = [];
+  //
+  //   for (let i = 0; i < client.groups.length; i++) {
+  //     groupIds.push(client.groups[i]._id);
+  //   }
+  //
+  //   return Groups.find({'_id': {$in : groupIds}});
+  // }
 
 });
 
@@ -39,7 +40,10 @@ Groups.before.find(function (userId, selector, options) {
         delete client.check;
       });
       delete group.attendanceCheckedAt;
-      Groups.direct.update({_id: group._id}, {$unset: {attendanceCheckedAt: ""}, $set: {clients: group.clients}});
+      Groups.direct.update( { _id: group._id }, {
+        $unset: { attendanceCheckedAt: '' },
+        $set: { clients: group.clients }
+      } );
     }
   });
 });

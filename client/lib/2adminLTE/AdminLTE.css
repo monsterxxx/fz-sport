@@ -150,21 +150,7 @@ body.hold-transition .main-header .logo {
   padding-left: 15px;
   padding-right: 15px;
 }
-/* H1 - H6 font */
-h1,
-h2,
-h3,
-h4,
-h5,
-h6,
-.h1,
-.h2,
-.h3,
-.h4,
-.h5,
-.h6 {
-  font-family: 'Source Sans Pro', sans-serif;
-}
+
 /* General Links */
 a {
   color: #3c8dbc;
@@ -1268,7 +1254,7 @@ a:focus {
   box-shadow: none;
 }
 .form-group.has-error label {
-  color: #dd4b39;
+  
 }
 .form-group.has-error .form-control {
   border-color: #dd4b39;

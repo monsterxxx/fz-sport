@@ -3,7 +3,8 @@ Users._ensureIndex({
 });
 
 Meteor.publish(null, function () {
-  return Users.find({_id: this.userId}, {fields: {'role': 1}});
+  if (!this.userId) {return; }
+  return Users.find({_id: this.userId}, {fields: {'role': 1, 'server': 1}});
 });
 
 Meteor.publish('users_for_admin', function () {

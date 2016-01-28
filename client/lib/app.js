@@ -6,6 +6,11 @@ angular.module('fz', [
   'angular-meteor',
   // 'angular-meteor.auth',
   'ui.router',
+  //AUTHORIZATION
+  'accounts.ui',
+  //CONTROL SIDEBAR
+  'fz.control-sidebar',
+  'fz.control-sidebar-profile',
   //ROUTES
   'fz.admin',
   'fz.trainer'
@@ -15,8 +20,13 @@ angular.module('fz', [
   $locationProvider.html5Mode(true);
 
   $stateProvider
-  .state('home', {
+  .state('index', {
     url: '/',
+    templateUrl: 'client/views/index/index.html'
+  })
+  .state('home', {
+    url: '/home',
+    template: '<div></div>',
     resolve: {
       redirect: ($q, $state, $timeout) => {
         var deferred = $q.defer();
@@ -65,11 +75,31 @@ angular.module('fz', [
 })
 
 .run(function ($state, $rootScope) {
+  // console.log('RUN');
 
   //when user loggs in or out go to home state
   Meteor.autorun(function () {
-    if (Meteor.userId()) {}
-    $state.go('home', {}, {reload: true});
+    // if (Meteor.userId()) {}
+    $rootScope.user = Meteor.user();
+    console.log($rootScope.user);
+    if ($rootScope.user) {
+      if ($rootScope.user.profile
+          && /^([А-Я][а-я]+ ){2}([А-Я][а-я]+){1}$/.test($rootScope.user.profile.fname))
+      {
+        var nameArr = $rootScope.user.profile.fname.split(' ');
+        $rootScope.user.sname = nameArr[1] + ' ' + nameArr[0];
+        $rootScope.user.initials = nameArr[1][0] + nameArr[0][0];
+      } else {
+        $rootScope.user.initials = '?';
+      }
+      $state.go('home', {}, {reload: true});
+    }
+    else {
+      $state.go('index');
+      if ($('.control-sidebar').length) {
+        $('.control-sidebar').removeClass('control-sidebar-open');
+      }
+    }
   });
 
   $rootScope.$state = $state;

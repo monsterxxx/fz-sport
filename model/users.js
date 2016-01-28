@@ -37,9 +37,10 @@ Meteor.methods({
 
       // console.log(JSON.stringify(userToUpdate , null, 2));
 
-      if (userToUpdate.system.client) {
-        Clients.update({_id: userToUpdate.system.client._id}, {$set: {profile: profile}});
-      }
+      // TODO update profile in a client doc of the user
+      // if (userToUpdate.system.client) {
+      //   Clients.update({_id: userToUpdate.system.client._id}, {$set: {profile: profile}});
+      // }
     }
 
   },
@@ -81,10 +82,11 @@ Meteor.methods({
             throw new Meteor.Error('no-permission',
               'Admin cannot change admin or master permissions.');
           }
-          if (module === 'client' && userToUpdate.system.client) {
-            throw new Meteor.Error('invalid-action',
-              'There are no ex-clients in the App.');
-          }
+          // TODO check if user is client
+          // if (module === 'client' && userToUpdate.system.client) {
+          //   throw new Meteor.Error('invalid-action',
+          //     'There are no ex-clients in the App.');
+          // }
           if (module === 'trainer'
             && (userToUpdate.trainer && Object.keys(userToUpdate.trainer).length > 0)) {
             throw new Meteor.Error('invalid-action',

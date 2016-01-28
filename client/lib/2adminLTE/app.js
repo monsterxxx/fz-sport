@@ -1,17 +1,4 @@
-// var head = document.getElementsByTagName('head')[0];
-// console.log(head);
-// 
-// //Generate a style tag
-// var style = document.createElement('link');
-// style.type = 'text/css';
-// style.rel = "stylesheet";
-// style.href = 'https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css';
-//
-// head.appendChild(style);
-//
-// style.href = 'https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css';
-//
-// head.appendChild(style);
+// console.log('adminLTE app.js');
 
 /*! AdminLTE app.js
  * ================
