@@ -2,19 +2,19 @@
 // 'use strict';
 
 angular
-  .module('fz.control-sidebar', [
+  .module('fz.navbar-notifications', [
   ])
-  .directive('fzControlSidebar', Dir);
+  .directive('fzNavbarNotifications', Dir);
 
 function Dir() {
   var directive = {
     restrict: 'E',
+    templateUrl: 'client/components/fz-navbar-notifications/fz-navbar-notifications.html',
     replace: true,
-    templateUrl: 'client/components/fz-control-sidebar/fz-control-sidebar.html',
     scope: {},
     bindToController: {},
     controller: Ctrl,
-    controllerAs: 'vm',
+    controllerAs: 'vm'
   };
 
   return directive;
@@ -24,7 +24,9 @@ Ctrl.$inject = ['$scope', '$reactive'];
 
 function Ctrl($scope, $reactive) {
   var vm = this;
-  vm.selectedTab = 1;
+  $reactive(vm).attach($scope);
+  vm.helpers({ notifications: () => Meteor.user().notifications });
+
 }
 
 })();

@@ -1,0 +1,26 @@
+<li class="dropdown notifications-menu">
+  <a href="" class="dropdown-toggle" data-toggle="dropdown">
+    <i class="fa fa-bell-o"></i>
+    <span class="label label-warning">{{vm.notifications.length || ''}}</span>
+  </a>
+  <ul class="dropdown-menu">
+    <li class="header">
+      <span ng-if="vm.notifications.length === 0">Нет новых уведомлений</span>
+      <span ng-if="vm.notifications.length === 1">У Вас 1 новое уведомление</span>
+      <span ng-if="vm.notifications.length === 2 || vm.notifications.length === 3 || vm.notifications.length === 4">У Вас {{vm.notifications.length}} новых уведомления</span>
+      <span ng-if="vm.notifications.length >  4">У Вас {{vm.notifications.length}} новых уведомлений</span>
+    </li>
+    <li ng-if="vm.notifications.length">
+      <ul class="menu">
+        <!-- <li>
+          <a href="">
+            <i class="fa fa-users text-aqua"></i> 5 new members joined today
+          </a>
+        </li> -->
+      </ul>
+    </li>
+    <li class="footer" ng-if="vm.notifications.length > 4">
+      <a href="">Показать все уведомления</a>
+    </li>
+  </ul>
+</li>

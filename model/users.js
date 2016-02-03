@@ -1,10 +1,3 @@
-// Meteor.users.allow({
-//   update: function (userId, user, fields, modifier) {
-//     return true;
-//   }
-//   // ,fetch: ['trainer', 'admin', 'master']
-// });
-
 Meteor.users.deny({
   update: function() {
     return true;
@@ -15,7 +8,10 @@ Meteor.methods({
   updateUserProfile: function (userId, profile) {
     check(userId, String);
     check(profile, {
-      fname: String
+      fname: Match.Where(function (fname) {
+        check(fname, String);
+        return /^([А-Я][а-я]+ ){2}([А-Я][а-я]+){1}$/.test(fname);
+      })
     });
 
     if (! this.userId) {
@@ -30,7 +26,14 @@ Meteor.methods({
         'Must be the user or admin to update user profile.');
     }
 
-    Users.update({_id: userId}, {$set: {profile: profile}});
+    let modifier = {};
+
+    // if user had task to fill his fname slice this task ( id: 1 )
+    if (_.any(user.tasks, (task) => task.id === 1)) {
+      modifier.$pull = { tasks: { id: 1 } };
+    }
+
+    Users.update({_id: userId},  _.extend( { $set: {profile: profile} }, modifier ) );
 
     if (Meteor.isServer) {
       let userToUpdate = Users.findOne(userId);
