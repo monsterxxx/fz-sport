@@ -2,4 +2,5 @@
 packages
 tests
 client/compatibility
-client/styles
+client/lib/1bootstrap
+client/lib/2adminLTE

@@ -15,7 +15,7 @@
       <!-- Inner menu: contains the tasks -->
       <ul class="menu">
         <li ng-repeat="task in vm.tasks">
-          <a ng-if="task.id === 1" ng-click="vm.showFnameInput()" href="">
+          <a ng-if="task.id === 1" ng-click="vm.showFnameInput($event)" href="">
             <h3>
               Представьтесь пожалуйста!
             </h3>

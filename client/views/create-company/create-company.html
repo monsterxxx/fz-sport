@@ -1,13 +1,40 @@
-<!-- Content Header -->
 <section class="content-header">
   <h1>
-    Новая компания!
-    <small>Введите необходимые данные и нажмите <b>Сохранить</b></small>
+    Новая компания
+    <!-- <small>Введите необходимые данные и нажмите <b>Сохранить</b></small> -->
   </h1>
-
 </section>
 
-<!-- Main content -->
+
 <section class="content">
-контент {{vm.word}}
+  <div class="alert alert-danger" ng-if="vm.hasTask(1)">
+    <h4><i class="icon fa fa-flag-o"></i>Представьтесь пожалуйста</h4>
+    Невыполненное задание препятствует продолжению работы
+  </div>
+
+  <div class="box box-primary" ng-if="!vm.hasTask(1)">
+    <div class="box-header with-border">
+      <h3 class="box-title">Базовая информация</h3>
+    </div>
+
+    <form name="form" ng-submit="vm.createCompany()" novalidate>
+      <div class="box-body">
+        <div class="form-group">
+          <label for="exampleInputEmail1">Название</label>
+          <input class="form-control"
+                 type="text"
+                 placeholder="Введите название Вашей компании"
+                 ng-model="vm.company.name"
+                 required>
+          <p class="help-block text-red" ng-show="vm.showError">
+            Компания с таким названием уже существует, попробуйте другое
+          </p>
+        </div>
+      </div>
+
+      <div class="box-footer">
+        <button type="submit" class="btn btn-primary" ng-disabled="form.$invalid">Сохранить</button>
+      </div>
+    </form>
+  </div>
 </section>

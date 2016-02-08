@@ -28,8 +28,9 @@ function Ctrl($scope, $reactive) {
   vm.helpers({ tasks: () => Meteor.user().tasks });
   vm.showFnameInput = showFnameInput;
 
-  function showFnameInput() {
-      // e.preventDefault();
+  function showFnameInput(e) {
+    e.preventDefault();
+    e.stopPropagation();
     let sidebar = $('.control-sidebar');
     let $input = sidebar.find('.control-fname');
 
@@ -45,10 +46,10 @@ function Ctrl($scope, $reactive) {
       $input.addClass('highlight-borders');
       setTimeout(function () {
         $input.focus();
-      }, 100)
+      }, 200);
       setTimeout(function () {
         $input.removeClass('highlight-borders');
-      }, 3000)
+      }, 3000);
     }
 
   }

@@ -4,8 +4,7 @@ Users._ensureIndex({
 
 Meteor.publish(null, function () {
   if (!this.userId) { return this.ready(); }
-  return Users.find({_id: this.userId}, {fields: {'role': 1, 'server': 1, 'companies': 1, 'tasks': 1}});
-  this.ready();
+  return Users.find({_id: this.userId}, {fields: {'roles': 1, 'server': 1, 'companies': 1, 'tasks': 1, 'notifications': 1}});
 });
 
 Meteor.publish('users_for_admin', function () {
@@ -15,7 +14,6 @@ Meteor.publish('users_for_admin', function () {
 
   if (user.role.admin) {
     return Users.find({}, {fields: {'username': 1, 'emails': 1, 'profile': 1, 'role': 1, 'server': 1}});
-    this.ready();
   }
 });
 
@@ -25,7 +23,7 @@ Users.before.insert(function (userId, user) {
   user.tasks.push({
     id: 1,
     name: 'fill fname',
-    text: "Представьтесь пожалуйста"
+    text: 'Представьтесь пожалуйста'
   });
 });
 

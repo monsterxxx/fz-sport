@@ -8,25 +8,26 @@ body
 a
   text-decoration: none!important
 
-nav a
+nav > ul > li > a
   &:active:not(:hover)
     background-color: transparent !important
   // &:hover
   //   background-color: transparent !important
   &:focus:not(:hover):not(:active)
     background-color: transparent !important
-  &.accounts-ui
-    height: 50px
-    padding: 0 !important
-    &:active
-      background-color: transparent !important
-    &:hover
-      background-color: transparent !important
-    &:focus
-      background-color: transparent !important
+
+nav a.accounts-ui
+  height: 50px
+  padding: 0 !important
+  &:active
+    background-color: transparent !important
+  &:hover
+    background-color: transparent !important
+  &:focus
+    background-color: transparent !important
 
 @media (max-width: 480px)
-  nav a
+  nav > ul > li > a
     &:active
       background-color: transparent !important
     &:hover
@@ -63,14 +64,24 @@ nav a
   &:hover
     background-color: #e3e6e8
   &-lg
-    width: 45px
-    height: 45px
-    line-height: 45px
+    display: flex
+    align-items: center
+    justify-content: center
+    width: 100%
+    max-width: 45px
+    height: auto
+    line-height: normal
     font-size: 22px
     border-radius: 4px
     cursor: default
     &:hover
       background-color: #edeff0
+    &:before
+      content: ''
+      padding-top: 60% /* vertical value as  100% equals width */
+      padding-bottom: 40%
+    span
+      transition: all 0.2s
   &-navbar
     position: absolute
     top: 10px
@@ -78,20 +89,28 @@ nav a
     pointer-events: none
     &:hover
       background-color: #e3e6e8
+body.sidebar-collapse
+  .fz-initials-lg
+    font-size: 17px
+
 
 .sidebar-company-header
   padding-right: 15px
+
 .sidebar-input
   height: 35px
   margin: 10px 0
   color: #000
-  border-radius: 3px
   background-color: #374850
   border: 1px solid transparent
+  border-radius: 3px
   transition: all 0.3s ease-in-out
   &:focus
     background-color: #fff
     border-color: transparent
+
+.sidebar-control-input
+  border-radius: 3px
 
 @keyframes highlight-borders
   60%
@@ -107,3 +126,6 @@ nav a
 .navbar-nav > .tasks-menu > .dropdown-menu > li:last-child
   border-bottom-left-radius: 4px
   border-bottom-right-radius: 4px
+
+.user-panel > .info > a
+  cursor: default

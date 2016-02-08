@@ -62,6 +62,8 @@
         "Mongo": false,
         "Accounts": true,
         "Users": true,
+        "Companies": true,
+        "Roles": true,
         "Clients": true,
         "Groups": true,
         "Attendance": true,

@@ -2,57 +2,41 @@
 'use strict';
 
 angular
-  .module('fz.home', [])
+  .module('fz.company.structure', [])
   .config(function ($stateProvider) {
     $stateProvider
-      .state('home', {
-        url: '/home',
-        templateUrl: 'client/views/home/home.html',
+      .state('company.structure', {
+        url: '/structure',
+        templateUrl: 'client/views/company/structure/structure.html',
         resolve: {
-          auth: ($q, $state, $timeout) => {
-            console.log('auth home');
+          auth: ($q, $stateParams) => {
+            console.log('auth structure');
             var deferred = $q.defer();
 
-            if (! Meteor.user()) {
+            if (!Meteor.user()) {
               deferred.reject({name: 'index'});
-              return deferred.promise;
             }
 
-            let singleCompanyState = getSingleCompanyState();
-
-            if (singleCompanyState) {
-              deferred.reject(singleCompanyState);
-              console.log('rejected with state');
-            }
-            else {
+            else if (Roles.userIsInRole(Meteor.userId(), ['owner', 'admin'], $stateParams.companyId)) {
               deferred.resolve();
+            } else {
+              deferred.reject({name: 'home'});
             }
 
             return deferred.promise;
-
-            function getSingleCompanyState() {
-              let companies = Roles.getGroupsForUser(Meteor.userId());
-              if (companies.length === 1) {
-                let roles = Roles.getRolesForUser(Meteor.userId(), companies[0]);
-                if (roles.indexOf('owner') !== -1) {
-                  let state ={
-                    name: 'company.owner',
-                    params: {companyId: companies[0]}
-                  };
-                  return state;
-                }
-              }
-            }
           }
         },
-        controller: Ctrl,
-        controllerAs: 'vm'
+        controller: Ctrl
       });
   });
 
-function Ctrl() {
-  let vm = this;
-  vm.companies = (Meteor.user().companies) ? true : false;
+Ctrl.$inject = ['$scope', '$reactive'];
+
+function Ctrl($scope, $reactive) {
+  console.log('structure Ctrl');
+  var vm = this;
+  $reactive(vm).attach($scope);
+  vm.helpers({ user: () => Meteor.user() });
   vm.showCompanySelect = showCompanySelect;
 
   let screenSizes = { sm: 768 };
@@ -84,6 +68,8 @@ function Ctrl() {
       }, 3000);
     }
   }
+
+
 }
 
 })();

@@ -478,6 +478,13 @@ function _init() {
           _this._fixForContent(sidebar);
         }
       }
+
+      $(".content-wrapper").click(function () {
+        //Enable hide menu when clicking on the content-wrapper
+        if (sidebar.hasClass('control-sidebar-open')) {
+          _this.close(sidebar, o.slide);
+        }
+      });
     },
     //Open the control sidebar
     open: function (sidebar, slide) {

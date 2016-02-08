@@ -1,12 +1,14 @@
 <form name="form" ng-submit="vm.updateUserProfile()" novalidate>
   <h3 class="control-sidebar-heading">Персональные данные</h3>
-  <div class="form-group" ng-class="{'has-error': form.name.$invalid}">
-    <label class="control-sidebar-subheading">
-      ФИО
-    </label>
-    <input type="text" name="name" class="form-control control-fname" placeholder="Введите ФИО" ng-model="vm.user.profile.fname" required ng-pattern="/^([А-Я][а-я]+ ){2}([А-Я][а-я]+){1}$/">
-
-    <p class="help-block" ng-show="form.name.$invalid" style="color: #dd4b39">
+  <div class="form-group" ng-class="{'has-error': form.fname.$invalid}">
+    <label class="control-sidebar-subheading">ФИО</label>
+    <input class="form-control control-fname sidebar-control-input"
+           name="fname"
+           type="text"
+           placeholder="Введите ФИО" ng-model="vm.user.profile.fname"
+           ng-pattern="/^([А-Я][а-я]+ ){2}([А-Я][а-я]+){1}$/"
+           required>
+    <p class="help-block text-red" ng-show="form.fname.$invalid">
       Три слова с заглавной буквы
     </p>
   </div>

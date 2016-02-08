@@ -17,6 +17,7 @@ angular.module('fz', [
   //ROUTES
   'fz.home',
   'fz.create-company',
+  'fz.company',
   'fz.admin',
   'fz.trainer'
 ])
@@ -29,12 +30,13 @@ angular.module('fz', [
     url: '/',
     templateUrl: 'client/views/index/index.html',
     resolve: {
-      redirect: ($q) => {
+      auth: ($q) => {
+        console.log('auth index');
         var deferred = $q.defer();
 
         //if user is logged in redirect to system's home page
         if (Meteor.user()) {
-          deferred.reject('go-home');
+          deferred.reject({name: 'home'});
         }
         else {
           deferred.resolve();
@@ -43,50 +45,86 @@ angular.module('fz', [
         return deferred.promise;
       }
     }
+  })
+  .state('debug', {
+    url: '/debug'
   });
 
   $urlRouterProvider.otherwise('/');
 })
-.controller('MainCtrl', function ($stateParams) {
+.controller('MainCtrl', function ($state, $stateParams, $scope) {
   console.log('MainCtrl');
   let vm = this;
-  Meteor.autorun(function () {
-    let user = Meteor.user();
-    if (!user) { return; }
-    let companyId = $stateParams.companyId;
-    let selectedCompany = (companyId)
-    ? _.detect(user.companies, (company) => company._id === companyId)
-    : { _id: 0, name: '' }
+  var selectedFromParams;
+  vm.company = {
+    selected: {_id: 0}
+  };
+
+  // Meteor.autorun(function () {
+  //   let user = Meteor.user();
+  //   if (!user) { return; }
 
     //list of available company options
-    vm.company = {
-      selected: selectedCompany,
-      options: user.companies || []
-    };
-    if (! user.companies
-      || ! _.any(user.companies, (company) => company.creator))
-      {
-        vm.company.options.push({
-          _id: 1,
-          name: 'Открыть свою компанию'
-        })
-      }
-  });
+  //   console.log('autorun');
+  //   vm.company.options = user.companies || [];
+  //   if (! user.companies
+  //       || ! _.any(user.companies, (company) => company.creator)) {
+  //     vm.company.options.push({
+  //       _id: 1,
+  //       name: 'Открыть свою компанию'
+  //     });
+  //   }
+  //   console.log(vm.company.selected);
+  // });
+  //
+  // $scope.$on('$stateChangeSuccess', function (e, toState, toParams, fromState, fromParams) {
+  //   if (! Meteor.user()) { return; }
+  //   console.log('changeSuccess');
+  //   console.log(toParams.companyId);
+  //   if (toParams.companyId) {
+  //     if (toParams.companyId !== vm.company.selected._id) {
+  //       vm.company.selected = {_id: toParams.companyId};
+  //       selectedFromParams = true;
+  //     }
+  //   } else if (toState.name === 'create-company'){
+  //     vm.company.selected = {_id: 1};
+  //   } else {
+  //     vm.company.selected = {_id: 0};
+  //   }
+  //
+  //   console.log(vm.company.selected);
+  // });
+  //
+  // $scope.$watch(() => vm.company.selected, function (newV, oldV) {
+  //   // if (newV._id === 0) {return;}
+  //   console.log('watch');
+  //   console.log(newV);
+  //   console.log(oldV);
+  //   if (newV._id !== oldV._id) {
+  //     console.log('watch '+ newV._id, oldV._id, selectedFromParams);
+  //     if (selectedFromParams) {
+  //       selectedFromParams = false;
+  //     } else {
+  //       $state.go('company', {companyId: newV._id});
+  //     }
+  //   }
+  //   if (newV._id === 1) {
+  //     $state.go('create-company');
+  //   }
+  // });
 
 })
 .run(function ($state, $rootScope) {
   // console.log('RUN');
 
-  //catch states' auth resolves rejects and redirect accordingly
-  $rootScope.$on('$stateChangeError', function(event, toState, toParams, fromState, fromParams, error) {
-    switch (error) {
-      case 'go-index':
-        $state.go('index');
-        break;
-      case 'go-home':
-        $state.go('home');
-        break;
+  //catch states' auth resolves rejects and redirect according to passed error state object
+  $rootScope.$on('$stateChangeError', function(e, toState, toParams, fromState, fromParams, error) {
+    console.log('$stateChangeError > ');
+    if (error.name) {
+      $state.go(error.name, error.params);
+      return;
     }
+    console.log('no redirection');
   });
 
   //when user loggs in or out go to home state
@@ -95,8 +133,7 @@ angular.module('fz', [
     console.log('logged in user: ');
     console.log($rootScope.user);
     if ($rootScope.user) {
-      if ($rootScope.user.profile
-          && /^([А-Я][а-я]+ ){2}([А-Я][а-я]+){1}$/.test($rootScope.user.profile.fname))
+      if ($rootScope.user.profile.fname)
       {
         var nameArr = $rootScope.user.profile.fname.split(' ');
         $rootScope.user.sname = nameArr[1] + ' ' + nameArr[0];
@@ -106,7 +143,9 @@ angular.module('fz', [
         $rootScope.user.initials = '?';
       }
 
-      $state.go('home', {}, {reload: true});
+      if ($state.current.name === 'index') {
+        $state.go('home', {}, {reload: true});
+      }
     }
     else {
       $state.go('index');
@@ -117,15 +156,23 @@ angular.module('fz', [
   });
 
   $rootScope.$state = $state;
-  // $rootScope.$on('$stateChangeSuccess', function (stateTo, stateToParams, stateFrom, stateFromParams) {
-  //   console.log(stateTo, JSON.stringify(stateToParams , null, 2), stateFrom, JSON.stringify(stateFromParams , null, 2));
-  // });
+  $rootScope.$on('$stateChangeStart', function (e, toState, toParams, fromState, fromParams) {
+    console.log('$stateChangeStart > '+ toState.name, toParams, fromState.name, fromParams);
+  });
+  $rootScope.$on('$stateChangeSuccess', function (e, toState, toParams, fromState, fromParams) {
+    console.log('$stateChangeSuccess > '+ toState.name, toParams, fromState.name, fromParams);
+    // console.log('toState > '+ toState.name);
+  });
+  //DEBUGS
   $rootScope.log = function (message) {
     console.log(message);
   };
   $rootScope.json = function (obj) {
     return angular.toJson(obj, 2);
   };
+  // let start = +new Date();
+  // let end =  +new Date();
+  // console.log('exec time: '+ start, end, start - end);
 
 });
 
