@@ -4,9 +4,12 @@
 angular
   .module('fz.company', [
     'fz.control-sidebar-company',
+    'fz.main-sidebar-menu',
     //ROUTES
     'fz.company.owner',
-    'fz.company.structure'
+    'fz.company.admin',
+    'fz.company.structure',
+    'fz.groups'
   ])
   .config(function ($stateProvider) {
     $stateProvider
@@ -35,11 +38,14 @@ angular
         },
         views: {
           '': {
-            template: '<div></div>',
+            template: '<div ui-view></div>',
             controller: Ctrl
           },
           'control-sidebar-company': {
             template: '<fz-control-sidebar-company></fz-control-sidebar-company>'
+          },
+          'fz-main-menu': {
+            template: '<fz-main-sidebar-menu></fz-main-sidebar-menu>'
           }
         }
       });
@@ -48,7 +54,7 @@ angular
 Ctrl.$inject = ['$stateParams'];
 
 function Ctrl($stateParams) {
-  console.log('company ctrl');
+  // console.log('company ctrl');
   Meteor.subscribe('company', $stateParams.companyId);
 }
 

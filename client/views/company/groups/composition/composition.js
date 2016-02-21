@@ -2,25 +2,20 @@
 'use strict';
 
 angular
-  .module('fz.company.structure', [
-    'fz.people-list'
+  .module('fz.groups.composition', [
+    'fz.group-create',
+    'fz.group-composition',
   ])
   .config(function ($stateProvider) {
     $stateProvider
-      .state('company.structure', {
-        url: '/structure',
-        templateUrl: 'client/views/company/structure/structure.html',
+      .state('company.groups.composition', {
+        url: '/composition',
+        templateUrl: 'client/views/company/groups/composition/composition.html',
         resolve: {
           auth: ($q, $stateParams) => {
-            console.log('auth structure');
+            console.log('auth composition');
             var deferred = $q.defer();
-
-            if (Roles.userIsInRole(Meteor.userId(), ['owner', 'admin'], $stateParams.companyId)) {
-              deferred.resolve();
-            } else {
-              deferred.reject({name: 'home'});
-            }
-
+            deferred.resolve();
             return deferred.promise;
           }
         },
@@ -34,7 +29,8 @@ Ctrl.$inject = ['$scope', '$reactive', '$stateParams'];
 function Ctrl($scope, $reactive, $stateParams) {
   // console.log('structure Ctrl');
   var vm = this;
-  // $reactive(vm).attach($scope);
+  $reactive(vm).attach($scope);
+  vm.helpers({company: () => Companies.findOne($stateParams.companyId)});
   vm.roles = Roles.getRolesForUser(Meteor.userId(), $stateParams.companyId);
 
 }

@@ -144,21 +144,8 @@
                   ng-model="vm.company.selected"
                   ng-options="option.name for option in vm.company.options track by option._id"></select>
         </li>
-        <!-- <p style="color: grey">
-          {{vm.company.selected}}
-
-        </p> -->
-        <!-- Optionally, you can add icons to the links -->
-        <li class="active"><a href=""><i class="fa fa-percent"></i> <span>Владелец</span></a></li>
-        <li class="treeview">
-          <a href=""><i class="fa fa-compass"></i> <span>Администратор</span> <i class="fa fa-angle-left pull-right"></i></a>
-          <ul class="treeview-menu">
-            <li><a href="">Права пользователей</a></li>
-            <li><a href="">Журнал посещений</a></li>
-          </ul>
-        </li>
-        <li><a href=""><i class="fa fa-male"></i> <span>Тренер</span></a></li>
       </ul>
+      <div ui-view="fz-main-menu"></div>
     </section>
   </aside>
 

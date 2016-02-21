@@ -1,0 +1,53 @@
+<div class="box box-default">
+  <div class="box-header with-border">
+    <h3 class="box-title">{{vm.groupInCompany.name}}</h3>
+    <div class="box-tools pull-right">
+      <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i>
+      </button>
+      <div class="btn-group">
+        <button type="button" class="btn btn-box-tool dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+          <i class="fa fa-wrench"></i></button>
+        <ul class="dropdown-menu" role="menu">
+          <li><a class="danger" href="#">Удалить группу</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="box-body no-padding">
+    <div class="box-padding-top">
+      <label>Тренер</label>
+    </div>
+    <ul class="nav nav-pills nav-stacked">
+      <li>
+        <a href="#">{{vm.groupInCompany.trainer.name}}</a>
+        <!-- TODO trainerDetails when click on trainer -->
+      </li>
+    </ul>
+    <div class="box-padding-center">
+      <label>Ученики</label>
+    </div>
+    <ul class="nav nav-pills nav-stacked">
+      <li ng-repeat="owner in vm.people">
+        <a ng-click="s1.showDetails=true" href="#">{{owner.name}}</a>
+        <div class="with-margin" ng-if="s1.showDetails && vm.delete">
+          <div class="box box-internal" >
+            <div class="box-header with-border">
+              <h3 class="box-title">Детали</h3>
+              <div class="box-tools pull-right">
+                <button class="btn btn-box-tool" ng-click="s1.showDetails=false">
+                  <i class="fa fa-times"></i>
+                </button>
+              </div>
+            </div>
+            <div class="box-body">
+              <button class="btn btn-block btn-danger" ng-click="vm.removeUserFromCompany(owner._id)">Удалить из списка</button>
+            </div>
+          </div>
+        </div>
+      </li>
+    </ul>
+  </div>
+  <div class="box-footer" ng-if="vm.add">
+    <!-- addClient -->
+  </div>
+</div>

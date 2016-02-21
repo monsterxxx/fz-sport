@@ -1,6 +1,6 @@
 Meteor.startup(function () {
 
-  Roles.removeUsersFromRoles('595TJFjchFatrF4TL', ['owner', 'admin'], 'vh3qq6xBZ6KdZX4Lz');
+  // Roles.removeUsersFromRoles('595TJFjchFatrF4TL', ['owner', 'admin'], 'vh3qq6xBZ6KdZX4Lz');
 
   // Roles.setUserRoles('595TJFjchFatrF4TL', ['owner'], 'vh3qq6xBZ6KdZX4Lz');
 

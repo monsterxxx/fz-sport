@@ -57,7 +57,7 @@ function Ctrl($scope, $reactive, $state) {
       } else {
         vm.showError = false;
         console.log(res);
-        $state.go('company', {companyId: res._id});
+        $state.go('company.structure', {companyId: res._id});
       }
     });
   }

@@ -26,7 +26,9 @@ Meteor.methods({
 
     company.createdAt = new Date();
     company.creator = user._id;
-    company.members = [user._id];
+    company.members = [{
+      _id: user._id
+    }];
     company.owners = [{
       _id: user._id,
       name: user.profile.fname,
@@ -53,9 +55,9 @@ Meteor.methods({
 
     let user = Meteor.user();
 
-    if (! user.companies || ! Roles.userIsInRole(this.userId, 'owner', id)) {
+    if (! user.companies || ! _.any(user.companies, (company) => company._id === id && company.creator)) {
       throw new Meteor.Error('no-permission',
-        'Only owner of the company can delete it');
+        'Only creator of the company can delete it');
     }
 
     if (! this.isSimulation) {
@@ -73,7 +75,9 @@ Meteor.methods({
       modifier.$unset['roles.' + id] = '';
 
       company.members.forEach((member) => {
-        Users.update( {_id: member}, modifier );
+        if (member._id) {
+          Users.update( {_id: member._id}, modifier );
+        }
       });
 
       Companies.remove( {_id: id} );

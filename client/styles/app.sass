@@ -114,7 +114,7 @@ body.sidebar-collapse
 
 @keyframes highlight-borders
   60%
-    border-color: red
+    border-color: #d73925
 
 .highlight-borders
   animation-name: highlight-borders
@@ -129,3 +129,35 @@ body.sidebar-collapse
 
 .user-panel > .info > a
   cursor: default
+
+.box-internal
+  margin-top: 10px
+  margin-bottom: 10px
+  border-top-width: 1px
+  .box-header
+    text-align: center
+  .box-title
+    font-size: 14px
+  .box-body
+    font-size: 12px
+.with-margin
+  margin: 10px
+.title-for-footer
+  margin-top: 10px
+  margin-bottom: 0
+  font-size: 15px
+  font-weight: bold
+  color: #444
+.box-padding
+  &-top
+    padding: 10px 10px 0 10px
+  &-center
+    padding: 0 10px
+  &-bottom
+    padding: 0 10px 10px 10px
+
+.dropdown-menu > li > a.danger
+  color: #dd4b39
+  &:hover
+    color: #fff
+    background-color: #dd4b39

@@ -60,58 +60,63 @@ angular.module('fz', [
     selected: {_id: 0}
   };
 
-  // Meteor.autorun(function () {
-  //   let user = Meteor.user();
-  //   if (!user) { return; }
+  Meteor.autorun(function () {
+    let user = Meteor.user();
+    if (!user) { return; }
 
     //list of available company options
-  //   console.log('autorun');
-  //   vm.company.options = user.companies || [];
-  //   if (! user.companies
-  //       || ! _.any(user.companies, (company) => company.creator)) {
-  //     vm.company.options.push({
-  //       _id: 1,
-  //       name: 'Открыть свою компанию'
-  //     });
-  //   }
-  //   console.log(vm.company.selected);
-  // });
-  //
-  // $scope.$on('$stateChangeSuccess', function (e, toState, toParams, fromState, fromParams) {
-  //   if (! Meteor.user()) { return; }
-  //   console.log('changeSuccess');
-  //   console.log(toParams.companyId);
-  //   if (toParams.companyId) {
-  //     if (toParams.companyId !== vm.company.selected._id) {
-  //       vm.company.selected = {_id: toParams.companyId};
-  //       selectedFromParams = true;
-  //     }
-  //   } else if (toState.name === 'create-company'){
-  //     vm.company.selected = {_id: 1};
-  //   } else {
-  //     vm.company.selected = {_id: 0};
-  //   }
-  //
-  //   console.log(vm.company.selected);
-  // });
-  //
-  // $scope.$watch(() => vm.company.selected, function (newV, oldV) {
-  //   // if (newV._id === 0) {return;}
-  //   console.log('watch');
-  //   console.log(newV);
-  //   console.log(oldV);
-  //   if (newV._id !== oldV._id) {
-  //     console.log('watch '+ newV._id, oldV._id, selectedFromParams);
-  //     if (selectedFromParams) {
-  //       selectedFromParams = false;
-  //     } else {
-  //       $state.go('company', {companyId: newV._id});
-  //     }
-  //   }
-  //   if (newV._id === 1) {
-  //     $state.go('create-company');
-  //   }
-  // });
+    // console.log('autorun');
+    vm.company.options = user.companies || [];
+    if (! _.any(user.companies, (company) => company.creator)) {
+      vm.company.options.push({
+        _id: 1,
+        name: 'Открыть свою компанию'
+      });
+    }
+    // console.log(vm.company.selected);
+    // console.log(vm.company.options);
+  });
+
+  $scope.$on('$stateChangeSuccess', function (e, toState, toParams, fromState, fromParams) {
+    if (! Meteor.user()) { return; }
+    // console.log('changeSuccess');
+    // console.log(toParams.companyId);
+    if (toParams.companyId) {
+      if (toParams.companyId !== vm.company.selected._id) {
+        vm.company.selected = {_id: toParams.companyId};
+        selectedFromParams = true;
+      }
+    } else if (toState.name === 'create-company'){
+      vm.company.selected = {_id: 1};
+    } else {
+      vm.company.selected = {_id: 0};
+    }
+
+    // console.log(vm.company.selected);
+  });
+
+  $scope.$watch(() => vm.company.selected, function (newV, oldV) {
+    // if (newV._id === 0) {return;}
+    // console.log('watch');
+    // console.log(newV);
+    // console.log(oldV);
+    if (newV._id !== oldV._id) {
+      // console.log('watch '+ newV._id, oldV._id, selectedFromParams);
+      if (selectedFromParams) {
+        selectedFromParams = false;
+      } else {
+        let roles = Roles.getRolesForUser(Meteor.userId(), newV._id);
+        let role = (roles.indexOf('owner') !== -1) ? 'owner'
+          : (roles.indexOf('admin') !== -1) ? 'admin'
+            : (roles.indexOf('trainer') !== -1) ? 'trainer'
+              : 'client';
+        $state.go('company.'+ role, {companyId: newV._id});
+      }
+    }
+    if (newV._id === 1) {
+      $state.go('create-company');
+    }
+  });
 
 })
 .run(function ($state, $rootScope) {

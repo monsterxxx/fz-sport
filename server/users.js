@@ -33,3 +33,17 @@ Users.before.insert(function (userId, user) {
 //   // modifier.$set = modifier.$set || {};
 //   // modifier.$set.modifiedAt = Date.now()ж
 // });
+
+Meteor.publish('searchUsers', function(email) {
+  check(email, Match.Where(function (email) {
+    check(email, String);
+    var trimmed = String(email).trim();
+    return /@/i.test(trimmed);
+  }));
+
+  // console.log('match passed');
+
+  if (!this.userId) {return this.ready(); }
+
+  return Users.find({'emails.address' : email}, {fields: {'username': 1, 'emails': 1, 'profile': 1}});
+});

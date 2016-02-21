@@ -52,7 +52,7 @@ angular
 
 function Ctrl() {
   let vm = this;
-  vm.companies = (Meteor.user().companies) ? true : false;
+  vm.companies = Meteor.user().companies;
   vm.showCompanySelect = showCompanySelect;
 
   let screenSizes = { sm: 768 };

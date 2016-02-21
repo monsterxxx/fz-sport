@@ -24,14 +24,8 @@ Ctrl.$inject = ['$scope', '$reactive', '$stateParams', '$state'];
 function Ctrl($scope, $reactive, $stateParams, $state) {
   var vm = this;
   $reactive(vm).attach($scope);
-  vm.showDelete = false;
-  vm.helpers({ company: () => {
-    let company = Companies.findOne($stateParams.companyId);
-    if (company) {
-      vm.showDelete = _.any(company.owners, (owner) => owner._id === Meteor.userId());
-    }
-    return company;
-  } });
+  vm.helpers({ company: () => Companies.findOne($stateParams.companyId) });
+  vm.showDelete = _.any(Meteor.user().companies, (company) => company._id === $stateParams.companyId && company.creator);
   vm.deleteCompany = deleteCompany;
 
   function deleteCompany() {

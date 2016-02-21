@@ -1,0 +1,23 @@
+<button class="btn btn-block btn-success" ng-show="!vm.showBox" ng-click="vm.showBox=true">Создать группу</button>
+<div class="box box-success" ng-if="vm.showBox">
+  <div class="box-header with-border">
+    <h3 class="box-title">Новая группа</h3>
+    <div class="box-tools pull-right">
+      <button class="btn btn-box-tool" ng-click="vm.showBox=false">
+        <i class="fa fa-times"></i>
+      </button>
+    </div>
+  </div>
+  <div class="box-body">
+    <label>Название</label>
+    <input class="form-control" ng-model="vm.group.name" placeholder="Введите название группы">
+    <h2 class="title-for-footer" ng-show="vm.group.name">Выберите тренера</h2>
+  </div>
+  <div class="box-footer no-padding" ng-show="vm.group.name">
+    <ul class="nav nav-pills nav-stacked">
+      <li ng-repeat="trainer in vm.company.trainers">
+        <a ng-click="vm.createGroup(trainer._id)" href="#">{{trainer.name}}</a>
+      </li>
+    </ul>
+  </div>
+</div>

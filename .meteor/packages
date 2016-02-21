@@ -13,7 +13,7 @@ tracker                 # Meteor's client-side reactive programming library
 
 es5-shim                # ECMAScript 5 compatibility for older browsers.
 
-angular@1.3.2
+angular
 fourseven:scss@=3.2.0
 seba:minifiers-autoprefixer
 accounts-password

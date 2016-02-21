@@ -102,5 +102,142 @@ Meteor.methods({
       Users.update({_id: userId}, {$set: {role: role}});
     }
 
+  },
+
+  addUserToCompany: function (userId, companyId, role) {
+    check(userId, String);
+    check(companyId, String);
+    check(role, Match.Where(function (role) {
+      check(role, String);
+      return ['owner', 'admin', 'trainer'].indexOf(role) !== -1;
+    }));
+
+    if (! this.userId) {
+      throw new Meteor.Error('not-logged-in',
+        'Must be logged in to add users to company.');
+    }
+
+    if ((role === 'owner' || role === 'admin') && ! Roles.userIsInRole(this.userId, 'owner', companyId)
+        || role === 'trainer' && ! Roles.userIsInRole(this.userId, ['owner', 'admin'], companyId)) {
+      throw new Meteor.Error('no-permission',
+        'Not enough privileges to add '+ role +' to the company.');
+    }
+
+    let userToAdd = Users.findOne(userId);
+
+    if (! userToAdd) {
+      throw new Meteor.Error('not-found',
+        'User to add to company is not found in db.');
+    }
+
+    if (Roles.userIsInRole(userId, role, companyId)) {
+      throw new Meteor.Error('duplicate',
+        'User is '+ role +' of this company already.');
+    }
+
+    let modifier = { $push: {} };
+
+    let roles = Roles.getRolesForUser(userId, companyId);
+
+    if (! roles.length) {
+      modifier.$push.members = { _id: userId };
+    }
+
+    modifier.$push[role + 's'] = {
+      _id: userId,
+      name: userToAdd.profile.fname,
+      user: true
+    };
+
+    Companies.update({_id: companyId}, modifier);
+
+    Roles.addUsersToRoles(userId, role, companyId);
+
+    if (! roles.length) {
+
+      let company = Companies.findOne(companyId);
+
+      Users.update({_id: userId}, {
+        $push: {
+          companies: {
+            _id: companyId,
+            name: company.name
+          }
+        }
+      });
+    }
+
+  },
+
+  removeUserFromCompany: function (userId, companyId, role) {
+    check(userId, String);
+    check(companyId, String);
+    check(role, Match.Where(function (role) {
+      check(role, String);
+      return ['owner', 'admin', 'trainer'].indexOf(role) !== -1;
+    }));
+
+    //authorize
+    if (! this.userId) {
+      throw new Meteor.Error('not-logged-in',
+        'Must be logged in to remove users from company.');
+    }
+
+    if ((role === 'owner' || role === 'admin') && ! Roles.userIsInRole(this.userId, 'owner', companyId)
+        || role === 'trainer' && ! Roles.userIsInRole(this.userId, ['owner', 'admin'], companyId)) {
+      throw new Meteor.Error('no-permission',
+        'Not enough privileges to remove '+ role +' to the company.');
+    }
+
+    if (Meteor.isServer) {
+      //check data
+      let userToDelete = Users.findOne(userId);
+
+      if (! userToDelete) {
+        throw new Meteor.Error('not-found',
+        'User to remove from company is not found in db.');
+      }
+
+      let companyInUser = _.detect(userToDelete.companies, (company) => company._id === companyId);
+
+      if (! companyInUser) {
+        throw new Meteor.Error('wrong-request',
+        'User is not in this company.');
+      }
+
+      if (companyInUser.creator) {
+        throw new Meteor.Error('not-allowed',
+        'Cannot delete the creator of this company.');
+      }
+
+      Roles.removeUsersFromRoles(userId, role, companyId);
+
+      let roles = Roles.getRolesForUser(userId, companyId);
+
+      let modifier = { $pull: {} };
+
+      modifier.$pull[role+'s'] = { _id: userId };
+
+      //if user has no other roles in the company, we also delete membership
+      if (! roles.length) {
+        modifier.$pull.members = {
+          _id: userId
+        };
+      }
+
+      Companies.update({_id: companyId}, modifier);
+
+      //if user has no other roles in the company, we delete company from this user
+      if (! roles.length) {
+        Users.update({_id: userId}, {
+          $pull: {
+            companies: {
+              _id: companyId
+            }
+          }
+        });
+      }
+
+    }
   }
 });

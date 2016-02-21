@@ -1,0 +1,21 @@
+<!-- <ul class="sidebar-menu">
+  <li class="active"><a href=""><i class="fa fa-percent"></i> <span>Владелец</span></a></li>
+  <li class="treeview">
+    <a href=""><i class="fa fa-compass"></i> <span>Администратор</span> <i class="fa fa-angle-left pull-right"></i></a>
+    <ul class="treeview-menu">
+      <li><a href="">Права пользователей</a></li>
+      <li><a href="">Журнал посещений</a></li>
+    </ul>
+  </li>
+  <li><a href=""><i class="fa fa-male"></i> <span>Тренер</span></a></li>
+</ul> -->
+<ul class="sidebar-menu" ng-if="vm.role === 'owner'">
+  <li ui-sref-active="active"><a ui-sref="company.owner" href=""><i class="fa fa-percent"></i><span>Владелец</span></a></li>
+  <li ui-sref-active="active"><a ui-sref="company.structure" href=""><i class="fa fa-sitemap"></i><span>Структура компании</span></a></li>
+  <li ui-sref-active="active"><a ui-sref="company.groups.composition" href=""><i class="fa fa-users"></i><span>Группы</span></a></li>
+</ul>
+<ul class="sidebar-menu" ng-if="vm.role === 'admin'">
+  <li ui-sref-active="active"><a ui-sref="company.owner" href=""><i class="fa fa-compass"></i><span>Администратор</span></a></li>
+  <li ui-sref-active="active"><a ui-sref="company.structure" href=""><i class="fa fa-sitemap"></i><span>Структура компании</span></a></li>
+  <li ui-sref-active="active"><a ui-sref="company.groups.composition" href=""><i class="fa fa-users"></i><span>Группы</span></a></li>
+</ul>

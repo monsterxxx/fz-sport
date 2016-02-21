@@ -2,18 +2,18 @@
 'use strict';
 
 angular
-  .module('fz.company.owner', [])
+  .module('fz.company.admin', [])
   .config(function ($stateProvider) {
     $stateProvider
-      .state('company.owner', {
-        url: '/owner',
-        templateUrl: 'client/views/company/owner/owner.html',
+      .state('company.admin', {
+        url: '/admin',
+        templateUrl: 'client/views/company/admin/admin.html',
         resolve: {
           auth: ($q, $stateParams) => {
-            console.log('auth owner');
+            console.log('auth admin');
             var deferred = $q.defer();
 
-            if (! Roles.userIsInRole(Meteor.userId(), 'owner', $stateParams.companyId)) {
+            if (! Roles.userIsInRole(Meteor.userId(), 'admin', $stateParams.companyId)) {
               deferred.reject({name: 'home'});
               return deferred.promise;
             }
