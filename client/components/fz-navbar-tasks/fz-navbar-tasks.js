@@ -32,7 +32,7 @@ function Ctrl($scope, $reactive) {
     e.preventDefault();
     e.stopPropagation();
     let sidebar = $('.control-sidebar');
-    let $input = sidebar.find('.control-fname');
+    let $input = sidebar.find('#control-sidebar-fname');
 
     //If the sidebar is not open
     if (!sidebar.hasClass('control-sidebar-open')

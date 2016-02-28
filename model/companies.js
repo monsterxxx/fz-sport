@@ -31,8 +31,7 @@ Meteor.methods({
     }];
     company.owners = [{
       _id: user._id,
-      name: user.profile.fname,
-      user: true
+      name: user.profile.fname
     }];
     company.server = true;
 
@@ -82,6 +81,35 @@ Meteor.methods({
 
       Companies.remove( {_id: id} );
     }
+  },
+
+  searchMembers: function (companyId, text) {
+    check(companyId, String);
+    check(text, String);
+
+    if (! Roles.userIsInRole(this.userId, ['owner', 'admin', 'trainer'], companyId)) {
+      throw new Meteor.Error('no-permission',
+        'Must be owner, admin or trainer to search members of this company.');
+    }
+
+    //if email provided, search user in db by email
+    if (/@/.test(text)) {
+      // console.log('email');
+      // const result = Users.find({ 'emails.address': text }, {fields: {profile: 1} }).fetch();
+      // console.log(JSON.stringify(result , null, 2));
+      return Users.find({ 'emails.address': text }, {fields: {profile: 1} }).fetch();
+    }
+
+    const company = Companies.findOne(companyId, { fields: {members: 1}});
+    let regex = new RegExp(text, 'i');
+
+    let results = _.map(
+      _.select(company.members, (member) => regex.test(member.name)),
+      (member) => { return {_id: member._id, name: member.name}; }
+    );
+
+    return results;
+
   }
 
 });

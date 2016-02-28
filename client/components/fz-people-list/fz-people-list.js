@@ -3,6 +3,7 @@
 
 angular
   .module('fz.people-list', [
+    'fz.user-add',
   ])
   .directive('fzPeopleList', Dir);
 
@@ -47,11 +48,11 @@ function Ctrl($scope, $reactive, $stateParams) {
   vm.removeUserFromCompany = removeUserFromCompany;
 
   function addUserToCompany(userId) {
-    Meteor.call('addUserToCompany', userId, vm.company._id, vm.peopleRole);
+    Meteor.call('addUserToCompany', vm.company._id, userId, vm.peopleRole);
   }
 
   function removeUserFromCompany(userId) {
-    Meteor.call('removeUserFromCompany', userId, vm.company._id, vm.peopleRole);
+    Meteor.call('removeUserFromCompany', vm.company._id, userId, vm.peopleRole);
   }
 
 }

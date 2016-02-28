@@ -4,8 +4,8 @@
   </div>
   <div class="box-body no-padding">
     <ul class="nav nav-pills nav-stacked">
-      <li ng-repeat="owner in vm.people">
-        <a ng-click="s1.showDetails=true" href="#">{{owner.name}}</a>
+      <li ng-repeat="person in vm.people">
+        <a ng-click="s1.showDetails=true" href="#">{{person.name}}</a>
         <div class="with-margin" ng-if="s1.showDetails && vm.delete">
           <div class="box box-internal" >
             <div class="box-header with-border">
@@ -17,7 +17,7 @@
               </div>
             </div>
             <div class="box-body">
-              <button class="btn btn-block btn-danger" ng-click="vm.removeUserFromCompany(owner._id)">Удалить из списка</button>
+              <button class="btn btn-block btn-danger" ng-click="vm.removeUserFromCompany(person._id)">Удалить из списка</button>
             </div>
           </div>
         </div>
@@ -25,6 +25,6 @@
     </ul>
   </div>
   <div class="box-footer" ng-if="vm.add">
-    <fz-user-add add="vm.addUserToCompany(userId)"></fz-user-add>
+    <fz-user-add add="vm.addUserToCompany(memberId)"></fz-user-add>
   </div>
 </div>

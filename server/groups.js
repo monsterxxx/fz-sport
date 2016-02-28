@@ -1,16 +1,25 @@
 Meteor.publish('groups', function (companyId) {
-  if (!this.userId) { return this.ready(); }
-
   if (! Roles.userIsInRole(this.userId, ['owner', 'admin', 'trainer'], companyId)) { return this.ready(); }
 
-  let company = Companies.findOne(companyId);
+  let company = Companies.findOne(companyId, { fields: {groups: 1} });
 
   if (Roles.userIsInRole(this.userId, ['owner', 'admin'], companyId)) {
-    let groups = _.map(company.groups, function (group) { return group._id; });
-    return Groups.find( { _id: { $in: groups } } );
+    return Groups.find( { 'company._id': companyId } );
   }
 
 });
+
+// Meteor.publish('groups', function (companyId) {
+//   if (! Roles.userIsInRole(this.userId, ['owner', 'admin', 'trainer'], companyId)) { return this.ready(); }
+//
+//   let company = Companies.findOne(companyId, { fields: {groups: 1} });
+//
+//   if (Roles.userIsInRole(this.userId, ['owner', 'admin'], companyId)) {
+//     let groups = _.map(company.groups, group => group._id);
+//     return Groups.find( { _id: { $in: groups } } );
+//   }
+//
+// });
 
 // Groups.before.find(function (userId, selector, options) {
 //   let user = Users.findOne(userId);

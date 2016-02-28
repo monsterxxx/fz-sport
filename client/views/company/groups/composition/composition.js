@@ -13,10 +13,10 @@ angular
         templateUrl: 'client/views/company/groups/composition/composition.html',
         resolve: {
           auth: ($q, $stateParams) => {
-            console.log('auth composition');
-            var deferred = $q.defer();
-            deferred.resolve();
-            return deferred.promise;
+            // console.log('auth composition');
+            // var deferred = $q.defer();
+            // deferred.resolve();
+            // return deferred.promise;
           }
         },
         controller: Ctrl,

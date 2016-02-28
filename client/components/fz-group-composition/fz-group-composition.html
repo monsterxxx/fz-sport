@@ -1,14 +1,14 @@
-<div class="box box-default">
+<div class="box box-default collapsed-box">
   <div class="box-header with-border">
     <h3 class="box-title">{{vm.groupInCompany.name}}</h3>
     <div class="box-tools pull-right">
-      <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i>
-      </button>
-      <div class="btn-group">
+      <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i></button>
+      <div class="btn-group" ng-if="vm.userIsOwner">
         <button type="button" class="btn btn-box-tool dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-          <i class="fa fa-wrench"></i></button>
+          <i class="fa fa-wrench"></i>
+        </button>
         <ul class="dropdown-menu" role="menu">
-          <li><a class="danger" href="#">Удалить группу</a></li>
+          <li><a class="danger" ng-click="vm.deleteGroup()" href="#">Удалить группу</a></li>
         </ul>
       </div>
     </div>
@@ -27,8 +27,8 @@
       <label>Ученики</label>
     </div>
     <ul class="nav nav-pills nav-stacked">
-      <li ng-repeat="owner in vm.people">
-        <a ng-click="s1.showDetails=true" href="#">{{owner.name}}</a>
+      <li ng-repeat="member in vm.group.clients">
+        <a ng-click="s1.showDetails=true" href="#">{{member.name}}</a>
         <div class="with-margin" ng-if="s1.showDetails && vm.delete">
           <div class="box box-internal" >
             <div class="box-header with-border">
@@ -40,7 +40,7 @@
               </div>
             </div>
             <div class="box-body">
-              <button class="btn btn-block btn-danger" ng-click="vm.removeUserFromCompany(owner._id)">Удалить из списка</button>
+              <button class="btn btn-block btn-danger" ng-click="vm.removeMemberFromGroup(member._id)">Удалить из списка</button>
             </div>
           </div>
         </div>
@@ -48,6 +48,6 @@
     </ul>
   </div>
   <div class="box-footer" ng-if="vm.add">
-    <!-- addClient -->
+    <fz-user-add member="true" add="vm.addMemberToGroup(memberId, surrogate)"></fz-user-add>
   </div>
 </div>

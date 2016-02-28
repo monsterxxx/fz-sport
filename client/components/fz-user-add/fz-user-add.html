@@ -12,12 +12,13 @@
     </div>
   </div>
   <div class="box-body">
-    <!-- <div class="form-group" ng-if="::vm.nonUsers">
+    <div class="form-group" ng-if="::vm.member">
       <div class="radio">
         <label>
-          <input type="radio" ng-model="vm.addAs" name="optionsRadios" value="common" checked="">
-          Добавить обычную запись
-          <i class="fa fa-info-circle" data-toggle="tooltip" data-original-title="Найти или добавить новую запись о человеке. Такая запись в компании управляется другими пользователями. Позже её можно привязать к пользователю fz-Sport."></i>
+          <input type="radio" ng-model="vm.addAs" name="optionsRadios" value="member" checked="">
+          Поиск по компании или создание непривязанной записи
+          <i class="fa fa-info-circle" data-toggle="tooltip" data-original-title="Непривязанная запись
+          в компании управляется другими пользователями. Позже её можно привязать к пользователю fz-Sport."></i>
         </label>
       </div>
       <div class="radio">
@@ -26,18 +27,40 @@
           Добавить пользователя fz-Sport
         </label>
       </div>
-    </div> -->
-    <div>
-      <label for="email">Email</label>
-      <input type="email" class="form-control" ng-model="vm.newPerson.email" ng-model-options="{ debounce: 300 }"
-        ng-change="vm.emailChanged()" name="email" placeholder="Введите email пользователя">
     </div>
-    <h2 ng-show="vm.foundUsers.length" class="title-for-footer">Выберите для добавления</h2>
+    <form name="vm.form" ng-if="vm.addAs==='member'" ng-submit="vm.addWithSurrogate()" novalidate>
+      <div class="form-group" ng-class="{'has-error': vm.form.name.$invalid && vm.form.name.$dirty}">
+        <label>Полное имя</label>
+        <input type="text" class="form-control" ng-model="vm.newPerson.name" ng-model-options="{ debounce: 300 }"
+          ng-change="vm.nameChanged()" name="name" placeholder="Введите ФИО"
+          ng-pattern="vm.namePattern" required>
+        <p class="help-block text-red" ng-show="vm.form.name.$invalid && vm.form.name.$dirty">
+          Два или три слова с заглавной буквы
+        </p>
+      </div>
+      <button type="submit" class="btn btn-block btn-default"
+        ng-show="vm.addAs==='member' && !vm.foundMembers.length === 0">
+        Добавить новую запись
+      </button>
+    </form>
+    <div ng-if="vm.addAs==='user'">
+      <label>Email</label>
+      <input type="email" class="form-control" ng-model="vm.newPerson.email" ng-model-options="{ debounce: 300 }"
+        ng-change="vm.emailChanged()" placeholder="Введите email пользователя">
+    </div>
+    <h2 class="title-for-footer"
+        ng-show="vm.foundUsers.length && vm.addAs==='user' || vm.foundMembers.length && vm.addAs==='member'">
+        Выберите для добавления</h2>
   </div>
   <div class="box-footer no-padding">
-    <ul class="nav nav-pills nav-stacked">
+    <ul class="nav nav-pills nav-stacked" ng-if="vm.addAs==='user'">
       <li ng-repeat="user in vm.foundUsers">
-        <a ng-click="vm.add({userId:user._id}); vm.newPerson.email=''; vm.showBox=false" href="#">{{user.profile.fname}}</a>
+        <a ng-click="vm.add({memberId:user._id}); vm.newPerson.email=''; vm.showBox=false" href="#">{{user.profile.fname}}</a>
+      </li>
+    </ul>
+    <ul class="nav nav-pills nav-stacked" ng-if="vm.addAs==='member'">
+      <li ng-repeat="member in vm.foundMembers">
+        <a ng-click="vm.add({memberId:member._id}); vm.newPerson.name=''; vm.showBox=false" href="#">{{member.name}}</a>
       </li>
     </ul>
   </div>

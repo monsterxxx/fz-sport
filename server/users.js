@@ -1,3 +1,20 @@
+createSurrogate = function (surrogate) {
+  const userId = Accounts.createUser({
+    username: 'surrogate',
+    email: 'surrogate@fz',
+    password: '56cd76fb6ec6dd4179ed1b27',
+    profile: surrogate
+  });
+  Meteor.users.update( {_id: userId}, {
+    $set: {
+      username: userId,
+      'emails.0.address': userId + '@fz',
+      tasks: []
+    }
+  });
+  return userId;
+};
+
 Users._ensureIndex({
   'profile.fname': 'text'
 });
@@ -35,13 +52,11 @@ Users.before.insert(function (userId, user) {
 // });
 
 Meteor.publish('searchUsers', function(email) {
+  console.log('searchUsers> email: '+email);
   check(email, Match.Where(function (email) {
     check(email, String);
-    var trimmed = String(email).trim();
-    return /@/i.test(trimmed);
+    return /@/i.test(email);
   }));
-
-  // console.log('match passed');
 
   if (!this.userId) {return this.ready(); }
 

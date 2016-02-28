@@ -26,21 +26,33 @@ Ctrl.$inject = ['$scope', '$reactive', '$stateParams'];
 function Ctrl($scope, $reactive, $stateParams) {
   var vm = this;
   $reactive(vm).attach($scope);
-  vm.helpers({ group: () => Groups.findOne(vm.groupInCompany._id) });
+  let groupId = vm.groupInCompany._id;
+  let companyId = $stateParams.companyId;
+  vm.helpers({ group: () => Groups.findOne(groupId) });
+  vm.userIsOwner = Roles.userIsInRole(Meteor.userId(), 'owner', companyId);
+  vm.deleteGroup = deleteGroup;
+
+  function deleteGroup() {
+    Meteor.call('deleteGroup', groupId);
+  }
 
   vm.add = (typeof vm.add === 'undefined') ? true : vm.add;
   vm.delete = (typeof vm.delete === 'undefined') ? true : vm.delete;
-  vm.addAs = (!vm.nonUsers) ? 'user' : 'common';
 
-  vm.addUserToCompany = addUserToCompany;
-  vm.removeUserFromCompany = removeUserFromCompany;
+  vm.addMemberToGroup = addMemberToGroup;
+  vm.removeMemberFromGroup = removeMemberFromGroup;
 
-  function addUserToCompany() {
-    Meteor.call('addUserToCompany', vm.foundUsers[0]._id, vm.company._id, vm.peopleRole);
+  function addMemberToGroup(memberId, surrogate) {
+    let args = [groupId, memberId];
+    if (surrogate) {
+      args.push(surrogate);
+    }
+    Meteor.apply('addMemberToGroup', args);
+    vm.foundMembers = [];
   }
 
-  function removeUserFromCompany(_id) {
-    Meteor.call('removeUserFromCompany', _id, vm.company._id, vm.peopleRole);
+  function removeMemberFromGroup(memberId) {
+    Meteor.call('removeMemberFromGroup', groupId, memberId);
   }
 
 }
