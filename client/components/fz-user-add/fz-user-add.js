@@ -38,6 +38,7 @@ function Ctrl($scope, $reactive, $stateParams) {
       }
     }
   });
+  //little change
   vm.addAs = (typeof vm.member === 'undefined') ? 'user' : 'member';
   vm.namePattern = '';
   vm.nameChanged = nameChanged;
