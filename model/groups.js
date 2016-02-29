@@ -76,11 +76,8 @@ Meteor.methods({
   deleteGroup: function (groupId) {
     check(groupId, String);
 
-    //AUTH
-    if (! this.userId) { throw new Meteor.Error('not-logged-in'); }
-
     //CHECK GROUP EXISTANCE
-    const group = Groups.findOne(groupId);
+    const group = Groups.findOne(groupId, {fields: {company: 1, trainer: 1, clients: 1}});
 
     if (! group) {
       throw new Meteor.Error('not-found',
@@ -97,7 +94,8 @@ Meteor.methods({
     }
 
     //REMOVE CLIENTS FROM GROUP
-    group.clients.forEach(client => Meteor.call('removeMemberFromGroup', groupId, client._id));
+    if (group.clients)
+      group.clients.forEach(client => Meteor.call('removeMemberFromGroup', groupId, client._id));
 
     //DELETE GROUP
     Groups.remove({_id: groupId});

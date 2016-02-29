@@ -1,4 +1,4 @@
-<a class="btn btn-block btn-default" href="" ng-click="vm.showBox=true">
+<a class="btn btn-block btn-default" href="" ng-click="vm.showBox=!vm.showBox; vm.searchQuery=''">
   <i class="fa fa-user-plus"></i>
   Добавить
 </a>
@@ -6,62 +6,67 @@
   <div class="box-header with-border">
     <h3 class="box-title">Добавить запись</h3>
     <div class="box-tools pull-right">
-      <button class="btn btn-box-tool" ng-click="vm.showBox=false; vm.newPerson.email=''">
+      <button class="btn btn-box-tool" ng-click="vm.showBox=false; vm.searchQuery=''">
         <i class="fa fa-times"></i>
       </button>
     </div>
   </div>
-  <div class="box-body">
-    <div class="form-group" ng-if="::vm.member">
-      <div class="radio">
-        <label>
-          <input type="radio" ng-model="vm.addAs" name="optionsRadios" value="member" checked="">
-          Поиск по компании или создание непривязанной записи
-          <i class="fa fa-info-circle" data-toggle="tooltip" data-original-title="Непривязанная запись
-          в компании управляется другими пользователями. Позже её можно привязать к пользователю fz-Sport."></i>
-        </label>
-      </div>
-      <div class="radio">
-        <label>
-          <input type="radio" ng-model="vm.addAs" name="optionsRadios" value="user">
-          Добавить пользователя fz-Sport
-        </label>
-      </div>
-    </div>
-    <form name="vm.form" ng-if="vm.addAs==='member'" ng-submit="vm.addWithSurrogate()" novalidate>
-      <div class="form-group" ng-class="{'has-error': vm.form.name.$invalid && vm.form.name.$dirty}">
-        <label>Полное имя</label>
-        <input type="text" class="form-control" ng-model="vm.newPerson.name" ng-model-options="{ debounce: 300 }"
-          ng-change="vm.nameChanged()" name="name" placeholder="Введите ФИО"
-          ng-pattern="vm.namePattern" required>
-        <p class="help-block text-red" ng-show="vm.form.name.$invalid && vm.form.name.$dirty">
-          Два или три слова с заглавной буквы
+  <div class="box-body no-padding">
+    <div class="box-padding-top">
+      <input type="text" class="form-control" ng-model="vm.searchQuery" ng-model-options="{ debounce: 300 }"
+      ng-change="vm.search()" name="search" placeholder="напр. fz@sport.ru">
+      <p class="help-block" ng-if="::!vm.surrogate" ng-show="!vm.searchQuery">
+        Поиск пользователей в компании по имени или в fz-Sport по точному email
+      </p>
+      <p class="help-block" ng-if="::vm.surrogate" ng-show="!vm.searchQuery">
+        Поиск в компании по имени или в fz-Sport по точному email
+      </p>
+      <div class="box-padding-top">
+        <p class="help-block text-center" ng-show="vm.searchQuery && !vm.foundMembers.length">
+          Нет результатов
         </p>
       </div>
-      <button type="submit" class="btn btn-block btn-default"
-        ng-show="vm.addAs==='member' && !vm.foundMembers.length === 0">
-        Добавить новую запись
-      </button>
-    </form>
-    <div ng-if="vm.addAs==='user'">
-      <label>Email</label>
-      <input type="email" class="form-control" ng-model="vm.newPerson.email" ng-model-options="{ debounce: 300 }"
-        ng-change="vm.emailChanged()" placeholder="Введите email пользователя">
+      <div ng-show="vm.foundMembers.length">
+        <h2 class="title-for-footer">
+          Выберите для добавления
+        </h2>
+        <hr>
+      </div>
     </div>
-    <h2 class="title-for-footer"
-        ng-show="vm.foundUsers.length && vm.addAs==='user' || vm.foundMembers.length && vm.addAs==='member'">
-        Выберите для добавления</h2>
-  </div>
-  <div class="box-footer no-padding">
-    <ul class="nav nav-pills nav-stacked" ng-if="vm.addAs==='user'">
-      <li ng-repeat="user in vm.foundUsers">
-        <a ng-click="vm.add({memberId:user._id}); vm.newPerson.email=''; vm.showBox=false" href="#">{{user.profile.fname}}</a>
-      </li>
-    </ul>
-    <ul class="nav nav-pills nav-stacked" ng-if="vm.addAs==='member'">
+    <ul class="nav nav-pills nav-stacked">
       <li ng-repeat="member in vm.foundMembers">
-        <a ng-click="vm.add({memberId:member._id}); vm.newPerson.name=''; vm.showBox=false" href="#">{{member.name}}</a>
+        <a ng-click="vm.add({memberId:member._id}); vm.searchQuery=''; vm.foundMembers=[]; vm.showBox=false" href="#">{{member.name}}</a>
       </li>
     </ul>
+  </div>
+  <div class="box-footer" ng-if="::vm.surrogate">
+    <button class="btn btn-block btn-default" ng-click="vm.showNew=!vm.showNew; vm.surrogate={}">Создать новую запись</button>
+    <div class="box box-internal box-primary" ng-if="vm.showNew">
+      <div class="box-header with-border">
+        <h3 class="box-title">Создать запись</h3>
+        <div class="box-tools pull-right">
+          <button class="btn btn-box-tool" ng-click="vm.showNew=false; vm.surrogate={}">
+            <i class="fa fa-times"></i>
+          </button>
+        </div>
+      </div>
+      <div class="box-body">
+        <form name="vm.form" ng-submit="vm.form.$valid && vm.addWithSurrogate()" novalidate>
+          <div class="form-group" ng-class="{'has-error': vm.form.name.$invalid && vm.form.name.$dirty}">
+            <label>Полное имя</label>
+            <input type="text" class="form-control" ng-model="vm.surrogate.fname"
+              name="name" placeholder="введите ФИО"
+              ng-pattern="/^([А-Я][а-я]+ ){1,2}([А-Я][а-я]+){1}$/" required>
+            <p class="help-block text-red" ng-show="vm.form.name.$invalid && vm.form.name.$dirty">
+              Два или три слова с заглавной буквы
+            </p>
+          </div>
+          <button type="submit" class="btn btn-block btn-primary"
+            ng-disabled="vm.form.name.$invalid">
+            Создать
+          </button>
+        </form>
+      </div>
+    </div>
   </div>
 </div>

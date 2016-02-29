@@ -124,9 +124,9 @@ Meteor.methods({
     //TODO auth when client is added by trainer - it should be client from his group in this company
 
     //CHECK USER
-    const userToAdd = Users.findOne(userId, { fields: {profile: 1} });
+    const member = Users.findOne(userId, { fields: {profile: 1, surrogate: 1} });
 
-    if (! userToAdd) {
+    if (! member) {
       throw new Meteor.Error('not-found',
         'User to add to company is not found in db.');
     }
@@ -145,14 +145,15 @@ Meteor.methods({
     if (! roles.length) {
       modifier.$push.members = {
         _id: userId,
-        name: userToAdd.profile.fname
+        name: member.profile.fname
       };
+      if (member.surrogate) modifier.$push.members.surrogate = true;
     }
 
     //insert member into corresponding role group
     modifier.$push[role + 's'] = {
       _id: userId,
-      name: userToAdd.profile.fname
+      name: member.profile.fname
     };
 
     Companies.update({_id: companyId}, modifier);
@@ -187,8 +188,6 @@ Meteor.methods({
     }));
 
     //AUTH
-    if (! this.userId) { throw new Meteor.Error('not-logged-in'); }
-
     if (! Roles.userIsInRole(this.userId, ['owner'], companyId)) {
       throw new Meteor.Error('no-permission',
         'Only owner can remove member from company.');
@@ -202,7 +201,7 @@ Meteor.methods({
     }
 
     if (Meteor.isServer) {
-      let member = Users.findOne(memberId, { fields: {companies: 1, trainer: 1, client: 1} });
+      const member = Users.findOne(memberId, { fields: {companies: 1, trainer: 1, client: 1, surrogate:1} });
 
       //CHECK OWNER
       if (role === 'owner' && _.any(member.companies, (company) => company._id === companyId && company.creator)) {
@@ -213,24 +212,11 @@ Meteor.methods({
       //FORFEIT PERMISSION
       Roles.removeUsersFromRoles(memberId, role, companyId);
       //get roles to check if member still has some other roles in the company
-      let roles = Roles.getRolesForUser(memberId, companyId);
-
-      //REMOVE FROM COMPANY
-      let modifier = { $pull: {} };
-      modifier.$pull[role+'s'] = { _id: memberId };
-
-      //if user has no other roles in the company, we also delete membership
-      if (! roles.length) {
-        modifier.$pull.members = {
-          _id: memberId
-        };
-      }
-
-      Companies.update({_id: companyId}, modifier);
+      const roles = Roles.getRolesForUser(memberId, companyId);
 
       //TRAINER
       //remove all trainer groups in the company
-      if (role === 'trainer') {
+      if (role === 'trainer' && member.trainer.groups) {
         member.trainer.groups.forEach(group => {
           if (group.company._id === companyId) {
             Meteor.call('deleteGroup', group._id);
@@ -248,16 +234,34 @@ Meteor.methods({
         });
       }
 
-      //UPDATE USER
-      //if user has no other roles in the company, we delete company from this user
+      //REMOVE FROM COMPANY
+      let modifier = { $pull: {} };
+      modifier.$pull[role+'s'] = { _id: memberId };
+
+      //if user has no other roles in the company, we also delete membership
       if (! roles.length) {
-        Users.update({_id: memberId}, {
-          $pull: {
-            companies: {
-              _id: companyId
+        modifier.$pull.members = {
+          _id: memberId
+        };
+      }
+
+      Companies.update({_id: companyId}, modifier);
+
+      //REMOVE COMPANY FROM MEMBER
+      //if user has no other roles in the company
+      if (! roles.length) {
+        //and is a surrogate user, delete him completely
+        if (member.surrogate)
+          Users.remove({_id: memberId});
+        //otherwise remove the company from his companies
+        else
+          Users.update({_id: memberId}, {
+            $pull: {
+              companies: {
+                _id: companyId
+              }
             }
-          }
-        });
+          });
       }
     }
   }

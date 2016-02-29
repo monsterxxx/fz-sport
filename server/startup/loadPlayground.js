@@ -1,12 +1,17 @@
+let clearDb = function () {
+  Users.remove({});
+  Companies.remove({});
+  Groups.remove({});
+  Clients.remove({});
+  Leads.remove({});
+  Attendance.remove({});
+}
+
 Meteor.startup(function () {
-  var loadPlayground = false;
+  const loadPlayground = false;
   if (loadPlayground) {
 
-    Users.remove({});
-    Groups.remove({});
-    Clients.remove({});
-    Leads.remove({});
-    Attendance.remove({});
+    clearDb();
 
     let userId;
     userId = Accounts.createUser({
@@ -33,4 +38,49 @@ Meteor.startup(function () {
     Meteor.users.update( {username: 'trainer2'}, {$pull: { tasks: { id: 1 } } } );
   }
 
+  const loadPlayground2 = false;
+  if (loadPlayground2) {
+    Meteor.call('loadPlayground2')
+  }
 });
+
+Meteor.methods({
+  loadPlayground2: function () {
+    if (this.connection === null) {
+      clearDb();
+
+      let ids = {};
+      const rusLetters = ['Эй Йо Кмон', 'Би Йо Вотсап', 'Си Синьор Мескузи', 'Ди Ри Жабль'];
+      ['a', 'b', 'c', 'd'].forEach((letter, i) => {
+        let id = Accounts.createUser({
+          username: letter+letter+letter,
+          email: letter + '@' + letter,
+          password: '123456',
+          profile: { fname: rusLetters[i] }
+        });
+        ids[letter] = id;
+      });
+      Meteor.users.update( {}, {$pull: { tasks: { id: 1 } } } );
+      // this.setUserId(ids['a']);
+      // Meteor.loginWithPassword('a', '123456');
+      // Meteor.call('createCompany', {name: 'ХоудиКо'});
+      // const company = Companies.findOne();
+      // const companyId = company._id;
+      // Meteor.call('addUserToCompany', companyId, ids['b'], 'admin');
+      // Meteor.call('addUserToCompany', companyId, ids['c'], 'trainer');
+      // Meteor.call('createGroup', {
+      //   company: {
+      //     _id: companyId
+      //   },
+      //   trainer: {
+      //     _id: ids['c']
+      //   },
+      //   name: 'Дрим Тим Долфиндс'
+      // });
+      // const group = Groups.findOne();
+      // const groupId = group._id;
+      // Meteor.call('addMemberToGroup', groupId, ids['d']);
+      // this.setUserId(null);
+    }
+  }
+})

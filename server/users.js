@@ -9,7 +9,8 @@ createSurrogate = function (surrogate) {
     $set: {
       username: userId,
       'emails.0.address': userId + '@fz',
-      tasks: []
+      tasks: [],
+      surrogate: true
     }
   });
   return userId;
