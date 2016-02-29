@@ -5,12 +5,9 @@ Meteor.methods({
       name: String
     });
 
-    if (! this.userId) {
-      throw new Meteor.Error('not-logged-in',
-        'Must be logged in to create new company.');
-    }
+    if (! this.userId) throw new Meteor.Error('not-logged-in');
 
-    let user = Meteor.user();
+    const user = Meteor.user();
 
     if (user.companies && _.any(user.companies, (company) => company.creator)) {
       throw new Meteor.Error('company-limit-exceed',
@@ -27,7 +24,8 @@ Meteor.methods({
     company.createdAt = new Date();
     company.creator = user._id;
     company.members = [{
-      _id: user._id
+      _id: user._id,
+      name: user.profile.fname
     }];
     company.owners = [{
       _id: user._id,
@@ -83,9 +81,10 @@ Meteor.methods({
     }
   },
 
-  searchMembers: function (companyId, text) {
+  searchMembers: function (companyId, text, surrogate) {
     check(companyId, String);
     check(text, String);
+    check(surrogate, Boolean);
 
     if (! Roles.userIsInRole(this.userId, ['owner', 'admin', 'trainer'], companyId)) {
       throw new Meteor.Error('no-permission',
@@ -94,22 +93,24 @@ Meteor.methods({
 
     //if email provided, search user in db by email
     if (/@/.test(text)) {
-      // console.log('email');
-      // const result = Users.find({ 'emails.address': text }, {fields: {profile: 1} }).fetch();
-      // console.log(JSON.stringify(result , null, 2));
-      return Users.find({ 'emails.address': text }, {fields: {profile: 1} }).fetch();
+      let member = Users.find({ 'emails.address': text }, {fields: {profile: 1} }).fetch();
+      if (member.length) return [{_id: member[0]._id, name: member[0].profile.fname}];
+      else return [];
     }
 
-    const company = Companies.findOne(companyId, { fields: {members: 1}});
-    let regex = new RegExp(text, 'i');
+    if (text) {
+      const company = Companies.findOne(companyId, { fields: {members: 1}});
+      let regex = new RegExp(text, 'i');
 
-    let results = _.map(
-      _.select(company.members, (member) => regex.test(member.name)),
-      (member) => { return {_id: member._id, name: member.name}; }
-    );
+      let results = _.map(
+        _.select(company.members, member => regex.test(member.name) && (surrogate || !member.surrogate)),
+        (member) => { return {_id: member._id, name: member.name}; }
+      );
 
-    return results;
-
+      return results;
+    } else {
+      return [];
+    }
   }
 
 });
