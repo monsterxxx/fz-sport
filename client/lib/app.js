@@ -4,13 +4,15 @@
 angular.module('fz', [
   //CORE
   'angular-meteor',
-  // 'angular-meteor.auth',
+  'angular-meteor.auth',
   'ui.router',
   //AUTHORIZATION
   'accounts.ui',
   //navbar
   'fz.navbar-notifications',
   'fz.navbar-tasks',
+  //MAIN SIDEBAR
+  'fz.company-select',
   //CONTROL SIDEBAR
   'fz.control-sidebar',
   'fz.control-sidebar-profile',
@@ -52,74 +54,12 @@ angular.module('fz', [
 
   $urlRouterProvider.otherwise('/');
 })
-.controller('MainCtrl', function ($state, $stateParams, $scope) {
-  console.log('MainCtrl');
-  let vm = this;
-  var selectedFromParams;
-  vm.company = {
-    selected: {_id: 0}
-  };
 
-  Meteor.autorun(function () {
-    let user = Meteor.user();
-    if (!user) { return; }
-
-    //list of available company options
-    // console.log('autorun');
-    vm.company.options = user.companies || [];
-    if (! _.any(user.companies, (company) => company.creator)) {
-      vm.company.options.push({
-        _id: 1,
-        name: 'Открыть свою компанию'
-      });
-    }
-    // console.log(vm.company.selected);
-    // console.log(vm.company.options);
-  });
-
-  $scope.$on('$stateChangeSuccess', function (e, toState, toParams, fromState, fromParams) {
-    if (! Meteor.user()) { return; }
-    // console.log('changeSuccess');
-    // console.log(toParams.companyId);
-    if (toParams.companyId) {
-      if (toParams.companyId !== vm.company.selected._id) {
-        vm.company.selected = {_id: toParams.companyId};
-        selectedFromParams = true;
-      }
-    } else if (toState.name === 'create-company'){
-      vm.company.selected = {_id: 1};
-    } else {
-      vm.company.selected = {_id: 0};
-    }
-
-    // console.log(vm.company.selected);
-  });
-
-  $scope.$watch(() => vm.company.selected, function (newV, oldV) {
-    // if (newV._id === 0) {return;}
-    // console.log('watch');
-    // console.log(newV);
-    // console.log(oldV);
-    if (newV._id !== oldV._id) {
-      // console.log('watch '+ newV._id, oldV._id, selectedFromParams);
-      if (selectedFromParams) {
-        selectedFromParams = false;
-      } else {
-        let roles = Roles.getRolesForUser(Meteor.userId(), newV._id);
-        let role = (roles.indexOf('owner') !== -1) ? 'owner'
-          : (roles.indexOf('admin') !== -1) ? 'admin'
-            : (roles.indexOf('trainer') !== -1) ? 'trainer'
-              : 'client';
-        $state.go('company.'+ role, {companyId: newV._id});
-      }
-    }
-    if (newV._id === 1) {
-      $state.go('create-company');
-    }
-  });
-
+.controller('MainCtrl', function ($state) {
+  // console.log('MainCtrl');
 })
-.run(function ($state, $rootScope) {
+
+.run(function ($state, $stateParams, $rootScope) {
   // console.log('RUN');
 
   //catch states' auth resolves rejects and redirect according to passed error state object
@@ -133,19 +73,21 @@ angular.module('fz', [
   });
 
   //when user loggs in or out go to home state
+  //TODO move USER PANEL logic to separate component
   Meteor.autorun(function () {
-    $rootScope.user = Meteor.user();
+    let user = Meteor.user();
+    $rootScope.user = user;
     console.log('logged in user: ');
-    console.log($rootScope.user);
-    if ($rootScope.user) {
-      if ($rootScope.user.profile.fname)
+    console.log(user);
+    if (user) {
+      if (user.profile.fname)
       {
-        var nameArr = $rootScope.user.profile.fname.split(' ');
-        $rootScope.user.sname = nameArr[1] + ' ' + nameArr[0];
-        $rootScope.user.initials = nameArr[1][0] + nameArr[0][0];
+        var nameArr = user.profile.fname.split(' ');
+        user.sname = nameArr[1] + ' ' + nameArr[0];
+        user.initials = nameArr[1][0] + nameArr[0][0];
       }
       else {
-        $rootScope.user.initials = '?';
+        user.initials = '?';
       }
 
       if ($state.current.name === 'index') {
@@ -161,13 +103,14 @@ angular.module('fz', [
   });
 
   $rootScope.$state = $state;
+  $rootScope.$stateParams = $stateParams;
   $rootScope.$on('$stateChangeStart', function (e, toState, toParams, fromState, fromParams) {
     console.log('$stateChangeStart > '+ toState.name, toParams, fromState.name, fromParams);
   });
   $rootScope.$on('$stateChangeSuccess', function (e, toState, toParams, fromState, fromParams) {
     console.log('$stateChangeSuccess > '+ toState.name, toParams, fromState.name, fromParams);
-    // console.log('toState > '+ toState.name);
   });
+
   //DEBUGS
   $rootScope.log = function (message) {
     console.log(message);
@@ -175,6 +118,7 @@ angular.module('fz', [
   $rootScope.json = function (obj) {
     return angular.toJson(obj, 2);
   };
+  
   // let start = +new Date();
   // let end =  +new Date();
   // console.log('exec time: '+ start, end, start - end);

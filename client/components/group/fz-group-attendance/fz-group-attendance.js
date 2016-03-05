@@ -2,17 +2,17 @@
 // 'use strict';
 
 angular
-  .module('fz.group-composition', [
+  .module('fz.group-attendance', [
   ])
-  .directive('fzGroupComposition', Dir);
+  .directive('fzGroupAttendance', Dir);
 
 function Dir() {
   var directive = {
     restrict: 'E',
-    templateUrl: 'client/components/fz-group-composition/fz-group-composition.html',
+    templateUrl: 'client/components/group/fz-group-attendance/fz-group-attendance.html',
     scope: {},
     bindToController: {
-      groupInCompany: '=group',
+      groupId: '@',
     },
     controller: Ctrl,
     controllerAs: 'vm'

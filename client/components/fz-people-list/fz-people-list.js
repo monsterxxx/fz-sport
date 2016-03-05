@@ -10,15 +10,14 @@ angular
 function Dir() {
   var directive = {
     restrict: 'E',
-    templateUrl: 'client/components/fz-people-list/fz-people-list.html',
+    templateUrl: elem => `client/components/${elem.prop('tagName').toLowerCase()}/${elem.prop('tagName').toLowerCase()}.html`,
     scope: {},
     bindToController: {
       peopleRole: '@',
       listTitle: '@',
       listStyle: '@',
-      nonUsers: '=',
-      add: '=',
-      delete: '='
+      add: '<?',
+      delete: '<?'
     },
     controller: Ctrl,
     controllerAs: 'vm'
@@ -34,15 +33,13 @@ function Ctrl($scope, $reactive, $stateParams) {
   $reactive(vm).attach($scope);
   vm.helpers({
     company: () => {
-      let company = Companies.findOne($stateParams.companyId);
+      let company = Companies.findOne($stateParams.companyId, {fields: {owners: 1, admins: 1, trainers: 1, clients: 1}});
       if (company) {
         vm.people = company[vm.peopleRole + 's'];
       }
       return company;
     },
   });
-  vm.add = (typeof vm.add === 'undefined') ? true : vm.add;
-  vm.delete = (typeof vm.delete === 'undefined') ? true : vm.delete;
 
   vm.addUserToCompany = addUserToCompany;
   vm.removeUserFromCompany = removeUserFromCompany;

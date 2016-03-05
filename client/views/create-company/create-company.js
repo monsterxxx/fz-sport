@@ -34,14 +34,16 @@ angular
       });
   });
 
-Ctrl.$inject = ['$scope', '$reactive', '$state'];
+Ctrl.$inject = ['$scope', '$rootScope', '$reactive', '$state'];
 
-function Ctrl($scope, $reactive, $state) {
+function Ctrl($scope, $rootScope, $reactive, $state) {
   var vm = this;
   $reactive(vm).attach($scope);
   vm.helpers({ tasks: () => Meteor.user().tasks });
   vm.hasTask = hasTask;
   vm.createCompany = createCompany;
+  //select "Create new company" option in fz-company-select
+  $rootScope.company = {_id: 1};
 
   function hasTask(id) {
     return _.any(vm.tasks, (task) => task.id === 1);
@@ -50,13 +52,11 @@ function Ctrl($scope, $reactive, $state) {
   function createCompany() {
     Meteor.call('createCompany', vm.company, (err, res) => {
       if (err) {
-        console.log(err.error);
         if (err.error === 'company-name-busy') {
           vm.showError = true;
         }
       } else {
         vm.showError = false;
-        console.log(res);
         $state.go('company.structure', {companyId: res._id});
       }
     });

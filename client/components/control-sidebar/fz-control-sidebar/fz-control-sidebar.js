@@ -10,7 +10,7 @@ function Dir() {
   var directive = {
     restrict: 'E',
     replace: true,
-    templateUrl: 'client/components/fz-control-sidebar/fz-control-sidebar.html',
+    templateUrl: 'client/components/control-sidebar/fz-control-sidebar/fz-control-sidebar.html',
     scope: {},
     bindToController: {},
     controller: Ctrl,

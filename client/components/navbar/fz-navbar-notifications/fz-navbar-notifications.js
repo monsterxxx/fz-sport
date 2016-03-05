@@ -9,7 +9,7 @@ angular
 function Dir() {
   var directive = {
     restrict: 'E',
-    templateUrl: 'client/components/fz-navbar-notifications/fz-navbar-notifications.html',
+    templateUrl: 'client/components/navbar/fz-navbar-notifications/fz-navbar-notifications.html',
     replace: true,
     scope: {},
     bindToController: {},

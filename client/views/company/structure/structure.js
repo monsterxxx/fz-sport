@@ -15,6 +15,7 @@ angular
             console.log('auth structure');
             var deferred = $q.defer();
 
+            //allow only owners and admins
             if (Roles.userIsInRole(Meteor.userId(), ['owner', 'admin'], $stateParams.companyId)) {
               deferred.resolve();
             } else {
@@ -34,9 +35,10 @@ Ctrl.$inject = ['$scope', '$reactive', '$stateParams'];
 function Ctrl($scope, $reactive, $stateParams) {
   // console.log('structure Ctrl');
   var vm = this;
-  // $reactive(vm).attach($scope);
-  vm.roles = Roles.getRolesForUser(Meteor.userId(), $stateParams.companyId);
+  $reactive(vm).attach($scope);
+  vm.helpers({ roles: () => Roles.getRolesForUser(Meteor.userId(), $stateParams.companyId) });
 
+  vm.role = 'owner';
 }
 
 })();

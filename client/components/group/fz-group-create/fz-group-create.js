@@ -9,7 +9,7 @@ angular
 function Dir() {
   var directive = {
     restrict: 'E',
-    templateUrl: 'client/components/fz-group-create/fz-group-create.html',
+    templateUrl: 'client/components/group/fz-group-create/fz-group-create.html',
     scope: {},
     bindToController: {},
     controller: Ctrl,
@@ -22,15 +22,25 @@ function Dir() {
 Ctrl.$inject = ['$scope', '$reactive', '$stateParams'];
 
 function Ctrl($scope, $reactive, $stateParams) {
-  var vm = this;
+  let vm = this;
   $reactive(vm).attach($scope);
-  vm.helpers({company: () => Companies.findOne($stateParams.companyId)});
+  const companyId = $stateParams.companyId;
+  if (Roles.userIsInRole(Meteor.userId(), ['owner', 'admin'], companyId)) {
+    vm.helpers({company: () => {
+      const company = Companies.findOne(companyId);
+      if (company) {vm.trainers = company.trainers;}
+      return company;
+    }});
+  } else if (Roles.userIsInRole(Meteor.userId(), 'trainer', companyId)) {
+    vm.trainers = [{_id: Meteor.userId(), name: Meteor.user().profile.fname}];
+  }
+  // vm.helpers({company: () => Companies.findOne($stateParams.companyId)});
   vm.createGroup = createGroup;
 
   function createGroup(trainerId) {
     let group = {
       company: {
-        _id: vm.company._id
+        _id: companyId
       },
       trainer: {
         _id: trainerId

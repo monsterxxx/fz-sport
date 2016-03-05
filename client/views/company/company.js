@@ -8,6 +8,7 @@ angular
     //ROUTES
     'fz.company.owner',
     'fz.company.admin',
+    'fz.company.trainer',
     'fz.company.structure',
     'fz.groups'
   ])
@@ -27,6 +28,7 @@ angular
 
             let roles = Roles.getRolesForUser(Meteor.userId(), $stateParams.companyId);
 
+            //allow anyone who has a role in the company
             if (! roles.length) {
               deferred.reject({name: 'home'});
             } else {
@@ -51,11 +53,15 @@ angular
       });
   });
 
-Ctrl.$inject = ['$stateParams'];
+Ctrl.$inject = ['$scope', '$rootScope', '$reactive', '$stateParams'];
 
-function Ctrl($stateParams) {
+function Ctrl($scope, $rootScope, $reactive, $stateParams) {
   // console.log('company ctrl');
-  Meteor.subscribe('company', $stateParams.companyId);
+  $reactive(this).attach($scope);
+  let companyId = $stateParams.companyId;
+  this.subscribe('company', () => [companyId]);
+  //select company for company-select on the main-sidebar
+  $rootScope.company = {_id: companyId};
 }
 
 // AuthResolve.$inject = ['$q', '$state', '$timeout', '$stateParams'];

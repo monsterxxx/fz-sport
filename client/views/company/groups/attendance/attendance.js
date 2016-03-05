@@ -2,18 +2,16 @@
 'use strict';
 
 angular
-  .module('fz.groups.composition', [
-    'fz.group-create',
-    'fz.group-composition',
+  .module('fz.groups.attendance', [
   ])
   .config(function ($stateProvider) {
     $stateProvider
-      .state('company.groups.composition', {
-        url: '/composition',
-        templateUrl: 'client/views/company/groups/composition/composition.html',
+      .state('company.groups.attendance', {
+        url: '/attendance',
+        templateUrl: 'client/views/company/groups/attendance/attendance.html',
         resolve: {
           auth: ($q, $stateParams) => {
-            // console.log('auth composition');
+            // console.log('auth attendance');
             // var deferred = $q.defer();
             // deferred.resolve();
             // return deferred.promise;
@@ -27,11 +25,12 @@ angular
 Ctrl.$inject = ['$scope', '$reactive', '$stateParams'];
 
 function Ctrl($scope, $reactive, $stateParams) {
-  // console.log('composition Ctrl');
+  // console.log('structure Ctrl');
   var vm = this;
   $reactive(vm).attach($scope);
-  const companyId = $stateParams.companyId;
-  vm.helpers({groups: () => Groups.find( {'company._id': companyId} )});
+  vm.helpers({company: () => Companies.findOne($stateParams.companyId)});
+  vm.roles = Roles.getRolesForUser(Meteor.userId(), $stateParams.companyId);
+
 }
 
 })();

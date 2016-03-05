@@ -7,14 +7,16 @@
 
   <section class="content">
     <div class="row">
-      <fz-people-list class="col-md-3 col-sm-6 col-xs-12" ng-if="vm.roles.indexOf('owner') !== -1"
-        people-role="owner" list-title="Владельцы" list-style="warning" non-users="false">
+      <fz-people-list class="col-md-3 col-sm-6 col-xs-12" ng-if="vm.roles.indexOf('owner') !== -1" list-style="warning"
+        people-role="owner" list-title="Владельцы">
       </fz-people-list>
-      <fz-people-list class="col-md-3 col-sm-6 col-xs-12"
-        people-role="admin" list-title="Администраторы" list-style="danger" add="vm.roles.indexOf('owner') !== -1" delete="vm.roles.indexOf('owner') !== -1" non-users="false">
+      <fz-people-list class="col-md-3 col-sm-6 col-xs-12" list-style="danger"
+                      people-role="admin" list-title="Администраторы"
+                      add="vm.roles.indexOf('owner') !== -1"
+                      delete="vm.roles.indexOf('owner') !== -1">
       </fz-people-list>
-      <fz-people-list class="col-md-3 col-sm-6 col-xs-12"
-        people-role="trainer" list-title="Тренеры" list-style="success" non-users="false">
+      <fz-people-list class="col-md-3 col-sm-6 col-xs-12" list-style="success"
+        people-role="trainer" list-title="Тренеры">
       </fz-people-list>
     </div>
   </section>

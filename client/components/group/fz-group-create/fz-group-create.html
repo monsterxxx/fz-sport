@@ -15,8 +15,8 @@
   </div>
   <div class="box-footer no-padding" ng-show="vm.group.name">
     <ul class="nav nav-pills nav-stacked">
-      <li ng-repeat="trainer in vm.company.trainers">
-        <a ng-click="vm.createGroup(trainer._id); ; vm.group.name=''" href="#">{{trainer.name}}</a>
+      <li ng-repeat="trainer in vm.trainers">
+        <a ng-click="vm.createGroup(trainer._id); vm.group.name=''" href="#">{{trainer.name}}</a>
       </li>
     </ul>
   </div>

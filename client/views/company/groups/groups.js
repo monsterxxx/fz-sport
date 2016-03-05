@@ -6,6 +6,7 @@ angular
 
     //ROUTES
     'fz.groups.composition',
+    'fz.groups.attendance',
     // 'fz.groups.admin',
 
   ])
@@ -15,10 +16,10 @@ angular
         url: '/groups',
         resolve: {
           auth: ($q, $stateParams) => {
-            console.log('auth company');
-            var deferred = $q.defer();
-            deferred.resolve();
-            return deferred.promise;
+            // console.log('auth groups');
+            // var deferred = $q.defer();
+            // deferred.resolve();
+            // return deferred.promise;
           }
         },
         template: '<div ui-view></div>',

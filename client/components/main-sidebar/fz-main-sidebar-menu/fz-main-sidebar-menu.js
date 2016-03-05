@@ -9,7 +9,7 @@ angular
 function Dir() {
   var directive = {
     restrict: 'E',
-    templateUrl: 'client/components/fz-main-sidebar-menu/fz-main-sidebar-menu.html',
+    templateUrl: 'client/components/main-sidebar/fz-main-sidebar-menu/fz-main-sidebar-menu.html',
     // replace: true,
     scope: {},
     bindToController: {},
@@ -26,10 +26,11 @@ function Ctrl($scope, $reactive, $stateParams) {
   var vm = this;
   $reactive(vm).attach($scope);
   vm.roles = Roles.getRolesForUser(Meteor.userId(), $stateParams.companyId);
-  vm.role = (vm.roles.indexOf('owner') !== -1) ? 'owner'
-    : (vm.roles.indexOf('admin') !== -1) ? 'admin'
-      : (vm.roles.indexOf('trainer') !== -1) ? 'trainer'
-        : 'client';
+  for (let role of ['owner', 'admin', 'trainer']) {
+    if (vm.roles.indexOf(role) !== -1) {
+      vm.role = role;
+    }
+  }
 }
 
 })();

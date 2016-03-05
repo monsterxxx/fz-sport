@@ -1,25 +1,21 @@
+Groups._ensureIndex({
+  'company._id': 1
+});
+Groups._ensureIndex({
+  'trainer._id': 1
+});
+
 Meteor.publish('groups', function (companyId) {
   if (! Roles.userIsInRole(this.userId, ['owner', 'admin', 'trainer'], companyId)) { return this.ready(); }
-
-  let company = Companies.findOne(companyId, { fields: {groups: 1} });
 
   if (Roles.userIsInRole(this.userId, ['owner', 'admin'], companyId)) {
     return Groups.find( { 'company._id': companyId } );
   }
 
+  if (Roles.userIsInRole(this.userId, 'trainer', companyId)) {
+    return Groups.find( { 'trainer._id': this.userId } );
+  }
 });
-
-// Meteor.publish('groups', function (companyId) {
-//   if (! Roles.userIsInRole(this.userId, ['owner', 'admin', 'trainer'], companyId)) { return this.ready(); }
-//
-//   let company = Companies.findOne(companyId, { fields: {groups: 1} });
-//
-//   if (Roles.userIsInRole(this.userId, ['owner', 'admin'], companyId)) {
-//     let groups = _.map(company.groups, group => group._id);
-//     return Groups.find( { _id: { $in: groups } } );
-//   }
-//
-// });
 
 // Groups.before.find(function (userId, selector, options) {
 //   let user = Users.findOne(userId);

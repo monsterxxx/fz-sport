@@ -115,7 +115,7 @@
   </header>
 
   <!-- MAIN SIDEBAR -->
-  <aside class="main-sidebar" ng-show="$root.user">
+  <aside class="main-sidebar" ng-if="$root.user">
     <!-- sidebar: style can be found in sidebar.less -->
     <section class="sidebar">
 
@@ -136,15 +136,10 @@
 
       <!-- SEARCH FORM (Removed) -->
 
+      <!-- COMPANY SELECT -->
+      <fz-company-select></fz-company-select>
+
       <!-- MAIN MENU -->
-      <ul class="sidebar-menu">
-        <li class="header" style="padding-right:15px">КОМПАНИЯ
-          <select class="form-control sidebar-input"
-                  id="company-select"
-                  ng-model="vm.company.selected"
-                  ng-options="option.name for option in vm.company.options track by option._id"></select>
-        </li>
-      </ul>
       <div ui-view="fz-main-menu"></div>
     </section>
   </aside>
@@ -166,6 +161,7 @@
     <!-- Default to the left -->
     <!-- <strong>Copyright &copy; 2016 <a href="">MoT</a>.</strong> All rights reserved. -->
     <!-- {{$root.json($state.current)}} -->
+    {{$root.company}}
   </footer>
 
   <!-- CONTROL SIDEBAR -->

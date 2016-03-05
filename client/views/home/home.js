@@ -9,7 +9,7 @@ angular
         url: '/home',
         templateUrl: 'client/views/home/home.html',
         resolve: {
-          auth: ($q, $state, $timeout) => {
+          auth: ($q, $state) => {
             console.log('auth home');
             var deferred = $q.defer();
 
@@ -22,7 +22,6 @@ angular
 
             if (singleCompanyState) {
               deferred.reject(singleCompanyState);
-              console.log('rejected with state');
             }
             else {
               deferred.resolve();
@@ -32,14 +31,18 @@ angular
 
             function getSingleCompanyState() {
               let companies = Roles.getGroupsForUser(Meteor.userId());
+              //if user is a member of only one company, compose appropriate state object for redirect
               if (companies.length === 1) {
                 let roles = Roles.getRolesForUser(Meteor.userId(), companies[0]);
-                if (roles.indexOf('owner') !== -1) {
-                  let state ={
-                    name: 'company.owner',
-                    params: {companyId: companies[0]}
-                  };
-                  return state;
+                let state = {
+                  params: {companyId: companies[0]}
+                };
+                //find and return state name for the highest available role
+                for (let role of ['owner', 'admin', 'trainer']) {
+                  if (roles.indexOf(role) !== -1) {
+                    state.name = 'company.' + role;
+                    return state;
+                  }
                 }
               }
             }
@@ -53,14 +56,13 @@ angular
 function Ctrl() {
   let vm = this;
   vm.companies = Meteor.user().companies;
-  vm.showCompanySelect = showCompanySelect;
+  vm.blinkCompanySelect = blinkCompanySelect;
 
-  let screenSizes = { sm: 768 };
-
-  function showCompanySelect(e) {
+  function blinkCompanySelect(e) {
     e.preventDefault();
     e.stopPropagation();
 
+    let screenSizes = { sm: 768 };
     let $select = $('#company-select');
 
     //show main menu if it's hidden

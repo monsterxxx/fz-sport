@@ -9,7 +9,7 @@ angular
 function Dir() {
   var directive = {
     restrict: 'E',
-    templateUrl: 'client/components/fz-control-sidebar-profile/fz-control-sidebar-profile.html',
+    templateUrl: 'client/components/control-sidebar/fz-control-sidebar-profile/fz-control-sidebar-profile.html',
     scope: {},
     bindToController: {},
     controller: Ctrl,

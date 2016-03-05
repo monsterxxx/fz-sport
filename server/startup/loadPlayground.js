@@ -5,7 +5,7 @@ let clearDb = function () {
   Clients.remove({});
   Leads.remove({});
   Attendance.remove({});
-}
+};
 
 Meteor.startup(function () {
   const loadPlayground = false;
@@ -40,7 +40,7 @@ Meteor.startup(function () {
 
   const loadPlayground2 = false;
   if (loadPlayground2) {
-    Meteor.call('loadPlayground2')
+    Meteor.call('loadPlayground2');
   }
 });
 
@@ -60,7 +60,7 @@ Meteor.methods({
         });
         ids[letter] = id;
       });
-      Meteor.users.update( {}, {$pull: { tasks: { id: 1 } } } );
+      Meteor.users.update( {}, {$pull: { tasks: { id: 1 } } }, {multi: true} );
       // this.setUserId(ids['a']);
       // Meteor.loginWithPassword('a', '123456');
       // Meteor.call('createCompany', {name: 'ХоудиКо'});
@@ -83,4 +83,4 @@ Meteor.methods({
       // this.setUserId(null);
     }
   }
-})
+});
