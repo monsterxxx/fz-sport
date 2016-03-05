@@ -31,7 +31,6 @@ Meteor.methods({
       _id: user._id,
       name: user.profile.fname
     }];
-    company.server = true;
 
     let id = Companies.insert(company);
 
@@ -42,43 +41,58 @@ Meteor.methods({
     return {_id: id};
   },
 
-  deleteCompany: function (id) {
-    check(id, String);
-
-    if (! this.userId) {
-      throw new Meteor.Error('not-logged-in',
-        'Must be logged in to delete company.');
-    }
+  deleteCompany: function (companyId) {
+    check(companyId, String);
+    console.log('>deleteCompany');
+    //AUTH
+    if (! this.userId) { throw new Meteor.Error('not-logged-in'); }
 
     let user = Meteor.user();
 
-    if (! user.companies || ! _.any(user.companies, (company) => company._id === id && company.creator)) {
+    if (! _.any(user.companies, (company) => company._id === companyId && company.creator)) {
       throw new Meteor.Error('no-permission',
         'Only creator of the company can delete it');
     }
 
+    //CHECK
+    let company = Companies.findOne({_id: companyId}, {fields: {owners: 1, admins: 1, trainers: 1, clients: 1}});
+
+    if (!company) {
+      throw new Meteor.Error('not-found',
+      'No such company in db');
+    }
+
+    console.log('checked');
+    //DELETE ALL MEMBERS FROM COMPANY
+    //groups and clients will also be deleted automatically with trainers
     if (! this.isSimulation) {
-      let company = Companies.findOne({_id: id});
-
-      if (!company) {
-        throw new Meteor.Error('not-found',
-          'No such company in db');
-      }
-
-      let modifier = {
-        $pull: { companies: { _id: id } },
-        $unset: {}
-      };
-      modifier.$unset['roles.' + id] = '';
-
-      company.members.forEach((member) => {
-        if (member._id) {
-          Users.update( {_id: member._id}, modifier );
+      ['owner', 'admin', 'trainer'].forEach( role => {
+        if (company[role +'s']) {
+          company[role +'s'].forEach( member => {
+            //remove everyone except for the creator
+            if (role === 'owner' && member._id === this.userId) return;
+            Meteor.call('removeUserFromCompany', companyId, member._id, role);
+          });
         }
       });
 
-      Companies.remove( {_id: id} );
+      //DELETE COMPANY FROM CREATOR
+      Users.update({_id: this.userId}, {
+        $pull: {
+          companies: {
+            _id: companyId
+          }
+        }
+      });
+
+      //forfeit permission
+      Roles.removeUsersFromRoles(this.userId, 'owner', companyId);
+
+      //DELETE COMPANY
+      Companies.remove( {_id: companyId} );
     }
+
+    console.log('<deleteCompany');
   },
 
   searchMembers: function (companyId, text, surrogate) {

@@ -32,6 +32,7 @@ function Ctrl($scope, $reactive, $rootScope, $state) {
   }
 
   function goToSelected() {
+    if (! $rootScope.company) return;
     let companyId = $rootScope.company._id;
     if (companyId === 1) {
       $state.go('create-company');

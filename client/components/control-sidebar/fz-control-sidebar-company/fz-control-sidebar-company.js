@@ -32,6 +32,8 @@ function Ctrl($scope, $reactive, $stateParams, $state) {
     Meteor.call('deleteCompany', vm.company._id, (err, res) => {
       if (! err) {
         $state.go('home');
+      } else {
+        console.log(err);
       }
     });
   }

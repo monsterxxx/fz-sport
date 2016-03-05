@@ -180,6 +180,7 @@ Meteor.methods({
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   removeUserFromCompany: function (companyId, memberId, role) {
+    console.log('>removeUserFromCompany');
     check(companyId, String);
     check(memberId, String);
     check(role, Match.Where(function (role) {
@@ -192,7 +193,7 @@ Meteor.methods({
       throw new Meteor.Error('no-permission',
         'Only owner can remove member from company.');
     }
-
+    console.log('auth passed');
     //CHECK DATA
     //by checking role we also check existance of member and company
     if (! Roles.userIsInRole(memberId, role, companyId)) {
@@ -208,6 +209,7 @@ Meteor.methods({
         throw new Meteor.Error('not-allowed',
         'Cannot delete the creator of this company.');
       }
+      console.log('check passed');
 
       //FORFEIT PERMISSION
       Roles.removeUsersFromRoles(memberId, role, companyId);
@@ -264,5 +266,6 @@ Meteor.methods({
           });
       }
     }
+    console.log('<removeUserFromCompany');
   }
 });
