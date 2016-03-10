@@ -20,7 +20,7 @@
     <form name="form" ng-submit="vm.createCompany()" novalidate>
       <div class="box-body">
         <div class="form-group">
-          <label for="exampleInputEmail1">Название</label>
+          <label>Название</label>
           <input class="form-control"
                  type="text"
                  placeholder="Введите название Вашей компании"
@@ -30,6 +30,15 @@
             Компания с таким названием уже существует, попробуйте другое
           </p>
         </div>
+        <div class="form-group">
+          <label>Часовой пояс</label>
+          <i class="fa fa-info-circle text-muted" data-toggle="tooltip" data-original-title="Часовой пояс позволит Вам быть уверенными, что тренер отмечает посещения строго в день тренировки. Если Вашей зоны нет в списке, просто нажмите Сохранить"></i>
+          <select class="form-control"
+                  ng-model="vm.timezone"
+                  ng-options="(timezone.offset+' '+timezone.city) for timezone in vm.timezones track by timezone.offset"
+                  required>
+          </select>
+        </div>
       </div>
 
       <div class="box-footer">
@@ -37,4 +46,5 @@
       </div>
     </form>
   </div>
+  {{vm.company.timezone}}
 </section>

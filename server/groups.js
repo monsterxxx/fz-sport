@@ -6,7 +6,6 @@ Groups._ensureIndex({
 });
 
 Meteor.publish('groups', function (companyId) {
-  if (! Roles.userIsInRole(this.userId, ['owner', 'admin', 'trainer'], companyId)) { return this.ready(); }
 
   if (Roles.userIsInRole(this.userId, ['owner', 'admin'], companyId)) {
     return Groups.find( { 'company._id': companyId } );
@@ -15,6 +14,8 @@ Meteor.publish('groups', function (companyId) {
   if (Roles.userIsInRole(this.userId, 'trainer', companyId)) {
     return Groups.find( { 'trainer._id': this.userId } );
   }
+
+  return this.ready();
 });
 
 // Groups.before.find(function (userId, selector, options) {

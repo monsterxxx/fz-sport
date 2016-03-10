@@ -24,14 +24,13 @@ angular
       });
   });
 
-Ctrl.$inject = ['$scope', '$reactive', '$stateParams'];
+Ctrl.$inject = ['$scope', '$reactive'];
 
-function Ctrl($scope, $reactive, $stateParams) {
+function Ctrl($scope, $reactive) {
   // console.log('composition Ctrl');
-  var vm = this;
+  const vm = this;
   $reactive(vm).attach($scope);
-  const companyId = $stateParams.companyId;
-  vm.helpers({groups: () => Groups.find( {'company._id': companyId} )});
+  vm.helpers({ groups: () => Groups.find({}, {fields: {_id: 1}}) });
 }
 
 })();

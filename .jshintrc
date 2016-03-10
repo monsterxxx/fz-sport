@@ -56,6 +56,8 @@
 
     "globals": {
         "_": true,
+        "dateSvc": true,
+        "GroupDays": true,
         "createSurrogate": true,
         "check": true,
         "Match": true,

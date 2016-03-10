@@ -1,16 +1,8 @@
 <div class="box box-default collapsed-box">
   <div class="box-header with-border">
-    <h3 class="box-title">{{vm.groupInCompany.name}}</h3>
+    <h3 class="box-title">{{vm.groups[0].name}}</h3>
     <div class="box-tools pull-right">
       <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i></button>
-      <div class="btn-group" ng-if="vm.userIsOwner">
-        <button type="button" class="btn btn-box-tool dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-          <i class="fa fa-wrench"></i>
-        </button>
-        <ul class="dropdown-menu" role="menu">
-          <li><a class="danger" ng-click="vm.deleteGroup()" href="#">Удалить группу</a></li>
-        </ul>
-      </div>
     </div>
   </div>
   <div class="box-body no-padding">
@@ -19,35 +11,34 @@
     </div>
     <ul class="nav nav-pills nav-stacked">
       <li>
-        <a href="#">{{vm.groupInCompany.trainer.name}}</a>
-        <!-- TODO trainerDetails when click on trainer -->
+        <a href="#">{{vm.groups[0].trainer.name}}</a>
       </li>
     </ul>
     <div class="box-padding-center">
-      <label>Ученики</label>
+      <label>Посещения</label>
     </div>
     <ul class="nav nav-pills nav-stacked">
-      <li ng-repeat="member in vm.group.clients">
-        <a ng-click="s1.showDetails=true" href="#">{{member.name}}</a>
-        <div class="fz-margin" ng-if="s1.showDetails && vm.delete">
-          <div class="box box-internal" >
-            <div class="box-header with-border">
-              <h3 class="box-title">Детали</h3>
-              <div class="box-tools pull-right">
-                <button class="btn btn-box-tool" ng-click="s1.showDetails=false">
-                  <i class="fa fa-times"></i>
-                </button>
-              </div>
-            </div>
-            <div class="box-body">
-              <button class="btn btn-block btn-danger" ng-click="vm.removeMemberFromGroup(member._id)">Удалить из списка</button>
-            </div>
-          </div>
-        </div>
+      <li ng-repeat="client in vm.groups[0].clients track by client._id">
+        <a ng-click="client.came=!client.came" href="#">{{client.name}}
+          <!-- TODO fancy checkbox style -->
+          <span class="pull-right">
+            <i class="fa fa-lg"
+                ng-class="{'fa-check-square text-success': client.came,
+                           'fa-square text-grey': !client.came}"> </i>
+          </span>
+          <!-- <input type="checkbox" class="pull-right" ng-model="client.came"> -->
+        </a>
       </li>
     </ul>
   </div>
-  <div class="box-footer" ng-if="vm.add">
-    <fz-user-add surrogate="true" add="vm.addMemberToGroup(memberId, surrogate)"></fz-user-add>
+  <div class="box-footer">
+    <button class="btn btn-block btn-primary" ng-click="vm.submitAttendance()"><i class="fa fa-save"></i>Сохранить</button>
   </div>
+  <!-- TODO ability to add client to this particular training -->
+  <!-- <div class="box-footer" ng-if="vm.add">
+    <fz-user-add surrogate="true" add="vm.addMemberToGroup(clientId, surrogate)"></fz-user-add>
+  </div> -->
+  <!-- <pre>
+    {{(vm.groups[0]) | json}}
+  </pre> -->
 </div>

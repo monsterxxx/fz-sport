@@ -64,9 +64,9 @@ angular.module('fz', [
 
   //catch states' auth resolves rejects and redirect according to passed error state object
   $rootScope.$on('$stateChangeError', function(e, toState, toParams, fromState, fromParams, error) {
-    console.log('$stateChangeError > ');
+    console.log('$stateChangeError > '+ JSON.stringify(error , null, 2));
     if (error.name) {
-      $state.go(error.name, error.params);
+      $state.go(error.name, error.params || {});
       return;
     }
     console.log('no redirection');
@@ -118,7 +118,7 @@ angular.module('fz', [
   $rootScope.json = function (obj) {
     return angular.toJson(obj, 2);
   };
-  
+
   // let start = +new Date();
   // let end =  +new Date();
   // console.log('exec time: '+ start, end, start - end);

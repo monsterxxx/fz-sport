@@ -12,7 +12,7 @@ function Dir() {
     templateUrl: 'client/components/group/fz-group-composition/fz-group-composition.html',
     scope: {},
     bindToController: {
-      groupInCompany: '=group',
+      groupId: '@',
     },
     controller: Ctrl,
     controllerAs: 'vm'
@@ -26,24 +26,23 @@ Ctrl.$inject = ['$scope', '$reactive', '$stateParams'];
 function Ctrl($scope, $reactive, $stateParams) {
   var vm = this;
   $reactive(vm).attach($scope);
-  let groupId = vm.groupInCompany._id;
   let companyId = $stateParams.companyId;
-  vm.helpers({ group: () => Groups.findOne(groupId) });
-  vm.userIsOwner = Roles.userIsInRole(Meteor.userId(), 'owner', companyId);
+  vm.helpers({
+    group: () => Groups.findOne(vm.groupId, {fields: {name: 1, trainer: 1, clients: 1}}),
+    userIsOwner: () => Roles.userIsInRole(Meteor.userId(), 'owner', companyId)
+  });
+  vm.add = true;
+  vm.delete = true;
   vm.deleteGroup = deleteGroup;
-
-  function deleteGroup() {
-    Meteor.call('deleteGroup', groupId);
-  }
-
-  vm.add = (typeof vm.add === 'undefined') ? true : vm.add;
-  vm.delete = (typeof vm.delete === 'undefined') ? true : vm.delete;
-
   vm.addMemberToGroup = addMemberToGroup;
   vm.removeMemberFromGroup = removeMemberFromGroup;
 
+  function deleteGroup() {
+    Meteor.call('deleteGroup', vm.groupId);
+  }
+
   function addMemberToGroup(memberId, surrogate) {
-    let args = [groupId, memberId];
+    let args = [vm.groupId, memberId];
     if (surrogate) {
       args.push(surrogate);
     }
@@ -52,7 +51,7 @@ function Ctrl($scope, $reactive, $stateParams) {
   }
 
   function removeMemberFromGroup(memberId) {
-    Meteor.call('removeMemberFromGroup', groupId, memberId);
+    Meteor.call('removeMemberFromGroup', vm.groupId, memberId);
   }
 
 }

@@ -25,25 +25,30 @@ function Ctrl($scope, $reactive, $stateParams) {
   let vm = this;
   $reactive(vm).attach($scope);
   const companyId = $stateParams.companyId;
-  if (Roles.userIsInRole(Meteor.userId(), ['owner', 'admin'], companyId)) {
-    vm.helpers({company: () => {
-      const company = Companies.findOne(companyId);
-      if (company) {vm.trainers = company.trainers;}
-      return company;
-    }});
-  } else if (Roles.userIsInRole(Meteor.userId(), 'trainer', companyId)) {
-    vm.trainers = [{_id: Meteor.userId(), name: Meteor.user().profile.fname}];
-  }
-  // vm.helpers({company: () => Companies.findOne($stateParams.companyId)});
   vm.createGroup = createGroup;
 
-  function createGroup(trainerId) {
+  acquireTrainers();
+
+  function acquireTrainers() {
+    if (Roles.userIsInRole(Meteor.userId(), ['owner', 'admin'], companyId)) {
+      vm.helpers({company: () => {
+        const company = Companies.findOne({}, {fields: {trainers: 1}});
+        if (company) {vm.trainers = company.trainers;}
+        return company;
+      }});
+    } else if (Roles.userIsInRole(Meteor.userId(), 'trainer', companyId)) {
+      vm.trainers = [{_id: Meteor.userId(), name: Meteor.user().profile.fname}];
+    }
+  }
+
+  function createGroup(trainerId, trainerName) {
     let group = {
       company: {
         _id: companyId
       },
       trainer: {
-        _id: trainerId
+        _id: trainerId,
+        name: trainerName
       },
       name: vm.group.name
     };

@@ -14,16 +14,13 @@ Meteor.methods({
       })
     });
 
-    if (! this.userId) {
-      throw new Meteor.Error('not-logged-in',
-        'Must be logged in to update user profile.');
-    }
+    if (! this.userId) { throw new Meteor.Error('not-logged-in'); }
 
     let user = Users.findOne(this.userId);
 
-    if (! (userId === this.userId || user.role.admin)) {
+    if (userId !== this.userId) {
       throw new Meteor.Error('no-permission',
-        'Must be the user or admin to update user profile.');
+        'Only user can update his profile.');
     }
 
     let modifier = {};
@@ -39,64 +36,6 @@ Meteor.methods({
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-  updateUserSettings: function (userId, role) {
-    // console.log('updateUserSettings', userId, role);
-
-    check(userId, String);
-    check(role, {
-      client: Match.Optional(Boolean),
-      trainer: Match.Optional(Boolean),
-      admin: Match.Optional(Boolean),
-      master: Match.Optional(Boolean)
-    });
-
-    // console.log('checked!');
-
-    if (! this.userId) {
-      throw new Meteor.Error('not-logged-in',
-        'Must be logged in to update user role.');
-    }
-
-    let user = Users.findOne(this.userId);
-
-    if (! (user.role.admin)) {
-      throw new Meteor.Error('no-permission',
-        'Must be an admin to update user role.');
-    }
-
-    if (Meteor.isServer) {
-      let userToUpdate = Users.findOne(userId);
-
-      // console.log(JSON.stringify(userToUpdate , null, 2));
-
-      _.each(role, function (permition, module) {
-        if (permition !== userToUpdate.role[module]) {
-
-          if (['admin', 'master'].indexOf(module) >= 0) {
-            throw new Meteor.Error('no-permission',
-              'Admin cannot change admin or master permissions.');
-          }
-          // TODO check if user is client
-          // if (module === 'client' && userToUpdate.system.client) {
-          //   throw new Meteor.Error('invalid-action',
-          //     'There are no ex-clients in the App.');
-          // }
-          if (module === 'trainer'
-            && (userToUpdate.trainer && Object.keys(userToUpdate.trainer).length > 0)) {
-            throw new Meteor.Error('invalid-action',
-              'There are no ex-trainers in the App.');
-          }
-
-        }
-      });
-
-      Users.update({_id: userId}, {$set: {role: role}});
-    }
-
-  },
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
   addUserToCompany: function (companyId, userId, role) {
     check(companyId, String);
     check(userId, String);
@@ -106,10 +45,7 @@ Meteor.methods({
     }));
 
     //AUTH
-    if (! this.userId) {
-      throw new Meteor.Error('not-logged-in',
-        'Must be logged in to add users to company.');
-    }
+    if (! this.userId) { throw new Meteor.Error('not-logged-in'); }
 
     //only owner of the company can add other owners and admins
     if ((role === 'owner' || role === 'admin') && ! Roles.userIsInRole(this.userId, 'owner', companyId)
@@ -123,64 +59,65 @@ Meteor.methods({
 
     //TODO auth when client is added by trainer - it should be client from his group in this company
 
-    //CHECK USER
-    const member = Users.findOne(userId, { fields: {profile: 1, surrogate: 1} });
+    if (Meteor.isServer) {
+      //CHECK USER
+      const member = Users.findOne(userId, { fields: {profile: 1, surrogate: 1} });
 
-    if (! member) {
-      throw new Meteor.Error('not-found',
+      if (! member) {
+        throw new Meteor.Error('not-found',
         'User to add to company is not found in db.');
-    }
+      }
 
-    if (Roles.userIsInRole(userId, role, companyId)) {
-      throw new Meteor.Error('duplicate',
+      if (Roles.userIsInRole(userId, role, companyId)) {
+        throw new Meteor.Error('duplicate',
         'User is '+ role +' of this company already.');
-    }
+      }
 
-    let roles = Roles.getRolesForUser(userId, companyId);
+      let roles = Roles.getRolesForUser(userId, companyId);
 
-    //INSERT NEW USER INTO COMPANY
-    let modifier = { $push: {} };
+      //INSERT NEW USER INTO COMPANY
+      let modifier = { $push: {} };
 
-    //new user in this company becomes a member
-    if (! roles.length) {
-      modifier.$push.members = {
+      //new user in this company becomes a member
+      if (! roles.length) {
+        modifier.$push.members = {
+          _id: userId,
+          name: member.profile.fname
+        };
+        if (member.surrogate) modifier.$push.members.surrogate = true;
+      }
+
+      //insert member into corresponding role group
+      modifier.$push[role + 's'] = {
         _id: userId,
         name: member.profile.fname
       };
-      if (member.surrogate) modifier.$push.members.surrogate = true;
-    }
 
-    //insert member into corresponding role group
-    modifier.$push[role + 's'] = {
-      _id: userId,
-      name: member.profile.fname
-    };
+      Companies.update({_id: companyId}, modifier);
 
-    Companies.update({_id: companyId}, modifier);
+      //INSERT COMPANY INTO USER
+      //for new members
+      if (! roles.length) {
+        let company = Companies.findOne(companyId);
 
-    //INSERT COMPANY INTO USER
-    //for new members
-    if (! roles.length) {
-      let company = Companies.findOne(companyId);
-
-      Users.update({_id: userId}, {
-        $push: {
-          companies: {
-            _id: companyId,
-            name: company.name
+        Users.update({_id: userId}, {
+          $push: {
+            companies: {
+              _id: companyId,
+              name: company.name
+            }
           }
-        }
-      });
-    }
+        });
+      }
 
-    //GRANT PERMISSION
-    Roles.addUsersToRoles(userId, role, companyId);
+      //GRANT PERMISSION
+      Roles.addUsersToRoles(userId, role, companyId);
+    }
   },
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   removeUserFromCompany: function (companyId, memberId, role) {
-    console.log('>removeUserFromCompany');
     check(companyId, String);
     check(memberId, String);
     check(role, Match.Where(function (role) {
@@ -266,6 +203,5 @@ Meteor.methods({
           });
       }
     }
-    console.log('<removeUserFromCompany');
   }
 });

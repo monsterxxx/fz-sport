@@ -2,7 +2,13 @@ Meteor.methods({
 
   createCompany: function (company) {
     check(company, {
-      name: String
+      name: String,
+      params: Match.ObjectIncluding({
+        tz: Match.Where((tz) => {
+          //check timezone parameter
+          return -12 <= tz && tz <= 12 && tz % 0.5 === 0;
+        })
+      })
     });
 
     if (! this.userId) throw new Meteor.Error('not-logged-in');
@@ -14,7 +20,7 @@ Meteor.methods({
         'User can have only one company in the system');
     }
 
-    if (! this.isSimulation) {
+    if (Meteor.isServer) {
       if (Companies.findOne({name: company.name})) {
         throw new Meteor.Error('company-name-busy',
           'This company name is busy');
@@ -41,9 +47,10 @@ Meteor.methods({
     return {_id: id};
   },
 
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
   deleteCompany: function (companyId) {
     check(companyId, String);
-    console.log('>deleteCompany');
     //AUTH
     if (! this.userId) { throw new Meteor.Error('not-logged-in'); }
 
@@ -62,10 +69,9 @@ Meteor.methods({
       'No such company in db');
     }
 
-    console.log('checked');
     //DELETE ALL MEMBERS FROM COMPANY
     //groups and clients will also be deleted automatically with trainers
-    if (! this.isSimulation) {
+    if (Meteor.isServer) {
       ['owner', 'admin', 'trainer'].forEach( role => {
         if (company[role +'s']) {
           company[role +'s'].forEach( member => {
@@ -91,9 +97,9 @@ Meteor.methods({
       //DELETE COMPANY
       Companies.remove( {_id: companyId} );
     }
-
-    console.log('<deleteCompany');
   },
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   searchMembers: function (companyId, text, surrogate) {
     check(companyId, String);

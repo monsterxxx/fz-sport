@@ -33,7 +33,6 @@ function Ctrl($scope, $reactive, $stateParams) {
   vm.addWithSurrogate = addWithSurrogate;
 
   function search() {
-    console.log('searchMembers surrogateParameter:'+ vm.surrogate || false);
     Meteor.call('searchMembers', companyId, vm.searchQuery, vm.surrogate || false, function (err, results) {
       $scope.$apply(function () {
         vm.foundMembers = results;

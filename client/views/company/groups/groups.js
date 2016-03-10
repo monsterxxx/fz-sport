@@ -16,6 +16,8 @@ angular
         url: '/groups',
         resolve: {
           auth: ($q, $stateParams) => {
+            //TODO maybe clients should not be allowed here in the future
+
             // console.log('auth groups');
             // var deferred = $q.defer();
             // deferred.resolve();
@@ -27,11 +29,12 @@ angular
       });
   });
 
-Ctrl.$inject = ['$stateParams'];
+Ctrl.$inject = ['$scope', '$reactive', '$stateParams'];
 
-function Ctrl($stateParams) {
+function Ctrl($scope, $reactive, $stateParams) {
   // console.log('groups ctrl');
-  Meteor.subscribe('groups', $stateParams.companyId);
+  $reactive(this).attach($scope);
+  this.subscribe('groups', () => [$stateParams.companyId]);
 }
 
 })();

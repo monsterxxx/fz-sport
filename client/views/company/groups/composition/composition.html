@@ -7,7 +7,7 @@
 
   <section class="content">
     <div class="row">
-      <fz-group-composition class="col-md-3 col-sm-6 col-xs-12" ng-repeat="group in vm.groups" group="group"></fz-group-composition>
+      <fz-group-composition class="col-md-3 col-sm-6 col-xs-12" ng-repeat="group in vm.groups" group-id="{{::group._id}}"></fz-group-composition>
       <fz-group-create class="col-md-3 col-sm-6 col-xs-12"></fz-group-create>
     </div>
   </section>

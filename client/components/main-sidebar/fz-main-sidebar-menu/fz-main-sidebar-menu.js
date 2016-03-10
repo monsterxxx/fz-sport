@@ -10,7 +10,6 @@ function Dir() {
   var directive = {
     restrict: 'E',
     templateUrl: 'client/components/main-sidebar/fz-main-sidebar-menu/fz-main-sidebar-menu.html',
-    // replace: true,
     scope: {},
     bindToController: {},
     controller: Ctrl,
@@ -25,12 +24,18 @@ Ctrl.$inject = ['$scope', '$reactive', '$stateParams'];
 function Ctrl($scope, $reactive, $stateParams) {
   var vm = this;
   $reactive(vm).attach($scope);
-  vm.roles = Roles.getRolesForUser(Meteor.userId(), $stateParams.companyId);
-  for (let role of ['owner', 'admin', 'trainer']) {
-    if (vm.roles.indexOf(role) !== -1) {
-      vm.role = role;
+  vm.helpers({ role: roleHelper });
+  vm.today = new Date(Date.now() - new Date().getTimezoneOffset()*60000).toISOString().slice(0, 10);
+
+  function roleHelper() {
+    let roles = Roles.getRolesForUser(Meteor.userId(), $stateParams.companyId);
+    for (let role of ['owner', 'admin', 'trainer']) {
+      if (roles.indexOf(role) !== -1) {
+        return role;
+      }
     }
   }
+
 }
 
 })();

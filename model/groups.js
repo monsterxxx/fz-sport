@@ -5,7 +5,8 @@ Meteor.methods({
         _id: String
       }),
       trainer: Match.ObjectIncluding({
-        _id: String
+        _id: String,
+        name: String
       }),
       name: String
     });
@@ -31,17 +32,22 @@ Meteor.methods({
 
     //CHECK
     const company = Companies.findOne(companyId, { fields: {name: 1} });
-    const trainer = Users.findOne(trainerId, { fields: {profile: 1} });
 
-    if (! trainer) {
-      throw new Meteor.Error('not-found',
+    if (Meteor.isServer) {
+      //on server we check the trainer and take his name from db
+      const trainer = Users.findOne(trainerId, { fields: {profile: 1} });
+
+      if (! trainer) {
+        throw new Meteor.Error('not-found',
         'No user record for this trainer in db.');
+      }
+
+      group.trainer.name = trainer.profile.fname;
     }
 
     //PREPARE DATA
     group.createdAt = new Date();
     group.company.name = company.name;
-    group.trainer.name = trainer.profile.fname;
 
     //CREATE GROUP
     const groupId = Groups.insert(group);
@@ -122,6 +128,7 @@ Meteor.methods({
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   addMemberToGroup: function (groupId, memberId, surrogate) {
+    if (Meteor.isClient) { return; }
     //SURROGATE ENABLED
     //this is createSurrogate enabled method, which inserts surrogate user into Users collection
     //  when following parameters are specified: memberId === '0', surrogate: surrogateUserProfile
@@ -175,12 +182,7 @@ Meteor.methods({
           name: surrogate.fname
         };
       }
-      if (Meteor.isClient) {
-        //surrogate creation way is not for browser
-        return;
-      }
-    }
-    if (memberId !== '0') {
+    } else {
       const userToAdd = Users.findOne(memberId, {fields: {profile: 1}});
       if (! userToAdd) {
         throw new Meteor.Error('not-found',

@@ -53,19 +53,16 @@ angular
       });
   });
 
-Ctrl.$inject = ['$scope', '$rootScope', '$reactive', '$stateParams'];
+Ctrl.$inject = ['$scope', '$reactive', '$stateParams', '$rootScope'];
 
-function Ctrl($scope, $rootScope, $reactive, $stateParams) {
+function Ctrl($scope, $reactive, $stateParams, $rootScope) {
   // console.log('company ctrl');
   $reactive(this).attach($scope);
   let companyId = $stateParams.companyId;
   this.subscribe('company', () => [companyId]);
+
   //select company for company-select on the main-sidebar
   $rootScope.company = {_id: companyId};
 }
-
-// AuthResolve.$inject = ['$q', '$state', '$timeout', '$stateParams'];
-
-
 
 })();

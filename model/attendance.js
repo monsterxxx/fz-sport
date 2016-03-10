@@ -1,67 +1,46 @@
 Meteor.methods({
-  submitAttendance: function (groupId, clients) {
+  submitAttendance: function (group, date) {
     // console.log('submitAttendance');
+    check(group, Match.ObjectIncluding({
+      _id: String,
+      clients: [Match.ObjectIncluding({
+        _id: String,
+        came: Match.Optional(Boolean)
+      })]
+    }));
 
-    check(groupId, String);
-    check(clients, [Object]);
+    //TODO protect this method
 
-    if (! this.userId) {
-      throw new Meteor.Error('not-logged-in',
-        'Must be logged in to submit attendance.');
-    }
+    if (! this.userId) { throw new Meteor.Error('not-logged-in'); }
 
-    var user = Meteor.user();
+    const companyId = group.company._id;
 
-    var group = Groups.findOne(groupId);
+    //FIND DATES
+    const tzOffset = Companies.findOne(group.company._id, { fields: {'params.tz': 1} }).params.tz * 3600000,
+          today = new Date(Date.now() + tzOffset).toISOString().slice(0, 10);
 
-    if (! ((user.role.trainer && this.userId === group.trainer._id) || user.role.admin)) {
+    //AUTH
+    if (! Roles.userIsInRole(this.userId, ['owner', 'admin'], companyId)
+        && ! (this.userId === group.trainer._id && date === today) ) {
       throw new Meteor.Error('no-permission',
-        'Must be trainer of this group or admin to submit attendance.');
+        'Only owner admin or trainer of this group on the date of training can submit attendance'); }
+
+    //PREPARE DATA
+    group.date = date;
+    group.edited = {
+      at: new Date(),
+      by: this.userId
+    };
+    //if user send to us a group (not groupDay) document:
+    if (! group.group) {
+      group.group = {
+        _id: group._id,
+        name: group.name
+      };
+      delete group._id;
     }
 
-    // console.log('clients: '+clients);
-
-    if (Meteor.isServer) {
-      // console.log('groupId: '+groupId);
-
-      // console.log('group:'+ JSON.stringify(group , null, 2));
-
-      var startDate = new Date();
-      startDate.setHours(0,0,0,0);
-
-      var dateMidnight = new Date(startDate);
-      dateMidnight.setHours(23,59,59,999);
-
-      var attendance = {},
-          now = new Date();
-
-      for (var i = 0; i < group.clients.length; i++) {
-
-        if (group.clients[i].check === clients[i].check) { continue; }
-
-        if (clients[i].check) {
-          attendance = {
-            trainer: group.trainer.name,
-            group: group.name,
-            client: clients[i].name,
-            createdAt: now
-          };
-          Attendance.insert(attendance);
-        } else {
-          Attendance.remove({
-            group: group.name,
-            client: clients[i].name,
-            createdAt: {
-              $gt: startDate,
-              $lt: dateMidnight
-            }
-          });
-        }
-
-      }
-
-      Groups.update({_id: group._id}, {$set: {clients: clients, attendanceCheckedAt: now}});
-
-    }
+    //UPSERT ATTENDANCE RECORD
+    const upsert = GroupDays.upsert({'group._id': group.group._id, date: date}, group);
   }
 });

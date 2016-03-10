@@ -2,59 +2,45 @@
 // 'use strict';
 
 angular
-  .module('fz.group-attendance', [
-  ])
-  .directive('fzGroupAttendance', Dir);
-
-function Dir() {
-  var directive = {
-    restrict: 'E',
-    templateUrl: 'client/components/group/fz-group-attendance/fz-group-attendance.html',
-    scope: {},
-    bindToController: {
-      groupId: '@',
-    },
-    controller: Ctrl,
-    controllerAs: 'vm'
-  };
-
-  return directive;
-}
-
-Ctrl.$inject = ['$scope', '$reactive', '$stateParams'];
-
-function Ctrl($scope, $reactive, $stateParams) {
-  var vm = this;
-  $reactive(vm).attach($scope);
-  let groupId = vm.groupInCompany._id;
-  let companyId = $stateParams.companyId;
-  vm.helpers({ group: () => Groups.findOne(groupId) });
-  vm.userIsOwner = Roles.userIsInRole(Meteor.userId(), 'owner', companyId);
-  vm.deleteGroup = deleteGroup;
-
-  function deleteGroup() {
-    Meteor.call('deleteGroup', groupId);
-  }
-
-  vm.add = (typeof vm.add === 'undefined') ? true : vm.add;
-  vm.delete = (typeof vm.delete === 'undefined') ? true : vm.delete;
-
-  vm.addMemberToGroup = addMemberToGroup;
-  vm.removeMemberFromGroup = removeMemberFromGroup;
-
-  function addMemberToGroup(memberId, surrogate) {
-    let args = [groupId, memberId];
-    if (surrogate) {
-      args.push(surrogate);
+  .module('fz.group-attendance', [])
+  .component('fzGroupAttendance',
+    {
+      templateUrl: `client/components/group/fz-group-attendance/fz-group-attendance.html`,
+      bindings: {
+        groupId: '@'
+      },
+      controller: Ctrl,
+      controllerAs: 'vm'
     }
-    Meteor.apply('addMemberToGroup', args);
-    vm.foundMembers = [];
-  }
+  );
 
-  function removeMemberFromGroup(memberId) {
-    Meteor.call('removeMemberFromGroup', groupId, memberId);
-  }
+  Ctrl.$inject = ['$scope', '$reactive', '$stateParams'];
 
-}
+  function Ctrl($scope, $reactive, $stateParams) {
+    let vm = this,
+          companyId = $stateParams.companyId,
+          date = $stateParams.attDate;
+    $reactive(vm).attach($scope);
+    // vm.helpers({ groups: groupsHelper});
+    vm.helpers({ groups: () => {
+      const dayGroup = GroupDays.findOne({'group._id': vm.groupId}, {fields: {_id:1}});
+      if (dayGroup) {
+        return GroupDays.find({'group._id': vm.groupId});
+      } else {
+        return Groups.find({_id: vm.groupId}, {fields: {name: 1, company: 1, trainer: 1, clients: 1}});
+      }
+    }});
+    vm.submitAttendance = submitAttendance;
+
+    function groupsHelper() {
+      return GroupDays.find({'group._id': vm.groupId})
+             || Groups.find({_id: vm.groupId});
+    }
+
+    function submitAttendance() {
+      console.log(JSON.stringify(vm.groups[0] , null, 2));
+      Meteor.call('submitAttendance', vm.groups[0], date);
+    }
+  }
 
 })();
