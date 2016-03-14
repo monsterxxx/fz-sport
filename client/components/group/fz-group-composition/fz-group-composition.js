@@ -46,7 +46,9 @@ function Ctrl($scope, $reactive, $stateParams) {
     if (surrogate) {
       args.push(surrogate);
     }
-    Meteor.apply('addMemberToGroup', args);
+    Meteor.apply('addMemberToGroup', args, (err) => {
+      if (err) console.log(err);
+    });
     vm.foundMembers = [];
   }
 

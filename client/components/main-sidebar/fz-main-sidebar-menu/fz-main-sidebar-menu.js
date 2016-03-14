@@ -24,18 +24,8 @@ Ctrl.$inject = ['$scope', '$reactive', '$stateParams'];
 function Ctrl($scope, $reactive, $stateParams) {
   var vm = this;
   $reactive(vm).attach($scope);
-  vm.helpers({ role: roleHelper });
+  vm.helpers({ role: () => Roles.getTopRole(Meteor.userId(), $stateParams.companyId) });
   vm.today = new Date(Date.now() - new Date().getTimezoneOffset()*60000).toISOString().slice(0, 10);
-
-  function roleHelper() {
-    let roles = Roles.getRolesForUser(Meteor.userId(), $stateParams.companyId);
-    for (let role of ['owner', 'admin', 'trainer']) {
-      if (roles.indexOf(role) !== -1) {
-        return role;
-      }
-    }
-  }
-
 }
 
 })();

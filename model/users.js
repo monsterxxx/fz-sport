@@ -81,16 +81,22 @@ Meteor.methods({
       //new user in this company becomes a member
       if (! roles.length) {
         modifier.$push.members = {
-          _id: userId,
-          name: member.profile.fname
+          $each: [{
+            _id: userId,
+            name: member.profile.fname
+          }],
+          $sort: {name: 1}
         };
         if (member.surrogate) modifier.$push.members.surrogate = true;
       }
 
       //insert member into corresponding role group
       modifier.$push[role + 's'] = {
-        _id: userId,
-        name: member.profile.fname
+        $each: [{
+          _id: userId,
+          name: member.profile.fname
+        }],
+        $sort: {name: 1}
       };
 
       Companies.update({_id: companyId}, modifier);
@@ -126,19 +132,19 @@ Meteor.methods({
     }));
 
     //AUTH
-    if (! Roles.userIsInRole(this.userId, ['owner'], companyId)) {
+    if (! Roles.userIsInRole(this.userId, 'owner', companyId)) {
       throw new Meteor.Error('no-permission',
         'Only owner can remove member from company.');
     }
-    console.log('auth passed');
-    //CHECK DATA
-    //by checking role we also check existance of member and company
-    if (! Roles.userIsInRole(memberId, role, companyId)) {
-      throw new Meteor.Error('wrong-request',
-        'User is not '+ role +' of the company.');
-    }
 
     if (Meteor.isServer) {
+      //CHECK DATA
+      //by checking role we also check existance of member and company
+      if (! Roles.userIsInRole(memberId, role, companyId)) {
+        throw new Meteor.Error('wrong-request',
+        'User is not '+ role +' of the company.');
+      }
+
       const member = Users.findOne(memberId, { fields: {companies: 1, trainer: 1, client: 1, surrogate:1} });
 
       //CHECK OWNER
@@ -146,7 +152,6 @@ Meteor.methods({
         throw new Meteor.Error('not-allowed',
         'Cannot delete the creator of this company.');
       }
-      console.log('check passed');
 
       //FORFEIT PERMISSION
       Roles.removeUsersFromRoles(memberId, role, companyId);

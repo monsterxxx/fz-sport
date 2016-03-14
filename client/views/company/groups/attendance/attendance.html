@@ -1,7 +1,7 @@
 <div>
   <section class="content-header">
     <h1>
-      Посещения сегодня
+      Посещения <span ng-if="vm.role==='trainer'">сегодня </span><small>{{vm.date}}</small>
     </h1>
     <small>{{::Date.now()}}</small>
   </section>

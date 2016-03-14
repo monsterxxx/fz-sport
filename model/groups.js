@@ -53,15 +53,15 @@ Meteor.methods({
     const groupId = Groups.insert(group);
 
     //INSERT GROUP INTO COMPANY
-    Companies.update({_id: companyId}, {
-      $push: {
-        groups: {
-          _id: groupId,
-          name: group.name,
-          trainer: group.trainer
-        }
-      }
-    });
+    // Companies.update({_id: companyId}, {
+    //   $push: {
+    //     groups: {
+    //       _id: groupId,
+    //       name: group.name,
+    //       trainer: group.trainer
+    //     }
+    //   }
+    // });
 
     //INSERT GROUP INTO TRAINER USER
     Users.update({_id: trainerId}, {
@@ -107,13 +107,13 @@ Meteor.methods({
     Groups.remove({_id: groupId});
 
     //REMOVE GROUP FROM COMPANY
-    Companies.update({_id: companyId}, {
-      $pull: {
-        groups: {
-          _id: groupId
-        }
-      }
-    });
+    // Companies.update({_id: companyId}, {
+    //   $pull: {
+    //     groups: {
+    //       _id: groupId
+    //     }
+    //   }
+    // });
 
     //REMOVE GROUP FROM TRAINER
     Users.update({_id: trainerId}, {
@@ -197,7 +197,10 @@ Meteor.methods({
     //INSERT MEMBER INTO GROUP
     Groups.update({_id: groupId}, {
       $push: {
-        clients: member
+        clients: {
+          $each: [member],
+          $sort: {name: 1}
+        }
       }
     });
 

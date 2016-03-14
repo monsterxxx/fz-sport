@@ -1,10 +1,13 @@
-let clearDb = function () {
+clearDb = function () {
   Users.remove({});
   Companies.remove({});
   Groups.remove({});
   Clients.remove({});
   Leads.remove({});
-  Attendance.remove({});
+  GroupDays.remove({});
+  CompanyDays.remove({});
+  TrainerDays.remove({});
+  ClientDays.remove({});
 };
 
 Meteor.startup(function () {

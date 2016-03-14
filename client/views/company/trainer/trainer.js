@@ -15,6 +15,7 @@ angular
 
             if (! Roles.userIsInRole(Meteor.userId(), 'trainer', $stateParams.companyId)) {
               deferred.reject({name: 'home'});
+              console.log('! trainer');
               return deferred.promise;
             }
 
@@ -32,7 +33,6 @@ Ctrl.$inject = ['$scope', '$reactive'];
 function Ctrl($scope, $reactive) {
   var vm = this;
   $reactive(vm).attach($scope);
-
 }
 
 })();

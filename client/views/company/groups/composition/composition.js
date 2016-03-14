@@ -30,7 +30,7 @@ function Ctrl($scope, $reactive) {
   // console.log('composition Ctrl');
   const vm = this;
   $reactive(vm).attach($scope);
-  vm.helpers({ groups: () => Groups.find({}, {fields: {_id: 1}}) });
+  vm.helpers({ groups: () => Groups.find({}, {sort: {name: 1}, fields: {_id: 1}}) });
 }
 
 })();

@@ -2,7 +2,9 @@
 'use strict';
 
 angular
-  .module('fz.company.owner', [])
+  .module('fz.company.owner', [
+    'fz.att-widget'
+  ])
   .config(function ($stateProvider) {
     $stateProvider
       .state('company.owner', {
@@ -30,9 +32,8 @@ angular
 Ctrl.$inject = ['$scope', '$reactive'];
 
 function Ctrl($scope, $reactive) {
-  var vm = this;
+  const vm = this;
   $reactive(vm).attach($scope);
-
 }
 
 })();

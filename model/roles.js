@@ -1,4 +1,4 @@
-var origRemove = Roles.removeUsersFromRoles;
+let origRemove = Roles.removeUsersFromRoles;
 
 Roles.removeUsersFromRoles = function (users, roles, group) {
   origRemove.call(this, users, roles, group);
@@ -27,3 +27,14 @@ Roles.removeUsersFromRoles = function (users, roles, group) {
     }
   }
 };
+
+//function returns the highest priority role for the user or an empty string
+Roles.getTopRole = function (user, group) {
+  let roles = Roles.getRolesForUser(user, group);
+  if (! roles.length) return;
+  for (let role of ['owner', 'admin', 'trainer']) {
+    if (~roles.indexOf(role)) {
+      return role;
+    }
+  }
+}

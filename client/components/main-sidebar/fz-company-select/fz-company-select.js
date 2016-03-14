@@ -1,11 +1,11 @@
 (function() {
-// 'use strict';
+'use strict';
 
 angular
   .module('fz.company-select', [])
   .component('fzCompanySelect',
     {
-      templateUrl: `client/components/main-sidebar/fz-company-select/fz-company-select-.html`,
+      templateUrl: `client/components/main-sidebar/fz-company-select/fz-company-select.html`,
       bindings: {},
       controller: Ctrl,
       controllerAs: 'vm'

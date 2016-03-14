@@ -69,7 +69,6 @@
         "Roles": true,
         "Clients": true,
         "Groups": true,
-        "Attendance": true,
         "Leads": true,
         "angular": false,
         "$": false

@@ -46,10 +46,14 @@ Ctrl.$inject = ['$scope', '$reactive', '$stateParams'];
 
 function Ctrl($scope, $reactive, $stateParams) {
   // console.log('attendance Ctrl');
-  const vm = this;
+  const vm = this,
+        companyId = $stateParams.companyId,
+        date = $stateParams.attDate;
+  vm.date = date.split('-').reverse().join('.');
   $reactive(vm).attach($scope);
-  vm.subscribe('attendance', () => [$stateParams.companyId, $stateParams.attDate]);
-  vm.helpers({ groups: () => Groups.find( {}, {fields: {_id: 1}} ) });
+  vm.subscribe('attendance', () => [companyId, date]);
+  vm.helpers({ groups: () => Groups.find( {}, {sort: {name: 1}, fields: {_id: 1}} ),
+               role: () => Roles.getTopRole(Meteor.userId(), companyId)});
 }
 
 })();

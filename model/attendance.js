@@ -1,5 +1,5 @@
 Meteor.methods({
-  submitAttendance: function (group, date) {
+  submitAttendance: function (group, dateISO) {
     // console.log('submitAttendance');
     check(group, Match.ObjectIncluding({
       _id: String,
@@ -11,22 +11,28 @@ Meteor.methods({
 
     //TODO protect this method
 
-    if (! this.userId) { throw new Meteor.Error('not-logged-in'); }
+    const user = Users.findOne(this.userId, {fields: {roles: 1}}),
+          companyId = group.company._id;
 
-    const companyId = group.company._id;
-
-    //FIND DATES
-    const tzOffset = Companies.findOne(group.company._id, { fields: {'params.tz': 1} }).params.tz * 3600000,
-          today = new Date(Date.now() + tzOffset).toISOString().slice(0, 10);
+    if (! user) { throw new Meteor.Error('not-logged-in'); }
 
     //AUTH
-    if (! Roles.userIsInRole(this.userId, ['owner', 'admin'], companyId)
-        && ! (this.userId === group.trainer._id && date === today) ) {
+    if (! Roles.userIsInRole(user, ['owner', 'admin', 'trainer'], companyId) ) {
       throw new Meteor.Error('no-permission',
-        'Only owner admin or trainer of this group on the date of training can submit attendance'); }
+      'Only owner admin or trainer can submit attendance'); }
+
+    //FIND DATES
+    const tz = Companies.findOne(group.company._id, { fields: {'params.tz': 1} }).params.tz,
+          todayISO = fzDate.todayISO(tz);
+
+    //AUTH
+    if (Roles.getTopRole(user, companyId) === 'trainer'
+        && ! (this.userId === group.trainer._id && dateISO === todayISO) ) {
+      throw new Meteor.Error('no-permission',
+      'Only trainer of this group and on the date of training can submit attendance'); }
 
     //PREPARE DATA
-    group.date = date;
+    group.date = fzDate.dateStart(dateISO, tz);
     group.edited = {
       at: new Date(),
       by: this.userId
@@ -39,8 +45,31 @@ Meteor.methods({
       };
       delete group._id;
     }
+    group.att = _.reduce(group.clients, (count, client) => count + !!client.came, 0);
+
+    const oldGroupDay = GroupDays.findOne(group._id, {fields: {att: 1, clients: 1}}),
+          oldAtt = (oldGroupDay) ? oldGroupDay.att : 0,
+          attDiff = group.att - oldAtt;
+
+    //UPDATE ATTENDANCE STATS FOR CLIENTS
+    group.clients.forEach((client, i) => {
+      if (oldGroupDay && client.came !== oldGroupDay.clients[i].came
+          || ! oldGroupDay) {
+        let query = {'company._id': group.company._id, 'client._id': client._id, date: group.date};
+        if (client.came) {
+          ClientDays.upsert(query, {$inc: {att: 1}});
+        } else {
+          ClientDays.update(query, {$inc: {att: -1}});
+          ClientDays.remove(_.extend({att: 0}, query));
+        }
+      }
+    });
+
+    // (maybe TODO - update instead of upserting to CompanyDays) if current attendance record existed, then update CompanyDays for this day
 
     //UPSERT ATTENDANCE RECORD
-    const upsert = GroupDays.upsert({'group._id': group.group._id, date: date}, group);
+    GroupDays.upsert({_id: group._id}, group);
+    CompanyDays.upsert({'company._id': group.company._id, date: group.date}, {$inc: {att: attDiff}});
+    TrainerDays.upsert({'company._id': group.company._id, 'trainer._id': group.trainer._id, date: group.date}, {$inc: {att: attDiff}});
   }
 });

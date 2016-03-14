@@ -6,16 +6,18 @@
     </div>
   </div>
   <div class="box-body no-padding">
-    <div class="box-padding-top">
-      <label>Тренер</label>
-    </div>
-    <ul class="nav nav-pills nav-stacked">
-      <li>
-        <a href="#">{{vm.groups[0].trainer.name}}</a>
-      </li>
-    </ul>
-    <div class="box-padding-center">
-      <label>Посещения</label>
+    <div ng-if="vm.role !== 'trainer'">
+      <div class="box-padding-top">
+        <label>Тренер</label>
+      </div>
+      <ul class="nav nav-pills nav-stacked">
+        <li>
+          <a href="#">{{vm.groups[0].trainer.name}}</a>
+        </li>
+      </ul>
+      <div class="box-padding-center">
+        <label>Посещения</label>
+      </div>
     </div>
     <ul class="nav nav-pills nav-stacked">
       <li ng-repeat="client in vm.groups[0].clients track by client._id">
@@ -26,13 +28,12 @@
                 ng-class="{'fa-check-square text-success': client.came,
                            'fa-square text-grey': !client.came}"> </i>
           </span>
-          <!-- <input type="checkbox" class="pull-right" ng-model="client.came"> -->
         </a>
       </li>
     </ul>
   </div>
   <div class="box-footer">
-    <button class="btn btn-block btn-primary" ng-click="vm.submitAttendance()"><i class="fa fa-save"></i>Сохранить</button>
+    <button class="btn btn-block btn-primary" ng-click="vm.submitAttendance()">Сохранить</button>
   </div>
   <!-- TODO ability to add client to this particular training -->
   <!-- <div class="box-footer" ng-if="vm.add">
