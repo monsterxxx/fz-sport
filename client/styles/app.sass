@@ -1,165 +1,21 @@
 @import 'variables'
+@import 'typography'
 @import 'mixins'
+@import 'elements'
+@import 'animations'
+@import 'bootstrap'
 @import 'packages/accounts-ui'
 @import '../components/components'
 
-body
-  font-family: 'PT Sans', 'Trebuchet MS', 'sans-serif' !important
 
-a
-  text-decoration: none!important
-
-.text-grey
-  color: #ccc
-
-nav > ul > li > a
-  &:active:not(:hover)
-    background-color: transparent !important
-  // &:hover
-  //   background-color: transparent !important
-  &:focus:not(:hover):not(:active)
-    background-color: transparent !important
-
-nav a.accounts-ui
-  height: 50px
-  padding: 0 !important
-  &:active
-    background-color: transparent !important
-  &:hover
-    background-color: transparent !important
-  &:focus
-    background-color: transparent !important
-
-@media (max-width: 480px)
-  nav > ul > li > a
-    &:active
-      background-color: transparent !important
-    &:hover
-      background-color: transparent !important
-    &:focus
-      background-color: transparent !important
-
+//for hiding sidebar when user is not logged in
 .main-sidebar-off
   margin-left: 0
 
-.form-control[disabled], .btn[disabled], fieldset[disabled] .form-control
-    cursor: default
-
-.fz-navbar-enter
+//TODO move with the navbar and its styles to separate component
+.fz-navbar__login-icon
   position: absolute
   width: 50px
   line-height: 50px !important
   text-align: center
   pointer-events: none
-
-.fz-initials
-  display: block
-  width: 30px
-  height: 30px
-  font-size: 17px
-  font-weight: bold
-  line-height: 30px
-  overflow: hidden
-  text-align: center
-  top: 0
-  color: #4d4d4d
-  background-color: #edeff0
-  border-radius: 3px
-  &:hover
-    background-color: #e3e6e8
-  &-lg
-    display: flex
-    align-items: center
-    justify-content: center
-    width: 100%
-    max-width: 45px
-    height: 45px
-    line-height: normal
-    font-size: 22px
-    border-radius: 4px
-    cursor: default
-    &:hover
-      background-color: #edeff0
-    &:before
-      content: ''
-      padding-top: 60% /* vertical value as  100% equals width */
-      padding-bottom: 40%
-    span
-      transition: all 0.2s
-  &-navbar
-    position: absolute
-    top: 10px
-    left: 10px
-    pointer-events: none
-    &:hover
-      background-color: #e3e6e8
-body.sidebar-collapse
-  .fz-initials-lg
-    font-size: 17px
-    height: 30px
-
-.sidebar-input
-  height: 35px
-  margin: 10px 0
-  color: #000
-  background-color: #374850
-  border: 1px solid transparent
-  border-radius: 3px
-  transition: all 0.3s ease-in-out
-  &:focus
-    background-color: #fff
-    border-color: transparent
-
-@keyframes highlight-borders
-  60%
-    border-color: #d73925
-
-.highlight-borders
-  animation-name: highlight-borders
-  animation-duration: 1s
-  animation-iteration-count: 3
-
-.navbar-nav > .messages-menu > .dropdown-menu > li:last-child > a,
-.navbar-nav > .notifications-menu > .dropdown-menu > li:last-child > a,
-.navbar-nav > .tasks-menu > .dropdown-menu > li:last-child
-  border-bottom-left-radius: 4px
-  border-bottom-right-radius: 4px
-
-.user-panel > .info > a
-  cursor: default
-
-.box-internal
-  margin-top: 10px
-  margin-bottom: 10px
-  border-top-width: 1px
-  .box-header
-    text-align: center
-  .box-title
-    font-size: 14px
-  .box-body
-    font-size: 12px
-.title-for-footer
-  margin-top: 10px
-  margin-bottom: 0
-  font-size: 15px
-  font-weight: bold
-  color: #444
-.box-padding
-  padding: 10px
-  &-top
-    padding: 10px 10px 0 10px
-  &-center
-    padding: 0 10px
-  &-bottom
-    padding: 0 10px 10px 10px
-
-.dropdown-menu > li > a.danger
-  color: #dd4b39
-  &:hover
-    color: #fff
-    background-color: #dd4b39
-hr
-  margin: 10px 0
-
-.sidebar-toggle
-  max-width: 45px

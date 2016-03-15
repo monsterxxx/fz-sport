@@ -1,0 +1,27 @@
+<div class="row">
+  <div class="box box-solid bg-green fz-group-filter__box">
+    <div class="box-header fz-group-filter__container">
+      <!-- <i class="fa fa-filter"></i>
+      <select class="form-control"
+              ng-model="vm.trainer"
+              ng-change="angular.noop()"
+              ng-options="trainer.name for trainer in vm.trainers track by trainer._id"></select> -->
+      <!-- <div class="fz-group-filter__container"> -->
+        <i class="fz-group-filter__icon fa fa-filter fa-lg"></i>
+        <div class="fz-group-filter__row row">
+          <div class="col-md-3 col-sm-6 col-xs-12">
+            <select class="fz-group-filter__select form-control pull-right"
+                    ng-model="vm.trainer"
+                    ng-change="angular.noop()"
+                    ng-options="trainer.name for trainer in vm.trainers track by trainer._id">
+              <option value="">-- Все группы --</option>
+            </select>
+          </div>
+        </div>
+        <div class="fz-group-filter__right-stub"></div>
+      <!-- </div> -->
+
+
+    </div>
+  </div>
+</div>

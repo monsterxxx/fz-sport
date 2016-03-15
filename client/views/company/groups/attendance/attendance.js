@@ -3,6 +3,7 @@
 
 angular
   .module('fz.groups.attendance', [
+    'fz.group-filter',
     'fz.group-attendance'
   ])
   .config(function ($stateProvider) {
@@ -50,10 +51,17 @@ function Ctrl($scope, $reactive, $stateParams) {
         companyId = $stateParams.companyId,
         date = $stateParams.attDate;
   vm.date = date.split('-').reverse().join('.');
+  // vm.trainer = {};
   $reactive(vm).attach($scope);
   vm.subscribe('attendance', () => [companyId, date]);
-  vm.helpers({ groups: () => Groups.find( {}, {sort: {name: 1}, fields: {_id: 1}} ),
-               role: () => Roles.getTopRole(Meteor.userId(), companyId)});
+  vm.helpers({
+    groups: () => {
+      const trainer = vm.getReactively('trainer');
+      let query = (trainer) ? {'trainer._id': trainer._id} : {};
+      return Groups.find( query, {sort: {name: 1}, fields: {_id: 1}} );
+    },
+    role: () => Roles.getTopRole(Meteor.userId(), companyId)
+  });
 }
 
 })();

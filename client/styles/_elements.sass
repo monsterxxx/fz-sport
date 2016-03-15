@@ -1,0 +1,64 @@
+a
+  text-decoration: none!important
+
+@mixin fz-shaded-input
+  @include fz-border-radius
+  color: #000
+  border: 1px solid transparent
+  transition: all 0.3s ease-in-out
+  &:focus
+    background-color: #fff
+    border-color: transparent
+
+//move it to
+.fz-sidebar-shaded-input
+  @include fz-shaded-input
+  margin: 10px 0
+  background-color: #374850
+
+//styling user initials (navbarm user panel and elsewhere)
+.fz-initials
+  display: block
+  width: 30px
+  height: 30px
+  font-size: 17px
+  font-weight: bold
+  line-height: 30px
+  overflow: hidden
+  text-align: center
+  top: 0
+  color: #4d4d4d
+  background-color: #edeff0
+  border-radius: 3px
+  &:hover
+    background-color: #e3e6e8
+  &-lg
+    display: flex
+    align-items: center
+    justify-content: center
+    width: 100%
+    max-width: 45px
+    height: 45px
+    line-height: normal
+    font-size: 22px
+    border-radius: 4px
+    cursor: default
+    &:hover
+      background-color: #edeff0
+    &:before
+      content: ''
+      padding-top: 60% /* vertical value as  100% equals width */
+      padding-bottom: 40%
+    span
+      transition: all 0.2s
+  &-navbar
+    position: absolute
+    top: 10px
+    left: 10px
+    pointer-events: none
+    &:hover
+      background-color: #e3e6e8
+body.sidebar-collapse
+  .fz-initials-lg
+    font-size: 17px
+    height: 30px
