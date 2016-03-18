@@ -19,9 +19,7 @@ angular.module('fz', [
   //ROUTES
   'fz.home',
   'fz.create-company',
-  'fz.company',
-  'fz.admin',
-  'fz.trainer'
+  'fz.company'
 ])
 
 .config(function ($urlRouterProvider, $stateProvider, $locationProvider) {

@@ -1,0 +1,12 @@
+<div>
+  <section class="content-header">
+    <h1>
+      Журнал посещений
+    </h1>
+  </section>
+
+  <section class="content journal__container">
+    <fz-group-filter ng-if="['owner','admin'].indexOf(vm.role)!==-1" trainer="vm.trainer" change="vm.filter()"></fz-group-filter>
+    <div id="journal"></div>
+  </section>
+</div>

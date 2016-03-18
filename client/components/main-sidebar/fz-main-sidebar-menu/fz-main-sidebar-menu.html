@@ -11,18 +11,21 @@
 </ul> -->
 <ul class="sidebar-menu" ng-if="vm.role === 'owner'">
   <li ui-sref-active="active"><a ui-sref="company.owner" href=""><i class="fa fa-percent"></i><span>Владелец</span></a></li>
+  <li ui-sref-active="active"><a ui-sref="company.journal" href=""><i class="fa fa-table"></i><span>Журнал посещений</span></a></li>
   <li ui-sref-active="active"><a ui-sref="company.structure" href=""><i class="fa fa-sitemap"></i><span>Структура компании</span></a></li>
   <li ui-sref-active="active"><a ui-sref="company.groups.composition" href=""><i class="fa fa-users"></i><span>Группы</span></a></li>
   <li ui-sref-active="active"><a ui-sref="company.groups.attendance({attDate:vm.today})" href=""><i class="fa fa-check-square"></i><span>Посещения</span></a></li>
 </ul>
 <ul class="sidebar-menu" ng-if="vm.role === 'admin'">
   <li ui-sref-active="active"><a ui-sref="company.admin" href=""><i class="fa fa-compass"></i><span>Администратор</span></a></li>
+  <li ui-sref-active="active"><a ui-sref="company.journal" href=""><i class="fa fa-table"></i><span>Журнал посещений</span></a></li>
   <li ui-sref-active="active"><a ui-sref="company.structure" href=""><i class="fa fa-sitemap"></i><span>Структура компании</span></a></li>
   <li ui-sref-active="active"><a ui-sref="company.groups.composition" href=""><i class="fa fa-users"></i><span>Группы</span></a></li>
   <li ui-sref-active="active"><a ui-sref="company.groups.attendance({attDate:vm.today})" href=""><i class="fa fa-check-square"></i><span>Посещения</span></a></li>
 </ul>
 <ul class="sidebar-menu" ng-if="vm.role === 'trainer'">
   <li ui-sref-active="active"><a ui-sref="company.trainer" href=""><i class="fa fa-hand-o-right"></i><span>Тренер</span></a></li>
+  <li ui-sref-active="active"><a ui-sref="company.journal" href=""><i class="fa fa-table"></i><span>Журнал посещений</span></a></li>
   <li ui-sref-active="active"><a ui-sref="company.groups.composition" href=""><i class="fa fa-users"></i><span>Группы</span></a></li>
   <li ui-sref-active="active"><a ui-sref="company.groups.attendance({attDate:vm.today})" href=""><i class="fa fa-check-square"></i><span>Посещения сегодня</span></a></li>
 </ul>

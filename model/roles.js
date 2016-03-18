@@ -33,8 +33,8 @@ Roles.getTopRole = function (user, group) {
   let roles = Roles.getRolesForUser(user, group);
   if (! roles.length) return;
   for (let role of ['owner', 'admin', 'trainer']) {
-    if (~roles.indexOf(role)) {
+    if (_.contains(roles, role)) {
       return role;
     }
   }
-}
+};

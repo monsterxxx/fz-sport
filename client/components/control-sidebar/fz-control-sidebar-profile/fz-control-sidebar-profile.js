@@ -24,24 +24,21 @@ Ctrl.$inject = ['$scope', '$reactive'];
 function Ctrl($scope, $reactive) {
   var vm = this;
   $reactive(vm).attach($scope);
-  vm.helpers({ user: () => Meteor.user() });
   let oriProfile;
-  if (vm.user) { oriProfile = angular.copy(vm.user.profile); }
+  vm.helpers({ user: () => {
+    const user = Meteor.user();
+    if (user) oriProfile = angular.copy(user.profile);
+    vm.profileChanged = false;
+    return user;
+  } });
+  $scope.$watch(() => vm.user, (user) => {
+    if (user) vm.profileChanged = !angular.equals(user.profile, oriProfile);
+  }, true);
   vm.updateUserProfile = updateUserProfile;
 
   function updateUserProfile() {
     Meteor.call('updateUserProfile', Meteor.userId(), vm.user.profile);
   }
-
-  $scope.$watch(() => vm.user, function (user) {
-    if (user) {
-      if (user.server) {
-        oriProfile = angular.copy(vm.user.profile);
-        user.server = false;
-      }
-      vm.profileChanged = !angular.equals(user.profile, oriProfile);
-    }
-  }, true);
 }
 
 })();

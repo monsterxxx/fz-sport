@@ -22,7 +22,7 @@
     "maxparams": 10,
     "maxdepth": 5,
     "maxstatements": 40,
-    "maxcomplexity": 8,
+    "maxcomplexity": 15,
     "maxlen": 200,
 
     "asi": false,
@@ -57,7 +57,12 @@
     "globals": {
         "_": true,
         "dateSvc": true,
+        "clearDb": true,
+        "fzDate": true,
         "GroupDays": true,
+        "CompanyDays": true,
+        "TrainerDays": true,
+        "ClientDays": true,
         "createSurrogate": true,
         "check": true,
         "Match": true,
@@ -70,7 +75,9 @@
         "Clients": true,
         "Groups": true,
         "Leads": true,
+        "Attendance": true,
         "angular": false,
+        "Chart": true,
         "$": false
     }
 }

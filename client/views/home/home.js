@@ -2,7 +2,9 @@
 'use strict';
 
 angular
-  .module('fz.home', [])
+  .module('fz.home', [
+    'fz.greeting-modal'
+  ])
   .config(function ($stateProvider) {
     $stateProvider
       .state('home', {
@@ -54,8 +56,9 @@ angular
   });
 
 function Ctrl() {
-  let vm = this;
-  vm.companies = Meteor.user().companies;
+  const vm = this;
+  vm.user = Meteor.user();
+  vm.companies = vm.user.companies; 
   vm.blinkCompanySelect = blinkCompanySelect;
 
   function blinkCompanySelect(e) {

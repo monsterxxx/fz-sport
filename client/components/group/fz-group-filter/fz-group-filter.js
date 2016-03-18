@@ -7,7 +7,8 @@ angular
     {
       templateUrl: `client/components/group/fz-group-filter/fz-group-filter.html`,
       bindings: {
-        trainer: '='
+        trainer: '=',
+        change: '&?'
       },
       controller: Ctrl,
       controllerAs: 'vm'

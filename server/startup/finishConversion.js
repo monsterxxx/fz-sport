@@ -21,7 +21,7 @@ Meteor.startup(function () {
       if (! user.client) {
         user.client = {
           groups: []
-        }
+        };
       }
       client.groups.forEach((group) => {
         user.client.groups.push({
@@ -53,7 +53,7 @@ Meteor.startup(function () {
         }]
       }
     }, {multi: true});
-    Users.update({username: pavship}, {$set: {'companies.0.creator': true}});
+    Users.update({username: 'pavship'}, {$set: {'companies.0.creator': true}});
     //Проследить, что все клиенты и члены добавлены в компанию
     //иначе использовать script в MongoChef:
     //   db.users.find({}).forEach(function(user) {
@@ -71,13 +71,13 @@ Meteor.startup(function () {
     }});
     //Проследить, что одна компания и все отсортировано
   }
-  const finishConversion = false;
+  const finishConversion = true;
   if (finishConversion) {
     //Проследить за *ндреевым Андреем
     Attendance.find({}).fetch().forEach((att) => {
       let date = fzDate.dateStart(fzDate.dateISO(att.createdAt, 3), 3),
           trainer = Users.findOne({'profile.fname': {$regex: att.trainer}}),
-          group = Groups.findOne({name: att.group, 'trainer._id': trainer._id});
+          group = Groups.findOne({name: att.group, 'trainer._id': trainer._id}),
           groupDay = GroupDays.findOne({'group._id': group._id, date: date}),
           client = Users.findOne({'profile.fname': {$regex: att.client}});
       if (!groupDay) {
@@ -87,12 +87,21 @@ Meteor.startup(function () {
           at: att.createdAt,
           by: 'cLx96uJGny5FJKiAh'
         };
+        groupDay.company = {
+          _id: '3SZmDouNH87jpyxSH',
+          name: 'FightZona'
+        };
+        groupDay.trainer = {
+          _id: trainer._id,
+          name: trainer.profile.fname
+        };
         groupDay.group = {
           _id: group._id,
           name: group.name
         };
+        groupDay.name = group.name;
         groupDay.clients = group.clients;
-        groupDayId = GroupDays.insert(groupDay);
+        const groupDayId = GroupDays.insert(groupDay);
         groupDay = GroupDays.findOne(groupDayId);
       }
       GroupDays.update({_id: groupDay._id, 'clients._id': client._id}, {$set: {'clients.$.came': true}, $inc: {att: 1}});

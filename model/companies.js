@@ -113,9 +113,15 @@ Meteor.methods({
 
     //if email provided, search user in db by email
     if (/@/.test(text)) {
-      let member = Users.find({ 'emails.address': text }, {fields: {profile: 1} }).fetch();
-      if (member.length) return [{_id: member[0]._id, name: member[0].profile.fname}];
-      else return [];
+      let member = Users.find({ 'emails.address': text }, {fields: {profile: 1} }).fetch()[0];
+      if (member) {
+        if (member.profile.fname) {
+          return [{_id: member._id, name: member.profile.fname}];
+        } else {
+          throw new Meteor.Error('user-has-no-name',
+            'User has to have name indicated in his profile to be added to a company');
+        }
+      } else return [];
     }
 
     if (text) {

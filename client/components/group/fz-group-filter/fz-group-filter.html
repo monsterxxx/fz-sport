@@ -12,7 +12,7 @@
           <div class="col-md-3 col-sm-6 col-xs-12">
             <select class="fz-group-filter__select form-control pull-right"
                     ng-model="vm.trainer"
-                    ng-change="angular.noop()"
+                    ng-change="vm.change && vm.change() || angular.noop()"
                     ng-options="trainer.name for trainer in vm.trainers track by trainer._id">
               <option value="">-- Все группы --</option>
             </select>

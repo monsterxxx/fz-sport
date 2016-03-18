@@ -1,0 +1,29 @@
+<div class="modal fade" id="fzGreetingModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Приветствуем Вас на fz-Sport!</h4>
+      </div>
+      <form name="form" ng-submit="vm.updateUserProfile()" novalidate>
+        <div class="modal-body">
+          <p>Представьтесь пожалуйста</p>
+          <div class="form-group" ng-class="{'has-error': form.fname.$invalid}">
+            <input class="form-control"
+            id="control-sidebar-fname"
+            name="fname"
+            type="text"
+            placeholder="Введите ФИО" ng-model="vm.user.profile.fname"
+            ng-pattern="/^([А-Я][а-я]+ ){2}([А-Я][а-я]+){1}$/"
+            required>
+            <p class="help-block text-red" ng-show="form.fname.$invalid">
+              Три слова с заглавной буквы
+            </p>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary" ng-disabled="!vm.profileChanged || form.$invalid">Продолжить</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

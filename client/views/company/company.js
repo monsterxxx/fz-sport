@@ -9,6 +9,7 @@ angular
     'fz.company.owner',
     'fz.company.admin',
     'fz.company.trainer',
+    'fz.company.journal',
     'fz.company.structure',
     'fz.groups'
   ])

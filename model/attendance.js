@@ -71,5 +71,25 @@ Meteor.methods({
     GroupDays.upsert({_id: group._id}, group);
     CompanyDays.upsert({'company._id': group.company._id, date: group.date}, {$inc: {att: attDiff}});
     TrainerDays.upsert({'company._id': group.company._id, 'trainer._id': group.trainer._id, date: group.date}, {$inc: {att: attDiff}});
+  },
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  journal: function (companyId, trainerId) {
+    check(companyId, String);
+    check(trainerId, Match.Optional(String));
+
+    if (Meteor.isServer) {
+      if (Roles.userIsInRole(this.userId, ['owner', 'admin'], companyId)) {
+        //TODO use unwind in the future (waiting for kadira to fix their meteor-aggregate package)
+        let query = {$match: {'company._id': companyId}};
+        if (trainerId) query.$match['trainer._id'] = trainerId;
+        return GroupDays.aggregate(query, {$project: {date: 1, trainer: '$trainer.name', group: '$name', 'clients.name': 1, 'clients.came': 1}});
+      }
+
+      if (Roles.userIsInRole(this.userId, 'trainer', companyId)) {
+        return GroupDays.aggregate({$match: {'company._id': companyId, 'trainer._id': this.userId}}, {$project: {date: 1, group: '$name', 'clients.name': 1, 'clients.came': 1}});
+      }
+    }
   }
 });

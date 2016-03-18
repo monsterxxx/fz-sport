@@ -55,11 +55,11 @@ Meteor.publish('att-widget', function (companyId, role, period) {
   check(companyId, String);
   check(role, Match.Where((role) => {
     check(role, String);
-    return ~['owner', 'trainer', 'client'].indexOf(role);
+    return _.contains(['owner', 'trainer', 'client'], role);
   }));
   check(period, Match.Where((period) => {
     check(period, String);
-    return ~['last31days', 'last364days'].indexOf(period);
+    return _.contains(['last31days', 'last364days'], period);
     //TODO add ISO date periods like 2016-02 or 2016
   }));
 

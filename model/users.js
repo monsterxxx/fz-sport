@@ -16,12 +16,12 @@ Meteor.methods({
 
     if (! this.userId) { throw new Meteor.Error('not-logged-in'); }
 
-    let user = Users.findOne(this.userId);
-
     if (userId !== this.userId) {
       throw new Meteor.Error('no-permission',
-        'Only user can update his profile.');
+      'Only user can update his profile.');
     }
+
+    let user = Users.findOne(this.userId);
 
     let modifier = {};
 
@@ -32,6 +32,43 @@ Meteor.methods({
 
     Users.update({_id: userId},  _.extend( { $set: {profile: profile} }, modifier ) );
 
+    if (Meteor.isServer) {
+      console.log('compare names: '+ user.profile.fname, profile.fname);
+
+      //UPDATE ALL APPEARANCES OF USER NAME
+      //if name was changed
+      if (user.profile.fname !== profile.fname) {
+        const userObj = {_id: user._id, name: profile.fname};
+        _.each(user.roles, (roles, companyId) => {
+          let pullModifier = {$pull: {}};
+          let pushModifier = {$push: {}};
+
+          //push 'member' role to make changes to members company array also
+          roles.push('member');
+          roles.forEach((role) => {
+            pullModifier.$pull[role + 's'] = {_id: user._id};
+            pushModifier.$push[role + 's'] = {$each: [userObj], $sort: {name: 1}};
+          });
+          console.log('to update: '+ companyId, JSON.stringify(pullModifier , null, 2), JSON.stringify(pushModifier , null, 2));
+          Companies.update({_id: companyId}, pullModifier);
+          Companies.update({_id: companyId}, pushModifier);
+        });
+      }
+      // if (user.profile.fname !== profile.fname) {
+      //   const userObj = {_id: user._id, name: profile.fname};
+      //   _.each(user.roles, (roles, companyId) => {
+      //     let modifier = {$pull: {}, $push: {}}
+      //     //push 'member' role to make changes to members company array also
+      //     roles.push('member');
+      //     roles.forEach((role) => {
+      //       modifier.$pull[role + 's'] = {_id: user._id};
+      //       modifier.$push[role + 's'] = {$each: [userObj], $sort: {name: 1}};
+      //     });
+      //     console.log('to update: '+ companyId, JSON.stringify(modifier , null, 2));
+      //     Companies.update({_id: companyId}, modifier);
+      //   });
+      // }
+    }
   },
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -160,7 +197,7 @@ Meteor.methods({
 
       //TRAINER
       //remove all trainer groups in the company
-      if (role === 'trainer' && member.trainer.groups) {
+      if (role === 'trainer' && member.trainer) {
         member.trainer.groups.forEach(group => {
           if (group.company._id === companyId) {
             Meteor.call('deleteGroup', group._id);

@@ -26,6 +26,9 @@
           Нет результатов
         </p>
       </div>
+      <p class="box-padding-top text-danger" ng-show="vm.showError">
+        Пользователь найден, но, к сожалению, он не представился. Добавление пользователя без имени не допускается.
+      </p>
       <div ng-show="vm.foundMembers.length">
         <h2 class="title-for-footer">
           Выберите для добавления

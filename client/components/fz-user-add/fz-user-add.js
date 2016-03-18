@@ -35,7 +35,13 @@ function Ctrl($scope, $reactive, $stateParams) {
   function search() {
     Meteor.call('searchMembers', companyId, vm.searchQuery, vm.surrogate || false, function (err, results) {
       $scope.$apply(function () {
-        vm.foundMembers = results;
+        if (err) {
+          if (err.error === 'user-has-no-name') {
+            vm.showError = true;
+          }
+        } else {
+          vm.foundMembers = results;
+        }
       });
     });
   }
