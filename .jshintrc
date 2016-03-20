@@ -72,6 +72,7 @@
         "Users": true,
         "Companies": true,
         "Roles": true,
+        "Email": true,
         "Clients": true,
         "Groups": true,
         "Leads": true,

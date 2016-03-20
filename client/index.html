@@ -13,13 +13,6 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
   <!-- Ionicons -->
   <!-- <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css"> -->
-  <!-- Theme style -->
-  <!-- <link rel="stylesheet" href="dist/css/AdminLTE.min.css"> -->
-  <!-- AdminLTE Skins. We have chosen the skin-blue for this starter
-        page. However, you can choose any other skin. Make sure you
-        apply the skin class to the body tag so the changes take effect.
-  -->
-  <!-- <link rel="stylesheet" href="dist/css/skins/skin-blue.min.css"> -->
 
   <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
   <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -29,7 +22,7 @@
   <![endif]-->
 </head>
 
-<body class="hold-transition skin-blue sidebar-mini" ng-app="fz" ng-strict-di="" ng-controller="MainCtrl as vm">
+<body class="hold-transition skin-green sidebar-mini" ng-app="fz" ng-strict-di="" ng-controller="MainCtrl as vm">
 
 <div class="wrapper">
 
@@ -48,7 +41,7 @@
     <nav class="navbar navbar-static-top" role="navigation">
 
       <!-- Sidebar toggle button-->
-      <a href="" class="sidebar-toggle" data-toggle="offcanvas" role="button" ng-show="$root.user">
+      <a href="" class="sidebar-toggle" data-toggle="offcanvas" role="button" ng-if="$root.user">
         <span class="sr-only">Toggle navigation</span>
       </a>
 
@@ -58,7 +51,7 @@
 
 
           <!-- Messages: style can be found in dropdown.less-->
-          <li class="dropdown messages-menu" ng-show="$root.user">
+          <li class="dropdown messages-menu" ng-if="$root.user">
             <a href="" class="dropdown-toggle" data-toggle="dropdown">
               <i class="fa fa-envelope-o"></i>
               <span class="label label-success"></span>
@@ -95,8 +88,8 @@
           <li class="dropdown user user-menu">
             <!-- Menu Toggle Button -->
             <a class="accounts-ui" href="">
-              <i class="fz-navbar__login-icon fa fa-power-off fa-2x" ng-show="!$root.user"></i>
-              <div class="fz-initials fz-initials-navbar" ng-show="$root.user">
+              <i class="fz-navbar__login-icon fa fa-sign-in fa-lg" ng-if="!$root.user"></i>
+              <div class="fz-initials fz-initials-navbar" ng-if="$root.user">
                 {{$root.user.initials}}
               </div>
               <login-buttons></login-buttons>
@@ -106,7 +99,7 @@
 
 
           <!-- Control Sidebar Toggle Button -->
-          <li ng-show="$root.user">
+          <li ng-if="$root.user">
             <a href="" data-toggle="control-sidebar"><i class="fa fa-gears"></i></a>
           </li>
         </ul>

@@ -21,7 +21,7 @@ Meteor.methods({
       'Only user can update his profile.');
     }
 
-    let user = Users.findOne(this.userId);
+    let user = Users.findOne(this.userId, {fields: {profile: 1, roles: 1, tasks: 1, trainer: 1, client: 1}});
 
     let modifier = {};
 
@@ -30,7 +30,7 @@ Meteor.methods({
       modifier.$pull = { tasks: { id: 1 } };
     }
 
-    Users.update({_id: userId},  _.extend( { $set: {profile: profile} }, modifier ) );
+    Users.update({_id: this.userId},  _.extend( { $set: {profile: profile} }, modifier ) );
 
     if (Meteor.isServer) {
       console.log('compare names: '+ user.profile.fname, profile.fname);
@@ -39,35 +39,30 @@ Meteor.methods({
       //if name was changed
       if (user.profile.fname !== profile.fname) {
         const userObj = {_id: user._id, name: profile.fname};
+        //in companies' members and roles arrays
         _.each(user.roles, (roles, companyId) => {
           let pullModifier = {$pull: {}};
           let pushModifier = {$push: {}};
-
           //push 'member' role to make changes to members company array also
           roles.push('member');
           roles.forEach((role) => {
             pullModifier.$pull[role + 's'] = {_id: user._id};
             pushModifier.$push[role + 's'] = {$each: [userObj], $sort: {name: 1}};
           });
-          console.log('to update: '+ companyId, JSON.stringify(pullModifier , null, 2), JSON.stringify(pushModifier , null, 2));
           Companies.update({_id: companyId}, pullModifier);
           Companies.update({_id: companyId}, pushModifier);
         });
+        //names of a trainer in his groups and attendance records
+        if (user.trainer && user.trainer.groups.length) {
+          Groups.update({'trainer._id': this.userId}, {$set: {trainer: userObj}}, {multi: true});
+          GroupDays.update({'trainer._id': this.userId}, {$set: {trainer: userObj}}, {multi: true});
+        }
+        if (user.client && user.client.groups.length) {
+          const groupIds = _.map(user.client.groups, (group) => group._id);
+          GroupDays.update({'group._id': {$in: groupIds}, 'clients._id': this.userId}, {$set: {'clients.$.name': userObj.name}}, {multi: true});
+          GroupDays.update({'group._id': {$in: groupIds}, 'clients._id': this.userId}, {$push: {clients: {$each: [], $sort: {name: 1}}}}, {multi: true});
+        }
       }
-      // if (user.profile.fname !== profile.fname) {
-      //   const userObj = {_id: user._id, name: profile.fname};
-      //   _.each(user.roles, (roles, companyId) => {
-      //     let modifier = {$pull: {}, $push: {}}
-      //     //push 'member' role to make changes to members company array also
-      //     roles.push('member');
-      //     roles.forEach((role) => {
-      //       modifier.$pull[role + 's'] = {_id: user._id};
-      //       modifier.$push[role + 's'] = {$each: [userObj], $sort: {name: 1}};
-      //     });
-      //     console.log('to update: '+ companyId, JSON.stringify(modifier , null, 2));
-      //     Companies.update({_id: companyId}, modifier);
-      //   });
-      // }
     }
   },
 

@@ -1,20 +1,31 @@
 <div class="box box-solid">
   <div class="box-header">
-    <!-- tools box -->
-    <div class="pull-right box-tools">
+    <!-- <div class="pull-right box-tools">
       <button type="button" class="btn btn-primary btn-sm daterange pull-right" data-toggle="tooltip" title="" data-original-title="Date range">
         <i class="fa fa-calendar"></i></button>
       <button type="button" class="btn btn-primary btn-sm pull-right" data-widget="collapse" data-toggle="tooltip" title="" style="margin-right: 5px;" data-original-title="Collapse">
         <i class="fa fa-minus"></i></button>
-    </div>
-    <!-- /. tools -->
+    </div> -->
 
     <i class="fa fa-check-square text-grey"></i>
     <h3 class="box-title">
       Посещаемость
     </h3>
+    <div class="box-tools pull-right">
+      <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+      <div class="btn-group">
+        <button type="button" class="btn btn-box-tool dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+          <i class="fa fa-calendar"></i>
+        </button>
+        <ul class="dropdown-menu" role="menu">
+          <li><a ng-click="vm.period='last31days'" href="#">31 день</a></li>
+          <li><a ng-click="vm.period='last53weeks'" href="#">53 недели</a></li>
+        </ul>
+      </div>
+    </div>
+
   </div>
-  <div class="box-body">
+  <div class="box-body" id="attChartBoxBody">
     <canvas id="attChart" height="240" style="display: block;"></canvas>
   </div>
-</div> 
+</div>

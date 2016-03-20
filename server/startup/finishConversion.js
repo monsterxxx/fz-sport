@@ -71,7 +71,7 @@ Meteor.startup(function () {
     }});
     //Проследить, что одна компания и все отсортировано
   }
-  const finishConversion = true;
+  const finishConversion = false;
   if (finishConversion) {
     //Проследить за *ндреевым Андреем
     Attendance.find({}).fetch().forEach((att) => {

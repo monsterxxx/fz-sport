@@ -59,7 +59,7 @@ Meteor.publish('att-widget', function (companyId, role, period) {
   }));
   check(period, Match.Where((period) => {
     check(period, String);
-    return _.contains(['last31days', 'last364days'], period);
+    return _.contains(['last31days', 'last53weeks'], period);
     //TODO add ISO date periods like 2016-02 or 2016
   }));
 
@@ -69,6 +69,10 @@ Meteor.publish('att-widget', function (companyId, role, period) {
   if (period === 'last31days') {
     to = fzDate.todayStart(tz);
     from = fzDate.addDays(to, -31);
+  }
+  if (period === 'last53weeks') {
+    to = fzDate.todayStart(tz);
+    from = fzDate.addDays(to, -371);
   }
   // console.log(from, to);
 

@@ -75,6 +75,7 @@ angular.module('fz', [
   Meteor.autorun(function () {
     let user = Meteor.user();
     $rootScope.user = user;
+    $rootScope.userAuthed = user && user.profile.fname & user.emails[0].verified;
     console.log('logged in user: ');
     console.log(user);
     if (user) {
