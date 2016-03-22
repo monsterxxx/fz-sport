@@ -1,18 +1,13 @@
-<!-- Main Header -->
 <header class="main-header">
 
-  <!-- Logo -->
   <a href="index2.html" class="logo">
-    <!-- mini logo for sidebar mini 50x50 pixels -->
-    <span class="logo-mini"><b>fz-</b>S</span>
-    <!-- logo for regular state and mobile devices -->
-    <span class="logo-lg"><b>fz-</b>Sport</span>
+    <!-- <span class="logo-mini"><b>fz-</b>S</span> -->
+    <span class="logo-mini fz-logo"><span class="fz-brand">FZ</span>Sport</span>
+    <span class="logo-lg fz-logo"><span class="fz-brand">FZ</span>Sport</span>
   </a>
 
-  <!-- Header Navbar -->
   <nav class="navbar navbar-static-top" role="navigation">
 
-    <!-- Sidebar toggle button-->
     <a href="" class="sidebar-toggle" data-toggle="offcanvas" role="button" ng-if="$root.user">
       <span class="sr-only">Toggle navigation</span>
     </a>
@@ -21,7 +16,6 @@
     <div class="navbar-custom-menu">
       <ul class="nav navbar-nav">
 
-        <!-- Messages-->
         <li class="dropdown messages-menu" ng-if="$root.user">
           <a href="" class="dropdown-toggle" data-toggle="dropdown">
             <i class="fa fa-envelope-o"></i>
@@ -55,9 +49,7 @@
         <fz-navbar-tasks ng-if="$root.user"></fz-navbar-tasks>
 
 
-        <!-- User Account Menu -->
         <li class="dropdown user user-menu">
-          <!-- Menu Toggle Button -->
           <a class="accounts-ui" href="">
             <i class="fz-navbar__login-icon fa fa-sign-in fa-lg" ng-if="!$root.user"></i>
             <div class="fz-initials fz-initials-navbar" ng-if="$root.user">
@@ -68,7 +60,6 @@
         </li>
 
 
-        <!-- Control Sidebar Toggle Button -->
         <li ng-show="$root.user">
           <a href="" data-toggle="control-sidebar"><i class="fa fa-gears"></i></a>
         </li>
@@ -80,9 +71,7 @@
 
 <!-- MAIN SIDEBAR -->
 <aside class="main-sidebar" ng-if="$root.user">
-  <!-- sidebar: style can be found in sidebar.less -->
   <section class="sidebar">
-
 
     <!-- USER PANEL -->
     <div class="user-panel">

@@ -225,9 +225,9 @@ a:focus {
   }
 }
 @media (max-width: 767px) {
-  .main-header .navbar-right {
+  /*.main-header .navbar-right {
     float: none;
-  }
+  }*/
   .navbar-collapse .main-header .navbar-right {
     margin: 7.5px -15px;
   }
@@ -372,14 +372,20 @@ a:focus {
   .main-header {
     position: relative;
   }
-  .main-header .logo,
+  .main-header .logo {
+    display: none;
+  }
+  .main-header .navbar {
+    margin-left: 0;
+  }
+  /*.main-header .logo,
   .main-header .navbar {
     width: 100%;
     float: none;
   }
   .main-header .navbar {
     margin: 0;
-  }
+  }*/
   .main-header .navbar-custom-menu {
     float: right;
   }
@@ -413,12 +419,12 @@ a:focus {
   -o-transition: -o-transform 0.3s ease-in-out, width 0.3s ease-in-out;
   transition: transform 0.3s ease-in-out, width 0.3s ease-in-out;
 }
-@media (max-width: 767px) {
+/*@media (max-width: 767px) {
   .main-sidebar,
   .left-side {
     padding-top: 100px;
   }
-}
+}*/
 @media (max-width: 767px) {
   .main-sidebar,
   .left-side {
@@ -685,11 +691,11 @@ a:focus {
   padding-top: 50px;
   z-index: 1010;
 }
-@media (max-width: 768px) {
+/*@media (max-width: 768px) {
   .control-sidebar {
     padding-top: 100px;
   }
-}
+}*/
 .control-sidebar > .tab-content {
   padding: 10px 15px;
 }
@@ -1254,7 +1260,7 @@ a:focus {
   box-shadow: none;
 }
 .form-group.has-error label {
-  
+
 }
 .form-group.has-error .form-control {
   border-color: #dd4b39;
