@@ -1,0 +1,54 @@
+<div class="content-wrapper main-sidebar-off">
+
+  <section class="content-header text-center">
+    <h1 class="fz-finish-registration__title" data-fittext="0.9" data-fittext-max="24">
+      Завершение регистрации!
+    </h1>
+  </section>
+
+  <section class="content">
+      <div class="box box-success fz-finish-registration__box">
+        <form class="form-horizontal" name="vm.form" ng-submit="vm.updateUserProfile()" novalidate>
+          <div class="box-body">
+            <div class="form-group" ng-class="{'has-error': vm.form.fname.$invalid}">
+              <i class="fa fa-2x col-sm-1 col-xs-2 text-right fz-finish-registration__bullet"
+                 ng-class="{'fa-check-square text-success': vm.user.profile.fname && vm.form.fname.$valid,
+                            'fa-square text-grey': ! (vm.user.profile.fname && vm.form.fname.$valid)}"> </i>
+              <div class="col-sm-11 col-xs-10">
+                <label>Представьтесь пожалуйста</label>
+                <div class="input-group">
+                  <input class="form-control"
+                         id="control-sidebar-fname"
+                         name="fname"
+                         type="text"
+                         placeholder="Введите ФИО" ng-model="vm.user.profile.fname"
+                         ng-pattern="/^([А-Я][а-я]+ ){2}([А-Я][а-я]+){1}$/"
+                         required>
+                  <span class="input-group-btn">
+                    <button type="submit" class="btn btn-primary btn-flat" ng-disabled="!vm.profileChanged || vm.form.$invalid"><i class="fa fa-check"></i></button>
+                  </span>
+                </div>
+                <p class="help-block text-red" ng-show="vm.form.fname.$invalid">
+                  Три слова с заглавной буквы
+                </p>
+              </div>
+
+            </div>
+            <div class="form-group">
+              <i class="fa fa-2x col-sm-1 col-xs-2 text-right fz-finish-registration__bullet"
+                 ng-class="{'fa-check-square text-success': vm.user.email[0].verified,
+                            'fa-square text-grey': ! vm.user.email[0].verified}"> </i>
+              <div class="col-sm-11 col-xs-10">
+                <label>Подтвердите свой email</label>
+                <p class="text-justify text-muted">На Ваш адрес электронной почты было отправлено письмо с сылкой для подтверждения email.
+                  <a href="#" ng-click="vm.sendVerificationLink()">Отправить письмо повторно.</a>
+                  <i class="fa fa-cog fa-spin" ng-show="vm.emailSending"></i>
+                </p>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+  </section>
+
+</div>

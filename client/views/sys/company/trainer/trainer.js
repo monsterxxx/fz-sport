@@ -5,16 +5,16 @@ angular
   .module('fz.company.trainer', [])
   .config(function ($stateProvider) {
     $stateProvider
-      .state('company.trainer', {
+      .state('sys.company.trainer', {
         url: '/trainer',
-        templateUrl: 'client/views/company/trainer/trainer.html',
+        templateUrl: 'client/views/sys/company/trainer/trainer.html',
         resolve: {
           auth: ($q, $stateParams) => {
             console.log('auth trainer');
             var deferred = $q.defer();
 
             if (! Roles.userIsInRole(Meteor.userId(), 'trainer', $stateParams.companyId)) {
-              deferred.reject({name: 'home'});
+              deferred.reject({name: 'sys'});
               console.log('! trainer');
               return deferred.promise;
             }

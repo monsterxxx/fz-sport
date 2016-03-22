@@ -38,12 +38,7 @@ function Ctrl($scope, $reactive, $rootScope, $state) {
       $state.go('create-company');
     } else {
       //go to selected company to highest available role view
-      let roles = Meteor.user().roles[companyId];
-      for (let role of ['owner', 'admin', 'trainer']) {
-        if (roles.indexOf(role) !== -1) {
-          return $state.go('company.'+ role, {companyId: companyId});
-        }
-      }
+      $state.go('sys.company.'+ Roles.getTopRole(Meteor.userId(), companyId), {companyId: companyId});
     }
   }
 }

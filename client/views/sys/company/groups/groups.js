@@ -12,7 +12,7 @@ angular
   ])
   .config(function ($stateProvider) {
     $stateProvider
-      .state('company.groups', {
+      .state('sys.company.groups', {
         url: '/groups',
         resolve: {
           auth: ($q, $stateParams) => {

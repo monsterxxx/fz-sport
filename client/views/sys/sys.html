@@ -1,0 +1,134 @@
+<!-- Main Header -->
+<header class="main-header">
+
+  <!-- Logo -->
+  <a href="index2.html" class="logo">
+    <!-- mini logo for sidebar mini 50x50 pixels -->
+    <span class="logo-mini"><b>fz-</b>S</span>
+    <!-- logo for regular state and mobile devices -->
+    <span class="logo-lg"><b>fz-</b>Sport</span>
+  </a>
+
+  <!-- Header Navbar -->
+  <nav class="navbar navbar-static-top" role="navigation">
+
+    <!-- Sidebar toggle button-->
+    <a href="" class="sidebar-toggle" data-toggle="offcanvas" role="button" ng-if="$root.user">
+      <span class="sr-only">Toggle navigation</span>
+    </a>
+
+    <!-- Navbar Right Menu -->
+    <div class="navbar-custom-menu">
+      <ul class="nav navbar-nav">
+
+        <!-- Messages-->
+        <li class="dropdown messages-menu" ng-if="$root.user">
+          <a href="" class="dropdown-toggle" data-toggle="dropdown">
+            <i class="fa fa-envelope-o"></i>
+            <span class="label label-success"></span>
+          </a>
+          <ul class="dropdown-menu">
+            <li class="header">Нет новых сообщений</li>
+            <!-- <li>
+              <ul class="menu">
+                <li>
+                  <a href="">
+                    <div class="pull-left">
+                      <img src="/img/user2-160x160.jpg" class="img-circle" alt="User Image">
+                    </div>
+                    <h4>
+                      Support Team
+                      <small><i class="fa fa-clock-o"></i> 5 mins</small>
+                    </h4>
+                    <p>Why not buy a new awesome theme?</p>
+                  </a>
+                </li>
+              </ul>
+            </li>
+            <li class="footer"><a href="">See All Messages</a></li> -->
+          </ul>
+        </li>
+
+
+        <fz-navbar-notifications ng-if="$root.user"></fz-navbar-notifications>
+
+        <fz-navbar-tasks ng-if="$root.user"></fz-navbar-tasks>
+
+
+        <!-- User Account Menu -->
+        <li class="dropdown user user-menu">
+          <!-- Menu Toggle Button -->
+          <a class="accounts-ui" href="">
+            <i class="fz-navbar__login-icon fa fa-sign-in fa-lg" ng-if="!$root.user"></i>
+            <div class="fz-initials fz-initials-navbar" ng-if="$root.user">
+              {{$root.user.initials}}
+            </div>
+            <login-buttons></login-buttons>
+          </a>
+        </li>
+
+
+        <!-- Control Sidebar Toggle Button -->
+        <li ng-show="$root.user">
+          <a href="" data-toggle="control-sidebar"><i class="fa fa-gears"></i></a>
+        </li>
+
+      </ul>
+    </div>
+  </nav>
+</header>
+
+<!-- MAIN SIDEBAR -->
+<aside class="main-sidebar" ng-if="$root.user">
+  <!-- sidebar: style can be found in sidebar.less -->
+  <section class="sidebar">
+
+
+    <!-- USER PANEL -->
+    <div class="user-panel">
+      <!-- <div class="pull-left image"> -->
+      <div class="pull-left image fz-initials fz-initials-lg"><span>{{$root.user.initials}}</span>
+        <!-- <img src="/img/user2-160x160.jpg" class="img-circle" alt="User Image"> -->
+
+      </div>
+      <div class="pull-left info">
+        <p>{{$root.user.sname}}</p>
+        <!-- Status -->
+        <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
+      </div>
+    </div>
+
+    <!-- SEARCH FORM (Removed) -->
+
+    <!-- COMPANY SELECT -->
+    <fz-company-select></fz-company-select>
+
+    <!-- MAIN MENU -->
+    <div ui-view="fz-main-menu"></div>
+  </section>
+</aside>
+
+<!-- PAGE CONTENT -->
+<div class="content-wrapper" ng-class="{'main-sidebar-off': !$root.user}">
+
+  <!-- ANGULAR VIEW -->
+  <div ui-view></div>
+
+</div>
+
+<!-- MAIN fOOTER -->
+<!-- <footer class="main-footer" ng-class="{'main-sidebar-off': !$root.user}"> -->
+  <!-- To the right -->
+  <!-- <div class="pull-right hidden-xs">
+    Anything you want
+  </div> -->
+  <!-- To the left -->
+  <!-- <strong>Copyright &copy; 2016 <a href="">MoT</a>.</strong> All rights reserved. -->
+<!-- </footer> -->
+
+<!-- CONTROL SIDEBAR -->
+<fz-control-sidebar></fz-control-sidebar>
+
+<!-- Add the sidebar's background. This div must be placed
+     immediately after the control sidebar -->
+<div class="control-sidebar-bg"></div>

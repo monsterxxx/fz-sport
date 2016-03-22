@@ -1,0 +1,38 @@
+<div ng-if="!vm.companies.length">
+  <section class="content-header">
+    <h1>
+      Спасибо за регистрацию!
+      <!-- <small>Работа в системе fz-Sport производится в рамках <b>Компаний</b>. Вы можете дождаться пока Вас пригласят или <a ui-sref='create-company'>открыть свою компанию</a>.</small> -->
+    </h1>
+    <!-- <ol class="breadcrumb">
+      <li><a href="#"><i class="fa fa-dashboard"></i> Level</a></li>
+      <li class="active">Here</li>
+    </ol> -->
+  </section>
+
+  <section class="content">
+    <p>
+      Работа в системе fz-Sport производится в рамках <b>Компаний</b>.
+    </p>
+    <p>
+      Вы можете дождаться пока Вас пригласят или <a ui-sref='create-company'>открыть свою компанию</a>.
+    </p>
+  </section>
+</div>
+
+<div ng-if="vm.companies.length">
+  <section class="content-header">
+    <h1>
+      Выбор компании
+    </h1>
+  </section>
+
+  <section class="content">
+    <p>
+      <a ng-click="vm.blinkCompanySelect($event)" href="#">Выберете компанию</a>, чтобы продолжить.
+    </p>
+    <!--TODO <p>
+      Вы также можете <a href="#">указать <b><i>Компанию по умолчанию</i></b></a> для будущих загрузок.
+    </p> -->
+  </section>
+</div>

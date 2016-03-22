@@ -8,9 +8,9 @@ angular
   ])
   .config(function ($stateProvider) {
     $stateProvider
-      .state('company.groups.composition', {
+      .state('sys.company.groups.composition', {
         url: '/composition',
-        templateUrl: 'client/views/company/groups/composition/composition.html',
+        templateUrl: 'client/views/sys/company/groups/composition/composition.html',
         resolve: {
           auth: ($q, $stateParams) => {
             // console.log('auth composition');

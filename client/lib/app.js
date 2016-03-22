@@ -6,20 +6,13 @@ angular.module('fz', [
   'angular-meteor',
   'angular-meteor.auth',
   'ui.router',
+  //ANGULAR PLUGINS
+  'ngFitText',
   //AUTHORIZATION
   'accounts.ui',
-  //navbar
-  'fz.navbar-notifications',
-  'fz.navbar-tasks',
-  //MAIN SIDEBAR
-  'fz.company-select',
-  //CONTROL SIDEBAR
-  'fz.control-sidebar',
-  'fz.control-sidebar-profile',
   //ROUTES
   'fz.home',
-  'fz.create-company',
-  'fz.company'
+  'fz.sys'
 ])
 
 .config(function ($urlRouterProvider, $stateProvider, $locationProvider) {
@@ -28,33 +21,65 @@ angular.module('fz', [
   $stateProvider
   .state('index', {
     url: '/',
-    templateUrl: 'client/views/index/index.html',
     resolve: {
       auth: ($q) => {
-        console.log('auth index');
-        var deferred = $q.defer();
+        const deferred = $q.defer(),
+              user = Users.findOne(Meteor.userId(), { fields: {profile: 1, emails: 1, roles: 1} }),
+              singleCompanyState = (user) ? getSingleCompanyState(user.roles) : null;
 
-        //if user is logged in redirect to system's home page
-        if (Meteor.user()) {
-          deferred.reject({name: 'home'});
-        }
-        else {
-          deferred.resolve();
-        }
-
+        resolve();
         return deferred.promise;
+
+        function resolve() {
+          //if user is not registered go to login page
+          if (! user) {
+            deferred.reject({name: 'home.login'});
+          } else
+          //if user hasn't finished registration process yet
+          if (! user.profile.fname || ! user.emails[0].verified) {
+            deferred.reject({name: 'home.finish-registration'});
+          } else
+          //if user has only one company, choose this company automatically
+          if (singleCompanyState) {
+            deferred.reject(singleCompanyState);
+          }
+          //otherwise go to select company page
+          else {
+            deferred.reject({name: 'sys.select-company'});
+          }
+        }
+
+        function getSingleCompanyState(roles) {
+          const companyIds = (roles) ? Object.keys(roles) : null;
+          if (! companyIds || companyIds.length !== 1) return;
+          const companyId = companyIds[0];
+          //find and return state name for the highest available role
+          return {
+            name: 'sys.company.' + Roles.getTopRole(user, companyId),
+            params: {companyId: companyId}
+          };
+        }
+
       }
     }
-  })
-  .state('debug', {
-    url: '/debug'
   });
+  //state for any debug purposes
+  // .state('debug', {
+  //   url: '/debug'
+  // });
 
   $urlRouterProvider.otherwise('/');
 })
 
-.controller('MainCtrl', function ($state) {
-  // console.log('MainCtrl');
+.config(function(fitTextConfigProvider) {
+  fitTextConfigProvider.config = {
+    debounce: function(a,b,c) {         // specify your own function
+      var d;return function(){var e=this,f=arguments;clearTimeout(d),d=setTimeout(function(){d=null,c||a.apply(e,f)},b),c&&!d&&a.apply(e,f)}
+    },
+    delay: 20,                        // debounce delay
+    loadDelay: 10,                      // global default delay before initial calculation
+    compressor: 1                      // global default calculation multiplier
+  };
 })
 
 .run(function ($state, $stateParams, $rootScope) {
@@ -63,11 +88,7 @@ angular.module('fz', [
   //catch states' auth resolves rejects and redirect according to passed error state object
   $rootScope.$on('$stateChangeError', function(e, toState, toParams, fromState, fromParams, error) {
     console.log('$stateChangeError > '+ JSON.stringify(error , null, 2));
-    if (error.name) {
-      $state.go(error.name, error.params || {});
-      return;
-    }
-    console.log('no redirection');
+    if (error.name) return $state.go(error.name, error.params || {});
   });
 
   //when user loggs in or out go to home state
@@ -75,22 +96,19 @@ angular.module('fz', [
   Meteor.autorun(function () {
     let user = Meteor.user();
     $rootScope.user = user;
-    $rootScope.userAuthed = user && user.profile.fname & user.emails[0].verified;
+    $rootScope.userAuthed = user && user.profile.fname && user.emails[0].verified;
     console.log('logged in user: ');
     console.log(user);
     if (user) {
-      if (user.profile.fname)
-      {
+      if (user.profile.fname) {
         var nameArr = user.profile.fname.split(' ');
         user.sname = nameArr[1] + ' ' + nameArr[0];
         user.initials = nameArr[1][0] + nameArr[0][0];
-      }
-      else {
+      } else {
         user.initials = '?';
       }
-
-      if ($state.current.name === 'index') {
-        $state.go('home', {}, {reload: true});
+      if ($state.current.name === 'home.login') {
+        $state.go('index');
       }
     }
     else {
@@ -123,5 +141,6 @@ angular.module('fz', [
   // console.log('exec time: '+ start, end, start - end);
 
 });
+
 
 })();

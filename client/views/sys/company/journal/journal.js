@@ -6,9 +6,9 @@ angular
   ])
   .config(function ($stateProvider) {
     $stateProvider
-      .state('company.journal', {
+      .state('sys.company.journal', {
         url: '/journal',
-        templateUrl: 'client/views/company/journal/journal.html',
+        templateUrl: 'client/views/sys/company/journal/journal.html',
         resolve: {
           auth: ($q, $stateParams) => {
             console.log('auth journal');
@@ -16,7 +16,7 @@ angular
 
             //allow owners, admins and trainers
             if (! Roles.userIsInRole(Meteor.userId(), ['owner', 'admin', 'trainer'], $stateParams.companyId)) {
-              deferred.reject({name: 'home'});
+              deferred.reject({name: 'sys'});
               return deferred.promise;
             }
 

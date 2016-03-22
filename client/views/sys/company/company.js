@@ -15,23 +15,17 @@ angular
   ])
   .config(function ($stateProvider) {
     $stateProvider
-      .state('company', {
+      .state('sys.company', {
         url: '/company/:companyId',
         resolve: {
           auth: ($q, $stateParams) => {
             console.log('auth company');
-            var deferred = $q.defer();
-
-            if (! Meteor.userId()) {
-              deferred.reject({name: 'index'});
-              return deferred.promise;
-            }
-
-            let roles = Roles.getRolesForUser(Meteor.userId(), $stateParams.companyId);
+            const deferred = $q.defer(),
+                  roles = Roles.getRolesForUser(Meteor.userId(), $stateParams.companyId);
 
             //allow anyone who has a role in the company
             if (! roles.length) {
-              deferred.reject({name: 'home'});
+              deferred.reject({name: 'index'});
             } else {
               deferred.resolve();
             }

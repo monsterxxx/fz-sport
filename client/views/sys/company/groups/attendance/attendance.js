@@ -8,9 +8,9 @@ angular
   ])
   .config(function ($stateProvider) {
     $stateProvider
-      .state('company.groups.attendance', {
+      .state('sys.company.groups.attendance', {
         url: '/attendance/:attDate',
-        templateUrl: 'client/views/company/groups/attendance/attendance.html',
+        templateUrl: 'client/views/sys/company/groups/attendance/attendance.html',
         resolve: {
           auth: ($q, $stateParams) => {
             // console.log('auth attendance');
@@ -32,7 +32,7 @@ angular
                 || Roles.userIsInRole(Meteor.userId(), 'trainer', companyId) && attDate === today)) {
               deferred.resolve();
             } else {
-              deferred.reject({name: 'home'});
+              deferred.reject({name: 'sys'});
             }
 
             return deferred.promise;

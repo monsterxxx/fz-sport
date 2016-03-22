@@ -1,5 +1,18 @@
 Meteor.startup(function () {
-    process.env.MAIL_URL='smtp://postmaster%40sandbox402fe10662264a4ab4cb9f7b5777abe5.mailgun.org:ad3decfaf0a88adb78383a8972d42dd9@smtp.mailgun.org:587/';
+    process.env.MAIL_URL             = 'smtp://postmaster%40sandbox402fe10662264a4ab4cb9f7b5777abe5.mailgun.org:ad3decfaf0a88adb78383a8972d42dd9@smtp.mailgun.org:587/';
+    Accounts.emailTemplates.siteName = 'fzSport';
+    Accounts.emailTemplates.from     = 'fzSport <support@fzsport.ru>';
+    Accounts.emailTemplates.verifyEmail = {
+      subject() {
+        return 'Подтвердите свой Email для fzSport';
+      },
+      text( user, url ) {
+        const emailAddress   = user.emails[0].address,
+              urlWithoutHash = url.replace( '#/verify-email', 'home/finish-registration' ),
+              emailBody      = `Чтобы подтвердить свой адрес электронной почты (${emailAddress}) просто пройдите по ссылке:\n\n${urlWithoutHash}\n\n Спасибо!`;
+        return emailBody;
+      }
+    };
     // Email.send({
     //   to: '3645321@gmail.com',
     //   from: 'VANCHEZ SNOWBOARDS <yampolsky@fightzona.com>',

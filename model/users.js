@@ -5,6 +5,12 @@ Meteor.users.deny({
 });
 
 Meteor.methods({
+  sendVerificationLink() {
+    if (Meteor.isServer) {
+      if ( this.userId ) return Accounts.sendVerificationEmail( this.userId );
+    }
+  },
+
   updateUserProfile: function (userId, profile) {
     check(userId, String);
     check(profile, {
@@ -33,8 +39,6 @@ Meteor.methods({
     Users.update({_id: this.userId},  _.extend( { $set: {profile: profile} }, modifier ) );
 
     if (Meteor.isServer) {
-      console.log('compare names: '+ user.profile.fname, profile.fname);
-
       //UPDATE ALL APPEARANCES OF USER NAME
       //if name was changed
       if (user.profile.fname !== profile.fname) {

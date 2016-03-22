@@ -7,22 +7,27 @@ angular
   ])
   .config(function ($stateProvider) {
     $stateProvider
-      .state('company.owner', {
+      .state('sys.company.owner', {
         url: '/owner',
-        templateUrl: 'client/views/company/owner/owner.html',
+        templateUrl: 'client/views/sys/company/owner/owner.html',
         resolve: {
           auth: ($q, $stateParams) => {
             console.log('auth owner');
             var deferred = $q.defer();
 
-            if (! Roles.userIsInRole(Meteor.userId(), 'owner', $stateParams.companyId)) {
-              deferred.reject({name: 'home'});
-              return deferred.promise;
+            resolve();
+            return deferred.promise;
+
+            function resolve() {
+              //only owners allowed
+              if (! Roles.userIsInRole(Meteor.userId(), 'owner', $stateParams.companyId)) {
+                deferred.reject({name: 'index'});
+              }
+              else {
+                deferred.resolve();
+              }
             }
 
-            deferred.resolve();
-
-            return deferred.promise;
           }
         },
         controller: Ctrl

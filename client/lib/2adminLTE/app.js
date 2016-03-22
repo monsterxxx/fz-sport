@@ -1,4 +1,4 @@
-// console.log('adminLTE app.js');
+console.log('adminLTE');
 
 /*! AdminLTE app.js
  * ================
@@ -131,7 +131,7 @@ $.AdminLTE.options = {
     lg: 1200
   }
 };
-
+console.log('adminLTE before Implementation');
 /* ------------------
  * - Implementation -
  * ------------------
@@ -140,6 +140,7 @@ $.AdminLTE.options = {
  * options above.
  */
 $(function () {
+  console.log('adminLTE implementation');
   "use strict";
 
   //Fix for IE page transitions
@@ -237,16 +238,14 @@ function _init() {
    * @type Object
    * @usage $.AdminLTE.layout.activate()
    *        $.AdminLTE.layout.fix()
-   *        $.AdminLTE.layout.fixSidebar()
    */
   $.AdminLTE.layout = {
     activate: function () {
       var _this = this;
+      console.log('activate');
       _this.fix();
-      _this.fixSidebar();
       $(window, ".wrapper").resize(function () {
         _this.fix();
-        _this.fixSidebar();
       });
     },
     fix: function () {
@@ -275,30 +274,6 @@ function _init() {
             $(".content-wrapper, .right-side").css('min-height', controlSidebar.height());
         }
 
-      }
-    },
-    fixSidebar: function () {
-      //Make sure the body tag has the .fixed class
-      if (!$("body").hasClass("fixed")) {
-        if (typeof $.fn.slimScroll != 'undefined') {
-          $(".sidebar").slimScroll({destroy: true}).height("auto");
-        }
-        return;
-      } else if (typeof $.fn.slimScroll == 'undefined' && window.console) {
-        window.console.error("Error: the fixed layout requires the slimscroll plugin!");
-      }
-      //Enable slimscroll for fixed layout
-      if ($.AdminLTE.options.sidebarSlimScroll) {
-        if (typeof $.fn.slimScroll != 'undefined') {
-          //Destroy if it exists
-          $(".sidebar").slimScroll({destroy: true}).height("auto");
-          //Add slimscroll
-          $(".sidebar").slimscroll({
-            height: ($(window).height() - $(".main-header").height()) + "px",
-            color: "rgba(0,0,0,0.2)",
-            size: "3px"
-          });
-        }
       }
     }
   };
@@ -451,6 +426,8 @@ function _init() {
       var sidebar = $(o.selector);
       //The toggle button
       var btn = $(o.toggleBtnSelector);
+      //fz - Mark sidebar as activated
+      sidebar.addClass('activated');
 
       //Listen to the click event
       btn.on('click', function (e) {

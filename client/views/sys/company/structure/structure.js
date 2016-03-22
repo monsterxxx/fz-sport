@@ -7,9 +7,9 @@ angular
   ])
   .config(function ($stateProvider) {
     $stateProvider
-      .state('company.structure', {
+      .state('sys.company.structure', {
         url: '/structure',
-        templateUrl: 'client/views/company/structure/structure.html',
+        templateUrl: 'client/views/sys/company/structure/structure.html',
         resolve: {
           auth: ($q, $stateParams) => {
             console.log('auth structure');
@@ -19,7 +19,7 @@ angular
             if (Roles.userIsInRole(Meteor.userId(), ['owner', 'admin'], $stateParams.companyId)) {
               deferred.resolve();
             } else {
-              deferred.reject({name: 'home'});
+              deferred.reject({name: 'sys'});
             }
 
             return deferred.promise;
