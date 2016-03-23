@@ -10,15 +10,13 @@ angular
         templateUrl: 'client/views/sys/company/admin/admin.html',
         resolve: {
           auth: ($q, $stateParams) => {
-            console.log('auth admin');
             var deferred = $q.defer();
 
             if (! Roles.userIsInRole(Meteor.userId(), 'admin', $stateParams.companyId)) {
-              deferred.reject({name: 'sys'});
-              return deferred.promise;
+              deferred.reject({name: 'redirect'});
+            } else {
+              deferred.resolve();
             }
-
-            deferred.resolve();
 
             return deferred.promise;
           }

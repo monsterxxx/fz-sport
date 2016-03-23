@@ -11,16 +11,14 @@ angular
         templateUrl: 'client/views/sys/company/journal/journal.html',
         resolve: {
           auth: ($q, $stateParams) => {
-            console.log('auth journal');
             var deferred = $q.defer();
 
             //allow owners, admins and trainers
             if (! Roles.userIsInRole(Meteor.userId(), ['owner', 'admin', 'trainer'], $stateParams.companyId)) {
-              deferred.reject({name: 'sys'});
-              return deferred.promise;
+              deferred.reject({name: 'redirect'});
+            } else {
+              deferred.resolve();
             }
-
-            deferred.resolve();
 
             return deferred.promise;
           }

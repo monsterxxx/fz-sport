@@ -26,7 +26,7 @@ angular
 
             //allow anyone who has a role in the company
             if (! roles.length) {
-              deferred.reject({name: 'index'});
+              deferred.reject({name: 'redirect'});
             } else {
               deferred.resolve();
             }

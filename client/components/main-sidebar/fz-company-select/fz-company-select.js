@@ -35,7 +35,7 @@ function Ctrl($scope, $reactive, $rootScope, $state) {
     if (! $rootScope.company) return;
     let companyId = $rootScope.company._id;
     if (companyId === 1) {
-      $state.go('create-company');
+      $state.go('sys.create-company');
     } else {
       //go to selected company to highest available role view
       $state.go('sys.company.'+ Roles.getTopRole(Meteor.userId(), companyId), {companyId: companyId});

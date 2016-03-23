@@ -32,7 +32,7 @@ angular
                 || Roles.userIsInRole(Meteor.userId(), 'trainer', companyId) && attDate === today)) {
               deferred.resolve();
             } else {
-              deferred.reject({name: 'sys'});
+              deferred.reject({name: 'redirect'});
             }
 
             return deferred.promise;

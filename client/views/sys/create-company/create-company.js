@@ -9,18 +9,14 @@ angular
     $stateProvider
       .state('sys.create-company', {
         url: '/create-company',
-        templateUrl: 'client/views/create-company/create-company.html',
+        templateUrl: 'client/views/sys/create-company/create-company.html',
         resolve: {
           auth: ($q) => {
             var deferred = $q.defer();
 
-            if (!Meteor.user()) {
-              deferred.reject({name: 'index'});
-              return deferred.promise;
-            }
-            //if user has already created a company, go to home page
-            if (_.any(Meteor.user().companies, (company) => company.creator)) {
-              deferred.reject({name: 'home'});
+            //only allowed users who has not created their own company yet
+            if (Users.findOne({_id: Meteor.userId(), 'companies.creator': true})) {
+              deferred.reject({name: 'redirect'});
             }
             else {
               deferred.resolve();
@@ -76,7 +72,7 @@ function Ctrl($scope, $rootScope, $reactive, $state, Timezones) {
         }
       } else {
         vm.showError = false;
-        $state.go('company.structure', {companyId: res._id});
+        $state.go('sys.company.structure', {companyId: res._id});
       }
     });
   }

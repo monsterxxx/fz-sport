@@ -15,11 +15,11 @@ angular
             console.log('auth structure');
             var deferred = $q.defer();
 
-            //allow only owners and admins
-            if (Roles.userIsInRole(Meteor.userId(), ['owner', 'admin'], $stateParams.companyId)) {
-              deferred.resolve();
+            //only owners and admins allowed
+            if (! Roles.userIsInRole(Meteor.userId(), ['owner', 'admin'], $stateParams.companyId)) {
+              deferred.reject({name: 'redirect'});
             } else {
-              deferred.reject({name: 'sys'});
+              deferred.resolve();
             }
 
             return deferred.promise;

@@ -34,9 +34,9 @@ angular
         return deferred.promise;
 
         function resolve() {
-          //if user is not logged in redirect to index page
+          //only comletely registered users allowed
           if (! user || ! user.profile.fname || ! user.emails[0].verified) {
-            deferred.reject({name: 'index'});
+            deferred.reject({name: 'redirect'});
           }
           else {
             deferred.resolve();
@@ -56,7 +56,12 @@ function Ctrl($timeout) {
   $timeout(function(){
     if (! $('.control-sidebar').hasClass('activated')) {
       $.AdminLTE.controlSidebar.activate();
-      $.AdminLTE.pushMenu.activate("[data-toggle='offcanvas']");
+      // $.AdminLTE.pushMenu.activate("[data-toggle='offcanvas']");
+      $(".content-wrapper").click(function () {
+        if ($(window).width() <= 767 && $("body").hasClass("sidebar-open")) {
+          $("body").removeClass('sidebar-open');
+        }
+      });
     }
   });
 }

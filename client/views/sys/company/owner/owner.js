@@ -12,7 +12,6 @@ angular
         templateUrl: 'client/views/sys/company/owner/owner.html',
         resolve: {
           auth: ($q, $stateParams) => {
-            console.log('auth owner');
             var deferred = $q.defer();
 
             resolve();
@@ -21,13 +20,11 @@ angular
             function resolve() {
               //only owners allowed
               if (! Roles.userIsInRole(Meteor.userId(), 'owner', $stateParams.companyId)) {
-                deferred.reject({name: 'index'});
-              }
-              else {
+                deferred.reject({name: 'redirect'});
+              } else {
                 deferred.resolve();
               }
             }
-
           }
         },
         controller: Ctrl
