@@ -56,6 +56,7 @@ function Ctrl($timeout) {
   $timeout(function(){
     if (! $('.control-sidebar').hasClass('activated')) {
       $.AdminLTE.controlSidebar.activate();
+      $.AdminLTE.pushMenu.activate("[data-toggle='offcanvas']");
     }
   });
 }

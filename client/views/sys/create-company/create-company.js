@@ -7,7 +7,7 @@ angular
   ])
   .config(function ($stateProvider) {
     $stateProvider
-      .state('create-company', {
+      .state('sys.create-company', {
         url: '/create-company',
         templateUrl: 'client/views/create-company/create-company.html',
         resolve: {
