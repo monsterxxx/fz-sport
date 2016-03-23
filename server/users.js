@@ -35,15 +35,20 @@ Meteor.publish('users_for_admin', function () {
   }
 });
 
-Users.before.insert(function (userId, user) {
-  //userId here is undefined
-  //user contains complete user document
-  user.tasks.push({
-    id: 1,
-    name: 'fill fname',
-    text: 'Представьтесь пожалуйста'
-  });
+// Users.before.insert(function (userId, user) {
+//   //userId here is undefined
+//   //user contains complete user document
+//   user.tasks.push({
+//     id: 1,
+//     name: 'fill fname',
+//     text: 'Представьтесь пожалуйста'
+//   });
+// });
+
+Users.after.insert(function (userId, user) {
+  Accounts.sendVerificationEmail( this._id );
 });
+
 
 // Users.before.update(function (userId, doc, fieldNames, modifier, options) {
 //   console.log('before update');

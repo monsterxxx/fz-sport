@@ -19,14 +19,14 @@ angular
 
         function resolve() {
           if (Meteor.userId()) {
-            deferred.reject({name: 'index'});
+            deferred.reject({name: 'redirect'});
           }
           else {
             deferred.resolve();
           }
         }
       }
-    }     
+    }
   });
 });
 

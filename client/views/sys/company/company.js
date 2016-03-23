@@ -17,6 +17,7 @@ angular
     $stateProvider
       .state('sys.company', {
         url: '/company/:companyId',
+        abstract: true,
         resolve: {
           auth: ($q, $stateParams) => {
             console.log('auth company');

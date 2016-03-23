@@ -11,6 +11,7 @@ angular.module('fz', [
   //AUTHORIZATION
   'accounts.ui',
   //ROUTES
+  'fz.redirect',
   'fz.home',
   'fz.sys'
 ])
@@ -21,54 +22,14 @@ angular.module('fz', [
   $stateProvider
   .state('index', {
     url: '/',
-    resolve: {
-      auth: ($q) => {
-        const deferred = $q.defer(),
-              user = Users.findOne(Meteor.userId(), { fields: {profile: 1, emails: 1, roles: 1} }),
-              singleCompanyState = (user) ? getSingleCompanyState(user.roles) : null;
-
-        resolve();
-        return deferred.promise;
-
-        function resolve() {
-          //if user is not registered go to login page
-          if (! user) {
-            deferred.reject({name: 'home.login'});
-          } else
-          //if user hasn't finished registration process yet
-          if (! user.profile.fname || ! user.emails[0].verified) {
-            deferred.reject({name: 'home.finish-registration'});
-          } else
-          //if user has only one company, choose this company automatically
-          if (singleCompanyState) {
-            deferred.reject(singleCompanyState);
-          }
-          //otherwise go to select company page
-          else {
-            deferred.reject({name: 'sys.select-company'});
-          }
-        }
-
-        function getSingleCompanyState(roles) {
-          const companyIds = (roles) ? Object.keys(roles) : null;
-          if (! companyIds || companyIds.length !== 1) return;
-          const companyId = companyIds[0];
-          //find and return state name for the highest available role
-          return {
-            name: 'sys.company.' + Roles.getTopRole(user, companyId),
-            params: {companyId: companyId}
-          };
-        }
-
-      }
-    }
+    abstract: true
   });
   //state for any debug purposes
   // .state('debug', {
   //   url: '/debug'
   // });
 
-  $urlRouterProvider.otherwise('/');
+  $urlRouterProvider.otherwise('/redirect');
 })
 
 .config(function(fitTextConfigProvider) {
@@ -96,7 +57,6 @@ angular.module('fz', [
   Meteor.autorun(function () {
     let user = Meteor.user();
     $rootScope.user = user;
-    $rootScope.userAuthed = user && user.profile.fname && user.emails[0].verified;
     console.log('logged in user: ');
     console.log(user);
     if (user) {
@@ -107,12 +67,12 @@ angular.module('fz', [
       } else {
         user.initials = '?';
       }
-      if ($state.current.name === 'home.login') {
-        $state.go('index');
+      if ($state.includes('home')) {
+        $state.go('redirect');
       }
     }
     else {
-      $state.go('index');
+      $state.go('redirect');
       if ($('.control-sidebar').length) {
         $('.control-sidebar').removeClass('control-sidebar-open');
       }

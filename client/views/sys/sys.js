@@ -23,6 +23,7 @@ angular
   .state('sys', {
     url: '/sys',
     templateUrl: 'client/views/sys/sys.html',
+    abstract: true,
     resolve: {
       auth: ($q) => {
         console.log('auth sys');
@@ -55,7 +56,6 @@ function Ctrl($timeout) {
   $timeout(function(){
     if (! $('.control-sidebar').hasClass('activated')) {
       $.AdminLTE.controlSidebar.activate();
-      $.AdminLTE.layout.activate();
     }
   });
 }

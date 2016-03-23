@@ -160,7 +160,7 @@ $(function () {
   _init();
 
   //Activate the layout maker
-  $.AdminLTE.layout.activate();
+  // $.AdminLTE.layout.activate();
 
   //Enable sidebar tree view controls
   $.AdminLTE.tree('.sidebar');

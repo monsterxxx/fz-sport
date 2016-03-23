@@ -12,8 +12,8 @@
           <div class="box-body">
             <div class="form-group" ng-class="{'has-error': vm.form.fname.$invalid}">
               <i class="fa fa-2x col-sm-1 col-xs-2 text-right fz-finish-registration__bullet"
-                 ng-class="{'fa-check-square text-success': vm.user.profile.fname && vm.form.fname.$valid,
-                            'fa-square text-grey': ! (vm.user.profile.fname && vm.form.fname.$valid)}"> </i>
+                 ng-class="{'fa-check-square text-success': vm.fnameAccepted,
+                            'fa-square text-grey': ! vm.fnameAccepted}"> </i>
               <div class="col-sm-11 col-xs-10">
                 <label>Представьтесь пожалуйста</label>
                 <div class="input-group">
@@ -22,7 +22,7 @@
                          name="fname"
                          type="text"
                          placeholder="Введите ФИО" ng-model="vm.user.profile.fname"
-                         ng-pattern="/^([А-Я][а-я]+ ){2}([А-Я][а-я]+){1}$/"
+                         ng-pattern="vm.fnameRegExp"
                          required>
                   <span class="input-group-btn">
                     <button type="submit" class="btn btn-primary btn-flat" ng-disabled="!vm.profileChanged || vm.form.$invalid"><i class="fa fa-check"></i></button>
@@ -36,11 +36,11 @@
             </div>
             <div class="form-group">
               <i class="fa fa-2x col-sm-1 col-xs-2 text-right fz-finish-registration__bullet"
-                 ng-class="{'fa-check-square text-success': vm.user.email[0].verified,
-                            'fa-square text-grey': ! vm.user.email[0].verified}"> </i>
+                 ng-class="{'fa-check-square text-success': vm.user.emails[0].verified,
+                            'fa-square text-grey': ! vm.user.emails[0].verified}"> </i>
               <div class="col-sm-11 col-xs-10">
-                <label>Подтвердите свой email</label>
-                <p class="text-justify text-muted">На Ваш адрес электронной почты было отправлено письмо с сылкой для подтверждения email.
+                <label>Подтвердите свой Email</label>
+                <p class="text-justify text-muted">На Ваш адрес электронной почты было отправлено письмо с сылкой для подтверждения Email.
                   <a href="#" ng-click="vm.sendVerificationLink()">Отправить письмо повторно.</a>
                   <i class="fa fa-cog fa-spin" ng-show="vm.emailSending"></i>
                 </p>

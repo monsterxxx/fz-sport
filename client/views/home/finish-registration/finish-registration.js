@@ -23,7 +23,7 @@ angular
 
         function resolve() {
           if (! user || (user.profile.fname && user.emails[0].verified)) {
-            deferred.reject({name: 'index'});
+            deferred.reject({name: 'redirect'});
           }
           else {
             deferred.resolve();
@@ -44,8 +44,9 @@ function Ctrl($scope, $reactive, $stateParams, $state) {
         token = $stateParams.token;
   $reactive(vm).attach($scope);
   let oriProfile;
+  vm.fnameRegExp = /^([А-Я][а-я]+ ){2}([А-Я][а-я]+){1}$/;
   vm.helpers({ user: userHelper });
-  $scope.$watch(() => vm.user, userListner(), true);
+  $scope.$watch(() => vm.user, userListener, true);
   vm.updateUserProfile = () => Meteor.call('updateUserProfile', Meteor.userId(), vm.user.profile);
   vm.sendVerificationLink = sendVerificationLink;
   console.log(token);
@@ -54,14 +55,16 @@ function Ctrl($scope, $reactive, $stateParams, $state) {
   function userHelper() {
     const user = Meteor.user();
     if (user) {
-      if (user.profile.fname && user.emails[0].verified) return $state.go('index');
+      const fname = user.profile.fname;
+      if (fname && user.emails[0].verified) return $state.go('redirect');
+      if (fname && vm.fnameRegExp.test(fname)) vm.fnameAccepted = true;
       oriProfile = angular.copy(user.profile);
     }
     vm.profileChanged = false;
     return user;
   }
 
-  function userListner(user) {
+  function userListener(user) {
     if (user) vm.profileChanged = ! angular.equals(user.profile, oriProfile)};
 
   function sendVerificationLink() {
