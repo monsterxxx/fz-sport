@@ -15,10 +15,10 @@
     <div class="box-padding-top">
       <input type="text" class="form-control" ng-model="vm.searchQuery" ng-model-options="{ debounce: 300 }"
       ng-change="vm.search()" name="search" placeholder="напр. fz@sport.ru">
-      <p class="help-block" ng-if="::!vm.surrogate" ng-show="!vm.searchQuery">
+      <p class="help-block" ng-if="::!vm.allowSurrogates" ng-show="!vm.searchQuery">
         Поиск пользователей в компании по имени или в fz-Sport по точному email
       </p>
-      <p class="help-block" ng-if="::vm.surrogate" ng-show="!vm.searchQuery">
+      <p class="help-block" ng-if="::vm.allowSurrogates" ng-show="!vm.searchQuery">
         Поиск в компании по имени или в fz-Sport по точному email
       </p>
       <div class="box-padding-top">
@@ -37,12 +37,12 @@
       </div>
     </div>
     <ul class="nav nav-pills nav-stacked">
-      <li ng-repeat="member in vm.foundMembers">
-        <a ng-click="vm.add({memberId:member._id}); vm.searchQuery=''; vm.foundMembers=[]; vm.showBox=false" href="#">{{member.name}}</a>
+      <li ng-repeat="member in vm.foundMembers track by member._id">
+        <a ng-click="vm.add({member: member}); vm.searchQuery=''; vm.foundMembers=[]; vm.showBox=false" href="#">{{member.name}}</a>
       </li>
     </ul>
   </div>
-  <div class="box-footer" ng-if="::vm.surrogate">
+  <div class="box-footer" ng-if="::vm.allowSurrogates">
     <button class="btn btn-block btn-default" ng-click="vm.showNew=!vm.showNew; vm.surrogate={}">Создать новую запись</button>
     <div class="box box-internal box-primary" ng-if="vm.showNew">
       <div class="box-header with-border">

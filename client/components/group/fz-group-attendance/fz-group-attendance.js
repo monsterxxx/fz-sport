@@ -21,22 +21,30 @@ function Ctrl($scope, $reactive, $stateParams) {
         companyId = $stateParams.companyId,
         date = $stateParams.attDate;
   $reactive(vm).attach($scope);
-  vm.helpers({ groups: groupsHelper,
+  let oriAtt;
+  vm.helpers({ group: groupHelper,
                role: () => Roles.getTopRole(Meteor.userId(), companyId)});
+  $scope.$watch(() => vm.group, groupListener, true);
   vm.submitAttendance = submitAttendance;
 
-  function groupsHelper() {
-    const dayGroup = GroupDays.findOne({'group._id': vm.groupId}, {fields: {_id:1}});
-    if (dayGroup) {
-      return GroupDays.find({'group._id': vm.groupId});
-    } else {
-      return Groups.find({_id: vm.groupId}, {fields: {name: 1, company: 1, trainer: 1, clients: 1}});
+  function groupHelper() {
+    vm.attChanged = false;
+    let dayGroup = GroupDays.findOne({'group._id': vm.groupId});
+    dayGroup = dayGroup || Groups.findOne({_id: vm.groupId}, {fields: {name: 1, company: 1, trainer: 1, clients: 1}});
+    oriAtt = angular.copy(dayGroup.clients);
+    vm.attChanged = false;
+    return dayGroup;
+  }
+
+  function groupListener(group) {
+    if (group && _.any(group.clients, (client, i) => client.came !== oriAtt[i].came)) {
+      vm.attChanged = true;
     }
   }
 
   function submitAttendance() {
-    console.log(JSON.stringify(vm.groups[0] , null, 2));
-    Meteor.call('submitAttendance', vm.groups[0], date);
+    console.log(JSON.stringify(vm.group, null, 2));
+    Meteor.call('submitAttendance', vm.group, date);
   }
 }
 

@@ -2,8 +2,7 @@
 // 'use strict';
 
 angular
-  .module('fz.group-composition', [
-  ])
+  .module('fz.group-composition', [])
   .directive('fzGroupComposition', Dir);
 
 function Dir() {
@@ -41,11 +40,9 @@ function Ctrl($scope, $reactive, $stateParams) {
     Meteor.call('deleteGroup', vm.groupId);
   }
 
-  function addMemberToGroup(memberId, surrogate) {
-    let args = [vm.groupId, memberId];
-    if (surrogate) {
-      args.push(surrogate);
-    }
+  function addMemberToGroup(member, surrogate) {
+    let args = [vm.groupId, member];
+    if (surrogate) args.push(surrogate);
     Meteor.apply('addMemberToGroup', args, (err) => {
       if (err) console.log(err);
     });

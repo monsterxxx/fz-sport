@@ -1,5 +1,4 @@
 Meteor.methods({
-
   createCompany: function (company) {
     check(company, {
       name: String,

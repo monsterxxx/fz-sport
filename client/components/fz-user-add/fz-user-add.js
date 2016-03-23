@@ -2,9 +2,7 @@
 // 'use strict';
 
 angular
-  .module('fz.user-add', [
-
-  ])
+  .module('fz.user-add', [])
   .directive('fzUserAdd', Dir);
 
 function Dir() {
@@ -14,7 +12,7 @@ function Dir() {
     scope: {},
     bindToController: {
       add: '&',
-      surrogate: '='
+      allowSurrogates: '='
     },
     controller: Ctrl,
     controllerAs: 'vm'
@@ -33,7 +31,7 @@ function Ctrl($scope, $reactive, $stateParams) {
   vm.addWithSurrogate = addWithSurrogate;
 
   function search() {
-    Meteor.call('searchMembers', companyId, vm.searchQuery, vm.surrogate || false, function (err, results) {
+    Meteor.call('searchMembers', companyId, vm.searchQuery, vm.allowSurrogates || false, function (err, results) {
       $scope.$apply(function () {
         if (err) {
           if (err.error === 'user-has-no-name') {
@@ -47,7 +45,7 @@ function Ctrl($scope, $reactive, $stateParams) {
   }
 
   function addWithSurrogate() {
-    vm.add({ memberId:'0', surrogate: vm.surrogate });
+    vm.add({ member: {_id: '0'}, surrogate: vm.surrogate });
     vm.surrogate = {};
     vm.showNew = false;
   }

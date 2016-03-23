@@ -1,5 +1,3 @@
-console.log('adminLTE');
-
 /*! AdminLTE app.js
  * ================
  * Main JS application file for AdminLTE v2. This file
@@ -131,7 +129,6 @@ $.AdminLTE.options = {
     lg: 1200
   }
 };
-console.log('adminLTE before Implementation');
 /* ------------------
  * - Implementation -
  * ------------------
@@ -140,7 +137,6 @@ console.log('adminLTE before Implementation');
  * options above.
  */
 $(function () {
-  console.log('adminLTE implementation');
   "use strict";
 
   //Fix for IE page transitions
@@ -242,7 +238,6 @@ function _init() {
   $.AdminLTE.layout = {
     activate: function () {
       var _this = this;
-      console.log('activate');
       _this.fix();
       $(window, ".wrapper").resize(function () {
         _this.fix();

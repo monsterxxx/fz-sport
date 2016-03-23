@@ -1,6 +1,6 @@
 <div class="box box-default collapsed-box">
   <div class="box-header with-border">
-    <h3 class="box-title">{{vm.groups[0].name}}</h3>
+    <h3 class="box-title">{{vm.group.name}}</h3>
     <div class="box-tools pull-right">
       <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i></button>
     </div>
@@ -12,7 +12,7 @@
       </div>
       <ul class="nav nav-pills nav-stacked">
         <li>
-          <a href="#">{{vm.groups[0].trainer.name}}</a>
+          <a href="#">{{vm.group.trainer.name}}</a>
         </li>
       </ul>
       <div class="box-padding-center">
@@ -20,7 +20,7 @@
       </div>
     </div>
     <ul class="nav nav-pills nav-stacked">
-      <li ng-repeat="client in vm.groups[0].clients track by client._id">
+      <li ng-repeat="client in vm.group.clients track by client._id">
         <a ng-click="client.came=!client.came" href="#">{{client.name}}
           <!-- TODO fancy checkbox style -->
           <span class="pull-right">
@@ -33,13 +33,13 @@
     </ul>
   </div>
   <div class="box-footer">
-    <button class="btn btn-block btn-primary" ng-click="vm.submitAttendance()">Сохранить</button>
+    <button class="btn btn-block btn-primary" ng-click="vm.submitAttendance()" ng-disabled="! vm.attChanged">Сохранить</button>
   </div>
   <!-- TODO ability to add client to this particular training -->
   <!-- <div class="box-footer" ng-if="vm.add">
-    <fz-user-add surrogate="true" add="vm.addMemberToGroup(clientId, surrogate)"></fz-user-add>
+    <fz-user-add allow-surrogates="true" add="vm.addMemberToGroup(clientId, surrogate)"></fz-user-add>
   </div> -->
   <!-- <pre>
-    {{(vm.groups[0]) | json}}
+    {{(vm.group) | json}}
   </pre> -->
 </div>

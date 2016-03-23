@@ -1,8 +1,14 @@
 //alter bootstrap and AdminLTE styles
 
-//100% inherited height for this layout works fine
-html, body, .wrapper
-  height: 100%
+//use vh instead of js min-height on resizing browser
+.main-header
+  position: absolute
+  right: 0
+  left: 0
+
+.content-wrapper
+  min-height: 100vh
+  padding-top: 50px
 
 //fix navigation buttons hover effects bug on touch devices
 nav > ul > li > a

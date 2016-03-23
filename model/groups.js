@@ -127,19 +127,29 @@ Meteor.methods({
 
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-  addMemberToGroup: function (groupId, memberId, surrogate) {
-    if (Meteor.isClient) { return; }
+  addMemberToGroup: function (groupId, memberArg, surrogate) {
     //SURROGATE ENABLED
     //this is createSurrogate enabled method, which inserts surrogate user into Users collection
-    //  when following parameters are specified: memberId === '0', surrogate: surrogateUserProfile
+    //  when following parameters are specified: memberArg._id === '0', surrogate: surrogateUserProfile
     check(groupId, String);
-    check(memberId, String);
+    check(memberArg, {
+      _id: String,
+      name: Match.Optional(String)
+    });
     check(surrogate, Match.Optional({
       fname: Match.Where(function (fname) {
         check(fname, String);
         return /^([А-Я][а-я]+ ){1,2}([А-Я][а-я]+){1}$/.test(fname);
       })
     }));
+
+    let memberId = memberArg._id;
+
+    //just for latency compensation
+    if (Meteor.isClient) {
+      let member = (memberId === '0') ? {_id: '0', name: surrogate.fname} : memberArg;
+      return Groups.update({_id: groupId}, { $addToSet: { clients: member } });
+    }
 
     //AUTH
     if (! this.userId) { throw new Meteor.Error('not-logged-in'); }
@@ -229,6 +239,9 @@ Meteor.methods({
     check(groupId, String);
     check(memberId, String);
 
+    //just for latency compensation
+    if (Meteor.isClient) return Groups.update({_id: groupId}, { $pull: {clients: {_id: memberId}} });
+
     //AUTH
     if (! this.userId) { throw new Meteor.Error('not-logged-in'); }
 
@@ -276,9 +289,7 @@ Meteor.methods({
     if (Roles.userIsInRole(memberId, 'client', companyId)) {
       //and if this member does not participate in other groups of this company
       const member = Users.findOne(memberId, { fields: {client: 1}});
-      if (
-        ! _.any( member.client.groups, (group) => group.company._id === companyId )
-      ) {
+      if ( ! _.any(member.client.groups, (group) => group.company._id === companyId) ) {
         Meteor.call('removeUserFromCompany', companyId, memberId, 'client');
       }
     }

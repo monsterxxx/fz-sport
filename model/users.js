@@ -123,7 +123,7 @@ Meteor.methods({
           }],
           $sort: {name: 1}
         };
-        if (member.surrogate) modifier.$push.members.surrogate = true;
+        if (member.surrogate) modifier.$push.members.$each[0].surrogate = true;
       }
 
       //insert member into corresponding role group
