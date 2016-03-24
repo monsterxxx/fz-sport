@@ -45,43 +45,42 @@ angular
         }
       }
       if (vm.period === 'last53weeks') {
-        window.alert();
-        window.alert(JSON.stringify(days , null, 2));
+        // window.alert(JSON.stringify(days , null, 2));
         let week = 0,
             n = days.length - 1;
         data = Array(53).fill(0);
-        window.alert(data);
-        window.alert(new Date().getTimezoneOffset());
-        window.alert(new Date(today.getTime() + (new Date().getTimezoneOffset() + tz*60)*60000).getDay());
-        window.alert('n: '+n);
-        window.alert('week: '+week);
+        // window.alert(new Date().getTimezoneOffset());
+        // window.alert(new Date(today.getTime() + (new Date().getTimezoneOffset() + tz*60)*60000).getDay());
+        // window.alert('n: '+n);
+        // window.alert('week: '+week);
         for (let i = 0; i < 371; i++) {
-          window.alert('i: '+i);
+          // window.alert('i: '+i);
           let day = fzDate.addDays(today, -i);
-          window.alert('day: '+day);
-          window.alert('days[n].date - day === 0: '+ (days[n].date - day === 0));
-          if (days[n].date - day === 0) {
-            window.alert('data[52 - week]: '+data[52 - week]);
+          // window.alert('day: '+day);
+          // window.alert('days[n].date - day === 0: '+ (days[n].date - day === 0));
+          if (n >=0 && days[n].date - day === 0) {
+            // window.alert('data[52 - week]: '+data[52 - week]);
             data[52 - week] += days[n].att;
-            window.alert('data[52 - week]: '+data[52 - week]);
+            // window.alert('data[52 - week]: '+data[52 - week]);
             n--;
-            window.alert('n: '+n);
+            // window.alert('n: '+n);
           }
-          window.alert('monday?: '+(new Date(day.getTime() + (new Date().getTimezoneOffset() + tz*60)*60000).getDay() === 1));
-          //finish data gathering from "days" on 53rd monday
+          // window.alert('monday?: '+(new Date(day.getTime() + (new Date().getTimezoneOffset() + tz*60)*60000).getDay() === 1));
+          //for mondays
           if (new Date(day.getTime() + (new Date().getTimezoneOffset() + tz*60)*60000).getDay() === 1) {
             //labels just for mondays so that they fit in mobile screens
-            window.alert('labels[52 - week]: '+labels[52 - week]);
+            // window.alert('labels[52 - week]: '+labels[52 - week]);
             labels[52 - week] = (week % 4) ? '' : pad(day.getDate()) +'.'+ pad(day.getMonth() + 1);
-            window.alert('labels[52 - week]: '+labels[52 - week]);
-            window.alert('(week === 52): '+(week === 52));
+            // window.alert('labels[52 - week]: '+labels[52 - week]);
+            // window.alert('(week === 52): '+(week === 52));
+            //finish  cycles on 53rd monday
             if (week === 52) break;
             week++;
-            window.alert('week: '+week);
+            // window.alert('week: '+week);
           }
         }
-        window.alert(data);
-        window.alert(labels);
+        // window.alert(data);
+        // window.alert(labels);
       }
       let chartData = {
         labels: labels,
@@ -95,13 +94,13 @@ angular
             }
         ]
       };
-      window.alert(JSON.stringify(chartData , null, 2));
+      // window.alert(JSON.stringify(chartData , null, 2));
       Chart.defaults.global.responsive = true;
       Chart.defaults.global.maintainAspectRatio = false;
       $('#attChartBoxBody').html('').append('<canvas id="attChart" height="240" style="display: block;"></canvas>');
       var ctx = $('#attChart').get(0).getContext('2d');
       var myNewChart = new Chart(ctx).Bar(chartData, {barValueSpacing : 1});
-      window.alert('chart should be redrawed');
+      // window.alert('chart should be redrawed');
     }
 
     function pad(num) { return (num < 10) ? '0' + num : num; }
