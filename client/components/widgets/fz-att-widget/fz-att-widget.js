@@ -51,14 +51,14 @@ angular
         data = Array(53).fill(0);
         window.alert(data);
         window.alert(new Date().getTimezoneOffset());
-        window.alert(new Date(today.getTime() + new Date().getTimezoneOffset()*60000).getDay());
+        window.alert(new Date(today.getTime() + (new Date().getTimezoneOffset() + tz*60)*60000).getDay());
         for (let i = 0; i < 371; i++) {
           let day = fzDate.addDays(today, -i);
           if (days[n].date - day === 0) {
             data[52 - week] += days[n].att;
             n--;
           }
-          if (new Date(day.getTime() + new Date().getTimezoneOffset()*60000).getDay() === 1) {
+          if (new Date(day.getTime() + (new Date().getTimezoneOffset() + tz*60)*60000).getDay() === 1) {
             labels[52 - week] = (week % 4) ? '' : pad(day.getDate()) +'.'+ pad(day.getMonth() + 1);
             if (week === 52) break;
             week++;
