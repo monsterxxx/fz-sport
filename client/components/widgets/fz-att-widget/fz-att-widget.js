@@ -27,7 +27,6 @@ angular
         let days = [];
         if (vm.role === 'owner') { days = CompanyDays.find({}).fetch(); }
         if (vm.role === 'trainer') { days = TrainerDays.find({}).fetch(); }
-        window.alert(JSON.stringify(days[0] , null, 2));
         generateChart(days);
       }
     });
@@ -50,6 +49,7 @@ angular
         let week = 0,
             n = days.length - 1;
         data = Array(53).fill(0);
+        window.alert(data);
         for (let i = 0; i < 371; i++) {
           let day = fzDate.addDays(today, -i);
           if (days[n].date - day === 0) {
@@ -62,6 +62,8 @@ angular
             week++;
           }
         }
+        window.alert(data);
+        window.alert(labels);
       }
       let chartData = {
         labels: labels,
@@ -75,6 +77,7 @@ angular
             }
         ]
       };
+      window.alert(JSON.stringify(chartData , null, 2));
       Chart.defaults.global.responsive = true;
       Chart.defaults.global.maintainAspectRatio = false;
       $('#attChartBoxBody').html('').append('<canvas id="attChart" height="240" style="display: block;"></canvas>');
