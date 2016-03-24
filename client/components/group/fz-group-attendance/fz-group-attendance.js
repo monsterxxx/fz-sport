@@ -37,11 +37,10 @@ function Ctrl($scope, $reactive, $stateParams) {
   }
 
   function groupListener(group) {
-    vm.attChanged = group && _.any(group.clients, (client, i) => client.came !== oriAtt[i].came);
+    vm.attChanged = group && _.any(group.clients, (client, i) => !client.came !== !oriAtt[i].came);
   }
 
   function submitAttendance() {
-    console.log(JSON.stringify(vm.group, null, 2));
     Meteor.call('submitAttendance', vm.group, date);
   }
 }
