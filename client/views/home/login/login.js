@@ -11,15 +11,14 @@ angular
     templateUrl: 'client/views/home/login/login.html',
     resolve: {
       auth: ($q) => {
-        console.log('auth login');
-        const deferred = $q.defer();
+        const deferred = $q.defer(),
+              user = Users.findOne(Meteor.userId(), { fields: {_id: 1} });
 
         resolve();
         return deferred.promise;
 
         function resolve() {
-          console.log(Meteor.userId());
-          if (Meteor.userId()) {
+          if (user) {
             deferred.reject({name: 'redirect'});
           }
           else {

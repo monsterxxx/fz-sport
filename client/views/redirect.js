@@ -19,10 +19,7 @@ angular
 
         function resolve() {
           //if user is not registered go to login page
-          console.log(Meteor.userId());
-          console.log(Users.findOne(Meteor.userId(), { fields: {profile: 1, emails: 1, roles: 1} }));
-          console.log(user);
-          if (! Meteor.userId()) {
+          if (! user) {
             deferred.reject({name: 'home.login'});
           } else
           //if user hasn't finished registration process yet
