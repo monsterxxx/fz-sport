@@ -25,6 +25,5 @@ meteorhacks:fast-render
 matb33:collection-hooks
 alanning:roles
 angular:angular@1.5.0
-angular-meteor-auth
 meteorhacks:aggregate
 email

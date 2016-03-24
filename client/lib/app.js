@@ -4,7 +4,6 @@
 angular.module('fz', [
   //CORE
   'angular-meteor',
-  'angular-meteor.auth',
   'ui.router',
   //ANGULAR PLUGINS
   'ngFitText',

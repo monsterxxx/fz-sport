@@ -18,6 +18,7 @@ angular
         return deferred.promise;
 
         function resolve() {
+          console.log(Meteor.userId());
           if (Meteor.userId()) {
             deferred.reject({name: 'redirect'});
           }
