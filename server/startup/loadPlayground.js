@@ -69,8 +69,8 @@ Meteor.methods({
       // Meteor.call('createCompany', {name: 'ХоудиКо'});
       // const company = Companies.findOne();
       // const companyId = company._id;
-      // Meteor.call('addUserToCompany', companyId, ids['b'], 'admin');
-      // Meteor.call('addUserToCompany', companyId, ids['c'], 'trainer');
+      // Meteor.call('addMemberToCompany', companyId, ids['b'], 'admin');
+      // Meteor.call('addMemberToCompany', companyId, ids['c'], 'trainer');
       // Meteor.call('createGroup', {
       //   company: {
       //     _id: companyId

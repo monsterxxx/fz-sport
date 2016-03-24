@@ -217,7 +217,7 @@ Meteor.methods({
     //INSERT MEMBER AS CLIENT INTO COMPANY
     //if this is a first group for this member
     if (! Roles.userIsInRole(memberId, 'client', companyId)) {
-      Meteor.call('addUserToCompany', companyId, memberId, 'client');
+      Meteor.call('addMemberToCompany', companyId, memberId, 'client');
     }
 
     //INSERT GROUP INTO USER

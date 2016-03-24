@@ -29,29 +29,19 @@ function Dir() {
 Ctrl.$inject = ['$scope', '$reactive', '$stateParams'];
 
 function Ctrl($scope, $reactive, $stateParams) {
-  var vm = this;
+  const vm = this,
+        role = vm.peopleRole,
+        companyId = $stateParams.companyId;
   $reactive(vm).attach($scope);
-  vm.helpers({
-    company: () => {
-      let company = Companies.findOne($stateParams.companyId, {fields: {owners: 1, admins: 1, trainers: 1, clients: 1}});
-      if (company) {
-        vm.people = company[vm.peopleRole + 's'];
-      }
-      return company;
-    },
-  });
+  vm.helpers({ company: companyHelper });
+  vm.addMemberToCompany = (member) => Meteor.call('addMemberToCompany', companyId, member, role);
+  vm.removeUserFromCompany = (userId) => Meteor.call('removeUserFromCompany', companyId, userId, role);
 
-  vm.addUserToCompany = addUserToCompany;
-  vm.removeUserFromCompany = removeUserFromCompany;
-
-  function addUserToCompany(userId) {
-    Meteor.call('addUserToCompany', vm.company._id, userId, vm.peopleRole);
+  function companyHelper() {
+    let company = Companies.findOne(companyId, {fields: {owners: 1, admins: 1, trainers: 1, clients: 1}});
+    if (company) vm.people = company[role + 's'];
+    return company;
   }
-
-  function removeUserFromCompany(userId) {
-    Meteor.call('removeUserFromCompany', vm.company._id, userId, vm.peopleRole);
-  }
-
 }
 
 })();

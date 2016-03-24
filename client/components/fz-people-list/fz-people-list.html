@@ -6,7 +6,7 @@
     <ul class="nav nav-pills nav-stacked">
       <li ng-repeat="person in vm.people">
         <a ng-click="s1.showDetails=true" href="#">{{person.name}}</a>
-        <div class="margin" 
+        <div class="margin"
               ng-if="s1.showDetails && (vm.delete === undefined || vm.delete)">
           <div class="box box-internal" >
             <div class="box-header with-border">
@@ -26,6 +26,6 @@
     </ul>
   </div>
   <div class="box-footer" ng-if="vm.add === undefined || vm.add">
-    <fz-user-add add="vm.addUserToCompany(memberId)"></fz-user-add>
+    <fz-user-add add="vm.addMemberToCompany(member)"></fz-user-add>
   </div>
 </div>

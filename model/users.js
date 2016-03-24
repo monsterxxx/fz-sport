@@ -72,13 +72,26 @@ Meteor.methods({
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-  addUserToCompany: function (companyId, userId, role) {
+  addMemberToCompany: function (companyId, memberArg, role) {
     check(companyId, String);
-    check(userId, String);
+    check(memberArg, {
+      _id: String,
+      name: Match.Optional(String)
+    });
     check(role, Match.Where(function (role) {
       check(role, String);
       return ['owner', 'admin', 'trainer', 'client'].indexOf(role) !== -1;
     }));
+
+    let memberId = memberArg._id;
+
+    //just for latency compensation
+    if (Meteor.isClient) {
+      const member = (memberId === '0') ? {_id: '0', name: surrogate.fname} : memberArg,
+            modifier = { $addToSet: {} };
+      modifier.$addToSet[role + 's'] = member;
+      return Companies.update({_id: companyId}, modifier);
+    }
 
     //AUTH
     if (! this.userId) { throw new Meteor.Error('not-logged-in'); }
@@ -97,19 +110,19 @@ Meteor.methods({
 
     if (Meteor.isServer) {
       //CHECK USER
-      const member = Users.findOne(userId, { fields: {profile: 1, surrogate: 1} });
+      const member = Users.findOne(memberId, { fields: {profile: 1, surrogate: 1} });
 
       if (! member) {
         throw new Meteor.Error('not-found',
         'User to add to company is not found in db.');
       }
 
-      if (Roles.userIsInRole(userId, role, companyId)) {
+      if (Roles.userIsInRole(memberId, role, companyId)) {
         throw new Meteor.Error('duplicate',
         'User is '+ role +' of this company already.');
       }
 
-      let roles = Roles.getRolesForUser(userId, companyId);
+      let roles = Roles.getRolesForUser(memberId, companyId);
 
       //INSERT NEW USER INTO COMPANY
       let modifier = { $push: {} };
@@ -118,7 +131,7 @@ Meteor.methods({
       if (! roles.length) {
         modifier.$push.members = {
           $each: [{
-            _id: userId,
+            _id: memberId,
             name: member.profile.fname
           }],
           $sort: {name: 1}
@@ -129,7 +142,7 @@ Meteor.methods({
       //insert member into corresponding role group
       modifier.$push[role + 's'] = {
         $each: [{
-          _id: userId,
+          _id: memberId,
           name: member.profile.fname
         }],
         $sort: {name: 1}
@@ -142,7 +155,7 @@ Meteor.methods({
       if (! roles.length) {
         let company = Companies.findOne(companyId);
 
-        Users.update({_id: userId}, {
+        Users.update({_id: memberId}, {
           $push: {
             companies: {
               _id: companyId,
@@ -153,7 +166,7 @@ Meteor.methods({
       }
 
       //GRANT PERMISSION
-      Roles.addUsersToRoles(userId, role, companyId);
+      Roles.addUsersToRoles(memberId, role, companyId);
     }
   },
 
