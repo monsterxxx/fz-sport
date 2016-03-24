@@ -26,6 +26,11 @@ function Ctrl($scope, $reactive, $stateParams) {
   $reactive(vm).attach($scope);
   vm.helpers({ role: () => Roles.getTopRole(Meteor.userId(), $stateParams.companyId) });
   vm.today = new Date(Date.now() - new Date().getTimezoneOffset()*60000).toISOString().slice(0, 10);
+  vm.closeMenu = () => {
+    if ($(window).width() <= 767 && $("body").hasClass("sidebar-open")) {
+      $("body").removeClass('sidebar-open');
+    }
+  };
 }
 
 })();
