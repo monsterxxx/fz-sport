@@ -27,6 +27,7 @@ angular
         let days = [];
         if (vm.role === 'owner') { days = CompanyDays.find({}).fetch(); }
         if (vm.role === 'trainer') { days = TrainerDays.find({}).fetch(); }
+        window.alert(JSON.stringify(days[0] , null, 2));
         generateChart(days);
       }
     });

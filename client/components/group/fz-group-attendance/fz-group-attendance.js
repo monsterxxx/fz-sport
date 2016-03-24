@@ -37,9 +37,7 @@ function Ctrl($scope, $reactive, $stateParams) {
   }
 
   function groupListener(group) {
-    if (group && _.any(group.clients, (client, i) => client.came !== oriAtt[i].came)) {
-      vm.attChanged = true;
-    }
+    vm.attChanged = group && _.any(group.clients, (client, i) => client.came !== oriAtt[i].came);
   }
 
   function submitAttendance() {
