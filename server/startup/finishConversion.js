@@ -17,7 +17,6 @@ Meteor.startup(function () {
         let id = createSurrogate({fname: client.name});
         user = Users.findOne({_id: id});
       }
-
       if (! user.client) {
         user.client = {
           groups: []
@@ -31,7 +30,7 @@ Meteor.startup(function () {
             _id: '3SZmDouNH87jpyxSH'
           }
         });
-        Groups.update({_id: group._id}, {$push: {clients: {_id: user._id, name: user.profile.fname}}});
+        Groups.update({_id: group._id}, {$addToSet: {clients: {_id: user._id, name: user.profile.fname}}});
       });
       if (! user.roles) {
         user.roles = {
@@ -40,10 +39,12 @@ Meteor.startup(function () {
       }
       user.roles['3SZmDouNH87jpyxSH'].push('client');
       Users.update({_id: user._id}, user);
-      Companies.update({},{$push: {clients: {_id: user._id, name: user.profile.fname}}});
+      Companies.update({_id: '3SZmDouNH87jpyxSH'},{$addToSet: {clients: {_id: user._id, name: user.profile.fname}}});
     });
     Users.find({}).fetch().forEach((user) => {
-      Companies.update({},{$push: {members: {_id: user._id, name: user.profile.fname}}});
+      let member = {_id: user._id, name: user.profile.fname};
+      if (user.surrogate) member.surrogate = true;
+      Companies.update({_id: '3SZmDouNH87jpyxSH'},{$push: {members: member}});
     });
     Users.update({}, {
       $set: {
@@ -61,7 +62,7 @@ Meteor.startup(function () {
     //     db.companies.update({},{$push: {clients: {_id: user._id, name: user.profile.fname}}});
     // }
     //   });
-    Groups.update({}, {$push: {clients: {$each: [], $sort: {name: 1}}}}, {multi: true});
+    Groups.update({_id: '3SZmDouNH87jpyxSH'}, {$push: {clients: {$each: [], $sort: {name: 1}}}}, {multi: true});
     Companies.update({}, {$push: {
       members: {$each: [], $sort: {name: 1}},
       owners: {$each: [], $sort: {name: 1}},
@@ -73,7 +74,7 @@ Meteor.startup(function () {
   }
   const finishConversion = false;
   if (finishConversion) {
-    //Проследить за *ндреевым Андреем
+    //Проследить за *ндреев Андрей, ****ушкарев Денис Близнина София �
     Attendance.find({}).fetch().forEach((att) => {
       let date = fzDate.dateStart(fzDate.dateISO(att.createdAt, 3), 3),
           trainer = Users.findOne({'profile.fname': {$regex: att.trainer}}),

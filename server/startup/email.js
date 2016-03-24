@@ -1,5 +1,5 @@
 Meteor.startup(function () {
-    process.env.MAIL_URL             = 'smtp://postmaster%40sandbox402fe10662264a4ab4cb9f7b5777abe5.mailgun.org:ad3decfaf0a88adb78383a8972d42dd9@smtp.mailgun.org:587/';
+    process.env.MAIL_URL             = 'smtp://postmaster%40fzsport.ru:0e5b05e81f67d41b42dc9a9e9048358f@smtp.mailgun.org:587/';
     Accounts.emailTemplates.siteName = 'FZSport';
     Accounts.emailTemplates.from     = 'FZSport <support@fzsport.ru>';
     Accounts.emailTemplates.verifyEmail = {

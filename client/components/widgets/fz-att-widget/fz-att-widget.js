@@ -25,8 +25,8 @@ angular
     vm.subscribe('att-widget', () => [ companyId, vm.role, this.getReactively('period') ], {
       onReady: function () {
         let days = [];
-        if (vm.role === 'owner') { days = CompanyDays.find({}).fetch(); }
-        if (vm.role === 'trainer') { days = TrainerDays.find({}).fetch(); }
+        if (vm.role === 'owner') { days = CompanyDays.find({}, {sort: {date: 1}}).fetch(); }
+        if (vm.role === 'trainer') { days = TrainerDays.find({}, {sort: {date: 1}}).fetch(); }
         generateChart(days);
       }
     });
