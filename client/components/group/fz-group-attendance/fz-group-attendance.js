@@ -25,7 +25,7 @@ function Ctrl($scope, $reactive, $stateParams) {
   vm.helpers({ group: groupHelper,
                role: () => Roles.getTopRole(Meteor.userId(), companyId)});
   $scope.$watch(() => vm.group, groupListener, true);
-  vm.submitAttendance = submitAttendance;
+  vm.submitAttendance = () => Meteor.call('submitAttendance', vm.group, date);
 
   function groupHelper() {
     vm.attChanged = false;
@@ -38,10 +38,6 @@ function Ctrl($scope, $reactive, $stateParams) {
 
   function groupListener(group) {
     vm.attChanged = group && _.any(group.clients, (client, i) => !client.came !== !oriAtt[i].came);
-  }
-
-  function submitAttendance() {
-    Meteor.call('submitAttendance', vm.group, date);
   }
 }
 

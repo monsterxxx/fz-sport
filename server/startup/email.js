@@ -1,5 +1,5 @@
 Meteor.startup(function () {
-    process.env.MAIL_URL             = 'smtp://support%40fzsport.ru:0e5b05e81f67d41b42dc9a9e9048358f@smtp.mailgun.org:587/';
+    // process.env.MAIL_URL             = 'smtp://support%40fzsport.ru:johnbarabulka@smtp.mailgun.org:587/';
     Accounts.emailTemplates.siteName = 'FZSport';
     Accounts.emailTemplates.from     = 'FZSport <support@fzsport.ru>';
     Accounts.emailTemplates.verifyEmail = {
@@ -9,7 +9,7 @@ Meteor.startup(function () {
       text( user, url ) {
         const emailAddress   = user.emails[0].address,
               urlWithoutHash = url.replace( '#/verify-email', 'home/finish-registration' ),
-              emailBody      = `Чтобы подтвердить свой адрес электронной почты (${emailAddress}) просто пройдите по ссылке:\n\n${urlWithoutHash}\n\n Спасибо!`;
+              emailBody      = `Чтобы подтвердить свой адрес электронной почты (${emailAddress}) просто пройдите по ссылке:\n\n${urlWithoutHash}\n\n Если Вы получили данное письмо по ошибке, просто проигнорируйте его. Пожалуйста не помечайте это письмо как спам.\n\nСпасибо!`;
         return emailBody;
       }
     };
