@@ -210,7 +210,7 @@ Meteor.methods({
       //TRAINER
       //remove all trainer groups in the company
       if (role === 'trainer' && member.trainer) {
-        member.trainer.groups.forEach(group => {
+        member.trainer.groups.forEach((group) => {
           if (group.company._id === companyId) {
             Meteor.call('deleteGroup', group._id);
           }

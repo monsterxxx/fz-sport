@@ -46,7 +46,7 @@ Meteor.publish('users_for_admin', function () {
 // });
 
 Users.after.insert(function (userId, user) {
-  Accounts.sendVerificationEmail( this._id );
+  if (user.username !== 'surrogate') Accounts.sendVerificationEmail( user._id );
 });
 
 

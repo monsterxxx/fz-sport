@@ -2,7 +2,6 @@ clearDb = function () {
   Users.remove({});
   Companies.remove({});
   Groups.remove({});
-  Clients.remove({});
   Leads.remove({});
   GroupDays.remove({});
   CompanyDays.remove({});

@@ -27,3 +27,4 @@ alanning:roles
 angular:angular@1.5.0
 meteorhacks:aggregate
 email
+pauldowman:dotenv

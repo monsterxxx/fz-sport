@@ -123,6 +123,19 @@ Meteor.methods({
         }
       }
     });
+
+    //REMOVE ALL GROUP HISTORY
+    GroupDays.find({'group._id': groupId}, {fields: {'company._id': 1, 'trainer._id': 1, date: 1, att: 1}}).fetch().forEach((group) => {
+      const companyId = group.company._id,
+            trainerId = group.trainer._id,
+            date = group.date,
+            att = group.att;
+      CompanyDays.update({'company._id': companyId, date: date}, {$inc: {att: -att}});
+      TrainerDays.update({'company._id': companyId, 'trainer._id': trainerId, date: date}, {$inc: {att: -att}});
+    });
+    GroupDays.remove({'group._id': groupId});
+    CompanyDays.remove({'company._id': companyId, att: 0});
+    TrainerDays.remove({'company._id': companyId, 'trainer._id': trainerId, att: 0});
   },
 
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -217,7 +230,7 @@ Meteor.methods({
     //INSERT MEMBER AS CLIENT INTO COMPANY
     //if this is a first group for this member
     if (! Roles.userIsInRole(memberId, 'client', companyId)) {
-      Meteor.call('addMemberToCompany', companyId, memberId, 'client');
+      Meteor.call('addMemberToCompany', companyId, member, 'client');
     }
 
     //INSERT GROUP INTO USER
