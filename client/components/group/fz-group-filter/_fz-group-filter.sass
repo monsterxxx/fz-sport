@@ -2,6 +2,9 @@
   &__box
     border-radius: 0
 
+  &__select-container
+    max-width: 250px
+
   &__container
     display: flex
     align-items: center
@@ -17,16 +20,30 @@
   &__row
     width: 100%
 
-  &__right-stub
-    width: 30px
-    flex-shrink: 0
-
   &__select
     @include fz-shaded-input
-    background-color: #00b362
+    background-color: $shaded-input-green
     &:active
       background-color: #fff
       border-color: transparent
     &:hover
       background-color: #fff
       border-color: transparent
+
+  &__dropdown
+    display: inline-block
+    flex-shrink: 10
+    width: 223px
+    margin-left: 10px
+
+  &__btn
+    background-color: $shaded-input-green
+    &:hover
+      background-color: #fff !important
+      transition: all 0.3s ease-in-out
+
+  &__dropdown-menu
+    right: 0
+    left: auto
+    padding: 0
+    border: none
