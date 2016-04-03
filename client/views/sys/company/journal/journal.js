@@ -36,13 +36,16 @@ function Ctrl($scope, $reactive, $stateParams) {
         companyId = $stateParams.companyId;
   $reactive(vm).attach($scope);
   vm.helpers({role: () => Roles.getTopRole(Meteor.userId(), companyId)});
-  $scope.$watch(() => vm.trainer, (trainer) => {
+  $scope.$watch(() => vm.trainer, trainerListener);
+  vm.month = new Date();
+
+  function trainerListener(trainer) {
     if (trainer) {
       getAndDraw(trainer._id);
     } else {
       getAndDraw();
     }
-  });
+  }
 
   const yearDeriver = $.pivotUtilities.derivers.dateFormat('date', '%y'),
         monthDeriver = $.pivotUtilities.derivers.dateFormat('date', '%m'),
@@ -85,10 +88,6 @@ function Ctrl($scope, $reactive, $stateParams) {
         }
       );
     });
-  }
-
-  function filter() {
-    console.log('filtered trainer: '+JSON.stringify(vm.trainer , null, 2));
   }
 }
 

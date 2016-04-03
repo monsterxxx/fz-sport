@@ -3,60 +3,24 @@
     <div class="box-header fz-group-filter__container">
 
       <i class="fz-group-filter__icon fa fa-filter fa-lg"></i>
-      <!-- <div class="fz-group-filter__row row"> -->
 
-        <!-- <div class="col-md-3 col-sm-6 col-xs-12"> -->
-        <div class="fz-group-filter__select-container">
-          <select class="fz-group-filter__select form-control pull-right"
-                  ng-model="vm.trainer"
-                  ng-change="vm.change && vm.change() || angular.noop()"
-                  ng-options="trainer.name for trainer in vm.trainers track by trainer._id">
-            <option value=""> Все группы </option>
-          </select>
+      <div class="fz-group-filter__select-container">
+        <select class="fz-group-filter__select form-control pull-right"
+                ng-model="vm.trainer"
+                ng-options="trainer.name for trainer in vm.trainers track by trainer._id">
+          <option value=""> Все группы </option>
+        </select>
+      </div>
+
+      <div class="dropdown fz-group-filter__dropdown" ng-if="vm.month">
+        <div class="btn fz-group-filter__btn dropdown-toggle" data-toggle="dropdown">
+          <i class="fa fa-calendar text-black"></i>
         </div>
-
-        <div class="dropdown fz-group-filter__dropdown">
-          <div class="btn fz-group-filter__btn dropdown-toggle" data-toggle="dropdown">
-            <i class="fa fa-calendar text-black"></i>
-          </div>
-          <ul class="dropdown-menu fz-group-filter__dropdown-menu">
-            <li class="header"><div class="" id="month-picker"> </div></li>
-          </ul>
-        </div>
-
-      <!-- </div> -->
-      <!-- <div class="fz-group-filter__right-stub"></div> -->
+        <ul class="dropdown-menu fz-group-filter__dropdown-menu">
+          <li class="header"><fz-month-picker month="vm.month"></fz-month-picker></li>
+        </ul>
+      </div>
     </div>
 
   </div>
 </div>
-<!-- <div class="row">
-  <div class="box box-solid bg-green fz-group-filter__box">
-    <div class="box-header fz-group-filter__container">
-      <i class="fz-group-filter__icon fa fa-filter fa-lg"></i>
-      <div class="fz-group-filter__row row">
-        <div class="col-md-3 col-sm-6 col-xs-12">
-          <select class="fz-group-filter__select form-control pull-right"
-                  ng-model="vm.trainer"
-                  ng-change="vm.change && vm.change() || angular.noop()"
-                  ng-options="trainer.name for trainer in vm.trainers track by trainer._id">
-            <option value=""> Все группы </option>
-          </select>
-        </div>
-        <div class="col-md-3 col-sm-6 col-xs-12 btn fz-group-filter__month-picker-btn dropdown-toggle" data-toggle="dropdown">
-          <i class="fa fa-calendar"></i>
-        </div>
-        <div class="dropdown-menu fz-group-filter__month-picker" id="month-picker">
-
-        </div>
-        <div class="col-md-3 col-sm-6 col-xs-12 btn fz-group-filter__month-picker-btn dropdown-toggle" data-toggle="dropdown" id="month-picker-toggle" ng-click="vm.showPicker=!vm.showPicker">
-          <i class="fa fa-calendar"></i>
-        </div>
-        <div class="dropdown-menu fz-group-filter__month-picker" id="month-picker" ng-show="vm.showPicker">
-
-        </div>
-      </div>
-      <div class="fz-group-filter__right-stub"></div>
-    </div>
-  </div>
-</div> -->

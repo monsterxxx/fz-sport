@@ -2,13 +2,11 @@
   &__box
     border-radius: 0
 
-  &__select-container
-    max-width: 250px
-
   &__container
     display: flex
     align-items: center
     padding-top: 8px
+    padding-right: 0
     padding-bottom: 8px
 
   &__icon
@@ -17,8 +15,9 @@
     padding-left: 3px
     margin-right: 0 !important
 
-  &__row
-    width: 100%
+  &__select-container
+    width: 250px
+    margin-right: 10px
 
   &__select
     @include fz-shaded-input
@@ -34,7 +33,7 @@
     display: inline-block
     flex-shrink: 10
     width: 223px
-    margin-left: 10px
+    margin-right: 10px
 
   &__btn
     background-color: $shaded-input-green
@@ -46,4 +45,4 @@
     right: 0
     left: auto
     padding: 0
-    border: none 
+    border: none
