@@ -2,13 +2,12 @@
 'use strict';
 
 angular
-  .module('fz.group-filter', [])
-  .component('fzGroupFilter',
+  .module('fz.month-picker', [])
+  .component('fzMonthPicker',
     {
-      templateUrl: `client/components/group/fz-group-filter/fz-group-filter.html`,
+      templateUrl: `client/components/fz-month-picker/fz-month-picker.html`,
       bindings: {
-        trainer: '=',
-        month: '=?'
+        month: '='
       },
       controller: Ctrl,
       controllerAs: 'vm'
@@ -18,19 +17,12 @@ angular
 Ctrl.$inject = ['$scope', '$reactive', '$stateParams'];
 
 function Ctrl($scope, $reactive, $stateParams) {
-  // console.log('fz-group-filter Ctrl');
-  const vm = this,
-        companyId = $stateParams.companyId;
+  // console.log('fz-month-picker Ctrl');
+  const vm = this;
   $reactive(vm).attach($scope);
-  vm.helpers({ trainers: () => trainersHelper });
   console.log(vm.month);
-  if (vm.month) initMonthPicker();
+  initMonthPicker();
   $scope.$on('$destroy', onDestroy);
-
-  function trainersHelper() {
-    let company = Companies.findOne(companyId, {fields: {trainers: 1}});
-    if (company) return company.trainers;
-  }
 
   function initMonthPicker() {
     $('#month-picker').MonthPicker({
