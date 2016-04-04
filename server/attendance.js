@@ -10,7 +10,10 @@ GroupDays._ensureIndex({
 
 Meteor.publish('attendance', function (companyId, dateISO) {
   check(companyId, String);
-  check(dateISO, String);
+  check(dateISO, Match.Where((dateISO) => {
+    check(dateISO, String);
+    return !isNaN(Date.parse(dateISO));
+  }));
   const user = Users.findOne(this.userId, {fields: {roles: 1}});
 
   if (! Roles.userIsInRole(user, ['owner', 'admin', 'trainer'], companyId)) {

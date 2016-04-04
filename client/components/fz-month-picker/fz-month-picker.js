@@ -20,7 +20,6 @@ function Ctrl($scope, $reactive, $stateParams) {
   // console.log('fz-month-picker Ctrl');
   const vm = this;
   $reactive(vm).attach($scope);
-  console.log(vm.month);
   initMonthPicker();
   $scope.$on('$destroy', onDestroy);
 
@@ -41,8 +40,9 @@ function Ctrl($scope, $reactive, $stateParams) {
         months: ['янв', 'фев','мар', 'апр', 'май', 'июн', 'июл', 'авг', 'сен', 'окт', 'ноя', 'дек']
       },
       SelectedMonth: vm.month,
+      MinMonth: new Date(2016,0,1),
       OnAfterChooseMonth: function(selectedDate) {
-        console.log(selectedDate);
+        $scope.$apply(() => vm.month = selectedDate);
         $('.fz-group-filter__btn').dropdown('toggle');
       }
     });

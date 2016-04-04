@@ -75,20 +75,34 @@ Meteor.methods({
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-  journal: function (companyId, trainerId) {
+  journal: function (companyId, monthISO, trainerId) {
     check(companyId, String);
+    check(monthISO, Match.Where((monthISO) => {
+      check(monthISO, String);
+      return !isNaN(Date.parse(monthISO));
+    }));
     check(trainerId, Match.Optional(String));
 
     if (Meteor.isServer) {
+      //AUTH
+      if (! Roles.userIsInRole(this.userId, ['owner', 'admin', 'trainer'], companyId) ) {
+        throw new Meteor.Error('no-permission',
+        'Only owner admin or trainer can submit attendance'); }
+
+      const tz = fzDate.getTz(companyId),
+            from = fzDate.dateStart(monthISO, tz),
+            to = fzDate.addMonths(from, 1),
+            query = {$match: {'company._id': companyId, date: { $gte: from, $lte: to } }};
+
       if (Roles.userIsInRole(this.userId, ['owner', 'admin'], companyId)) {
         //TODO use unwind in the future (waiting for kadira to fix their meteor-aggregate package)
-        let query = {$match: {'company._id': companyId}};
         if (trainerId) query.$match['trainer._id'] = trainerId;
         return GroupDays.aggregate(query, {$project: {date: 1, trainer: '$trainer.name', group: '$name', 'clients.name': 1, 'clients.came': 1}});
       }
 
       if (Roles.userIsInRole(this.userId, 'trainer', companyId)) {
-        return GroupDays.aggregate({$match: {'company._id': companyId, 'trainer._id': this.userId}}, {$project: {date: 1, group: '$name', 'clients.name': 1, 'clients.came': 1}});
+        query.$match['trainer._id'] = this.userId;
+        return GroupDays.aggregate(query, {$project: {date: 1, group: '$name', 'clients.name': 1, 'clients.came': 1}});
       }
     }
   }

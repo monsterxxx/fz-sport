@@ -36,14 +36,15 @@ function Ctrl($scope, $reactive, $stateParams) {
         companyId = $stateParams.companyId;
   $reactive(vm).attach($scope);
   vm.helpers({role: () => Roles.getTopRole(Meteor.userId(), companyId)});
-  $scope.$watch(() => vm.trainer, trainerListener);
+  $scope.$watch(() => vm.trainer, filterParamListner);
   vm.month = new Date();
+  $scope.$watch(() => vm.month, filterParamListner);
 
-  function trainerListener(trainer) {
-    if (trainer) {
-      getAndDraw(trainer._id);
+  function filterParamListner(filterParam) {
+    if (vm.trainer) {
+      getAndDraw(vm.month, vm.trainer._id);
     } else {
-      getAndDraw();
+      getAndDraw(vm.month);
     }
   }
 
@@ -51,8 +52,10 @@ function Ctrl($scope, $reactive, $stateParams) {
         monthDeriver = $.pivotUtilities.derivers.dateFormat('date', '%m'),
         dayDeriver = $.pivotUtilities.derivers.dateFormat('date', '%d');
 
-  function getAndDraw(trainerId) {
-    let args = [companyId];
+  function getAndDraw(month, trainerId) {
+    vm.gettingData = true;
+    const monthISO = new Date(month - new Date().getTimezoneOffset() * 60000).toISOString().slice(0,7);
+    let args = [ companyId, monthISO ];
     if (trainerId) args.push(trainerId);
     Meteor.call('journal', ...args, (err, data) => {
       if (err) console.log(err);
@@ -87,6 +90,7 @@ function Ctrl($scope, $reactive, $stateParams) {
           hiddenAttributes: ['_id', 'date']
         }
       );
+      $scope.$apply(() => vm.gettingData = false);
     });
   }
 }

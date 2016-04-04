@@ -8,5 +8,6 @@ fzDate = {
   todayISO: (tz) => new Date(Date.now() + tz * 36e5).toISOString().slice(0, 10),
   dateStart: (dateISO, tz) => new Date(new Date(dateISO).getTime() - tz * 36e5),
   todayStart: (tz) => fzDate.dateStart(fzDate.todayISO(tz), tz),
-  addDays: (date, n) => new Date(date.getTime() + n * 24 * 36e5)
+  addDays: (date, n) => new Date(date.getTime() + n * 24 * 36e5),
+  addMonths: (date, n) => new Date(new Date(date).setMonth(date.getMonth() + n))
 };
