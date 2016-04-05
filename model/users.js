@@ -87,7 +87,8 @@ Meteor.methods({
 
     //just for latency compensation
     if (Meteor.isClient) {
-      const member = (memberId === '0') ? {_id: '0', name: surrogate.fname} : memberArg,
+      //for now there should be no surrogates, only already created users
+      const member = (memberId === '0') ? {_id: '0', name: 'surrogateMethodERROR'} : memberArg,
             modifier = { $addToSet: {} };
       modifier.$addToSet[role + 's'] = member;
       return Companies.update({_id: companyId}, modifier);

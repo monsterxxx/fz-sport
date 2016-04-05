@@ -1,3 +1,5 @@
+/*jshint -W100 */
+
 Meteor.startup(function () {
   const continueConversion = false;
   if (continueConversion) {
@@ -74,7 +76,7 @@ Meteor.startup(function () {
   }
   const finishConversion = false;
   if (finishConversion) {
-    //Проследить за *ндреев Андрей, ****ушкарев Денис Близнина София �
+    //Проследить за *ндреев Андрей, ****ушкарев Денис Близнина София � jshint ignore:line
     Attendance.find({}).fetch().forEach((att) => {
       let date = fzDate.dateStart(fzDate.dateISO(att.createdAt, 3), 3),
           trainer = Users.findOne({'profile.fname': {$regex: att.trainer}}),

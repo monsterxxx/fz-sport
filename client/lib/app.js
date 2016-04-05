@@ -34,7 +34,7 @@ angular.module('fz', [
 .config(function(fitTextConfigProvider) {
   fitTextConfigProvider.config = {
     debounce: function(a,b,c) {         // specify your own function
-      var d;return function(){var e=this,f=arguments;clearTimeout(d),d=setTimeout(function(){d=null,c||a.apply(e,f)},b),c&&!d&&a.apply(e,f)}
+      var d;return function(){var e=this,f=arguments;clearTimeout(d),d=setTimeout(function(){d=null,c||a.apply(e,f);},b),c&&!d&&a.apply(e,f);}; // jshint ignore:line
     },
     delay: 20,                        // debounce delay
     loadDelay: 10,                      // global default delay before initial calculation

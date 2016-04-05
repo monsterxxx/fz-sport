@@ -65,7 +65,8 @@ function Ctrl($scope, $reactive, $stateParams, $state) {
   }
 
   function userListener(user) {
-    if (user) vm.profileChanged = ! angular.equals(user.profile, oriProfile)};
+    if (user) vm.profileChanged = ! angular.equals(user.profile, oriProfile);
+  }
 
   function sendVerificationLink() {
     vm.emailSending = true;

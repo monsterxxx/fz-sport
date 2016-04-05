@@ -37,7 +37,7 @@ function Ctrl($scope, $reactive, $stateParams) {
   }
 
   function groupListener(group) {
-    vm.attChanged = group && _.any(group.clients, (client, i) => !client.came !== !oriAtt[i].came);
+    vm.attChanged = group && _.any(group.clients, (client, i) => !client.came !== !oriAtt[i].came); // jshint ignore:line
   }
 }
 
