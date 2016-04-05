@@ -1,6 +1,5 @@
 Meteor.startup(function () {
-    process.env.MAIL_URL             = 'smtp://support%40fzsport.ru:75ncD7dRG6nhrw59N@smtp.mailgun.org:587/';
-    // process.env.MAIL_URL             = 'smtp://support%40fzsport.ru:johnbarabulka@smtp.mailgun.org:587/';
+    // process.env.MAIL_URL             = 'smtp://support%40fzsport.ru:75ncD7dRG6nhrw59N@smtp.mailgun.org:587/';
     Accounts.emailTemplates.siteName = 'FZSport';
     Accounts.emailTemplates.from     = 'FZSport <support@fzsport.ru>';
     Accounts.emailTemplates.verifyEmail = {
