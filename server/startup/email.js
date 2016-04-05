@@ -9,8 +9,9 @@ Meteor.startup(function () {
       },
       text( user, url ) {
         const emailAddress   = user.emails[0].address,
-              urlWithoutHash = url.replace( '#/verify-email', 'home/finish-registration' ),
-              emailBody      = `Чтобы подтвердить свой адрес электронной почты (${emailAddress}) просто пройдите по ссылке:\n\n${urlWithoutHash}\n\n Если Вы получили данное письмо по ошибке, просто проигнорируйте его.\n\nСпасибо!`; // jshint ignore:line
+            // TODO use urlWithoutHash with a separate route if hash is a problem
+            //   urlWithoutHash = url.replace( '#/verify-email', 'home/finish-registration' ),
+              emailBody      = `Чтобы подтвердить свой адрес электронной почты (${emailAddress}) просто пройдите по ссылке:\n\n${url}\n\n Если Вы получили данное письмо по ошибке, просто проигнорируйте его.\n\nСпасибо!`; // jshint ignore:line
         return emailBody;
       }
     };
