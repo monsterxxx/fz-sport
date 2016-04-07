@@ -59,6 +59,7 @@ function Ctrl($scope, $reactive, $stateParams) {
     if (trainerId) args.push(trainerId);
     Meteor.call('journal', ...args, (err, data) => {
       if (err) console.log(err);
+      console.log(data);
       const isAdmin = _.contains(['owner', 'admin'], Roles.getTopRole(Meteor.userId(), companyId));
       let inputFunction = function(callback) {
         data.forEach((groupDay) => {

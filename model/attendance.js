@@ -92,7 +92,9 @@ Meteor.methods({
       const tz = fzDate.getTz(companyId),
             from = fzDate.dateStart(monthISO, tz),
             to = fzDate.addMonths(from, 1),
-            query = {$match: {'company._id': companyId, date: { $gte: from, $lte: to } }};
+            query = {$match: {'company._id': companyId, date: { $gte: from, $lt: to } }};
+
+            console.log(from, to);
 
       if (Roles.userIsInRole(this.userId, ['owner', 'admin'], companyId)) {
         //TODO use unwind in the future (waiting for kadira to fix their meteor-aggregate package)
