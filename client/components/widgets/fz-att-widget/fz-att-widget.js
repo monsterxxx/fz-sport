@@ -56,7 +56,7 @@ angular
             n--;
           }
           //for mondays
-          if (new Date(day + (new Date().getTimezoneOffset() + tz*60)*60000).getDay() === 1) {
+          if (new Date(day.getTime() + (new Date().getTimezoneOffset() + tz*60)*60000).getDay() === 1) {
             //labels just for mondays so that they fit in mobile screens
             labels[52 - week] = (week % 4) ? '' : pad(day.getDate()) +'.'+ pad(day.getMonth() + 1);
             //finish  cycles on 53rd monday
